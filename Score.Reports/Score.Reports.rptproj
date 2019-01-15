@@ -73,9 +73,6 @@
     <Report Include="Chart_RawMetrics_ForGroup.rdl" />
     <Report Include="Chart_ServerMaintenanceMode.rdl" />
     <Report Include="Chart_WindowsDiskSpaceTrend.rdl" />
-    <Report Include="DLA Summary By Area.rdl" />
-    <Report Include="DLA Summary By Health.rdl" />
-    <Report Include="DLA Summary.rdl" />
     <Report Include="Item_Alert.rdl" />
     <Report Include="List_AlertStormObjects.rdl" />
     <Report Include="List_CorrelatedEvents.rdl" />
@@ -85,6 +82,7 @@
     <Report Include="List_PKICertificates.rdl" />
     <Report Include="List_ServerMaintenanceModeDetail.rdl" />
     <Report Include="List_ServerUptimeByGroup.rdl" />
+    <Report Include="List_ServerUtilization.rdl" />
     <Report Include="List_SQLDatabaseSize.rdl" />
     <Report Include="List_WindowsLogicalDiskSpace.rdl" />
     <Report Include="List_WindowsLogicalDiskSpace_Historical.rdl" />
@@ -92,9 +90,9 @@
     <Report Include="List_WindowsServersTopNPerf.rdl" />
     <Report Include="OrganizationReportCard.rdl" />
     <Report Include="OrganizationSummary.rdl" />
-    <Report Include="OrganizationSummary_Citrix.rdl" />
-    <Report Include="OrganizationSummary_Exchange.rdl" />
-    <Report Include="OrganizationSummary_Other.rdl" />
+    <Report Include="OrganizationSummaryByArea.rdl" />
+    <Report Include="OrganizationSummaryByHealth.rdl" />
+    <Report Include="OrganizationSummaryStatus.rdl" />
     <Report Include="OrganizationSummary_SQL.rdl" />
     <Report Include="OrganizationSummary_WindowsLogicalDisk.rdl" />
     <Report Include="Report_MonthReview.rdl" />
@@ -102,7 +100,6 @@
     <Report Include="Servers_Down_Report.rdl" />
     <Report Include="Servers_Health_Service_State.rdl" />
     <Report Include="Servers_Rollup_State.rdl" />
-    <Report Include="ServerUtilization.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

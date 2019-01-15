@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManager">
-      <DataSourceReference>/Data Sources/OperationsManager</DataSourceReference>
+      <DataSourceReference>OperationsManager</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>6fc29f7b-8592-4ee3-b0d5-3d14af0837d9</rd:DataSourceID>
     </DataSource>
     <DataSource Name="SCORE">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>382f5d8b-0b4c-43a6-b189-7311d7662ca5</rd:DataSourceID>
     </DataSource>
@@ -1453,7 +1453,7 @@ from
             </SortExpressions>
             <Top>2.78in</Top>
             <Height>1in</Height>
-            <Width>10.5in</Width>
+            <Width>10.50001in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -1585,7 +1585,7 @@ from
           </Border>
         </Style>
       </Body>
-      <Width>10.5in</Width>
+      <Width>10.50001in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -1747,6 +1747,39 @@ from
       <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>2</NumberOfColumns>
+      <NumberOfRows>3</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>ServerName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>ExpiresIn</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>SelfSigned</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Root</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>SubjectMatch</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>3c459357-5ba3-420e-b041-248c59620772</rd:ReportID>

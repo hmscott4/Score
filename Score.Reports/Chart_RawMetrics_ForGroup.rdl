@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManager">
-      <DataSourceReference>/Data Sources/OperationsManager</DataSourceReference>
+      <DataSourceReference>OperationsManager</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>d1b9de33-805e-423b-960d-8885cdc65009</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>f2354e0d-6f1d-4b92-9d0d-cb36fe92ea98</rd:DataSourceID>
     </DataSource>
@@ -35,7 +35,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @GroupName)</Command
     </DataSet>
     <DataSet Name="SystemTimeZone">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@Display">
             <Value>1</Value>
@@ -102,7 +102,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @GroupName)</Command
     </DataSet>
     <DataSet Name="DefaultTimeZoneOffset">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>DefaultTimeZoneCurrentOffset</Value>
@@ -188,7 +188,6 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @GroupName)</Command
                             </Border>
                           </Style>
                         </Subreport>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -300,6 +299,44 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @GroupName)</Command
       </ValidValues>
     </ReportParameter>
   </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>2</NumberOfColumns>
+      <NumberOfRows>3</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>StartDate</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>EndDate</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>ObjectName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>CounterName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>GroupName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>UTCOffset</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>f459d6c5-65eb-4291-b603-d35a32ffcd48</rd:ReportID>

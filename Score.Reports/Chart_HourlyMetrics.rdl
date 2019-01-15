@@ -3,12 +3,12 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>64709240-abe6-4a97-b738-82e0e102cb63</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>99d0bea7-56a8-4e5a-a530-3a5156f94ec0</rd:DataSourceID>
     </DataSource>
@@ -97,7 +97,7 @@ ORDER BY vme.[Path] ,
     </DataSet>
     <DataSet Name="SystemTimeZone">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@Display">
             <Value>1</Value>
@@ -163,7 +163,7 @@ ORDER BY vme.[Path] ,
     </DataSet>
     <DataSet Name="DefaultTimeZoneOffset">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>DefaultTimeZoneCurrentOffset</Value>

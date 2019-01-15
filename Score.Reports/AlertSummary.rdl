@@ -3,7 +3,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="SCORE">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>862021f4-b856-43b3-85d4-8d490ffd5872</rd:DataSourceID>
     </DataSource>

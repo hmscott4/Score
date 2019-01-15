@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManagerDW">
@@ -7,8 +7,8 @@
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>64709240-abe6-4a97-b738-82e0e102cb63</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>99d0bea7-56a8-4e5a-a530-3a5156f94ec0</rd:DataSourceID>
     </DataSource>
@@ -97,7 +97,7 @@ ORDER BY vme.[Path] ,
     </DataSet>
     <DataSet Name="SystemTimeZone">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@Display">
             <Value>1</Value>
@@ -163,7 +163,7 @@ ORDER BY vme.[Path] ,
     </DataSet>
     <DataSet Name="DefaultTimeZoneOffset">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>DefaultTimeZoneCurrentOffset</Value>
@@ -586,6 +586,44 @@ ORDER BY vme.[Path] ,
       </ValidValues>
     </ReportParameter>
   </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>2</NumberOfColumns>
+      <NumberOfRows>3</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>StartDate</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>EndDate</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>ObjectName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>CounterName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>ServerName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>UTCOffset</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>dd33b562-940d-45b2-9798-1706fa4b77dd</rd:ReportID>

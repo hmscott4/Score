@@ -4,12 +4,12 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>4c19081c-6f81-43c5-8f23-371158830224</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>aca82f85-94d6-4cbf-9503-ecc52a294417</rd:DataSourceID>
     </DataSource>
@@ -120,7 +120,7 @@ ORDER BY
     </DataSet>
     <DataSet Name="MaintenanceModeReason">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <CommandText>SELECT 
     ReasonCode, 
     Reason
@@ -1352,7 +1352,6 @@ ORDER BY ReasonCode</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

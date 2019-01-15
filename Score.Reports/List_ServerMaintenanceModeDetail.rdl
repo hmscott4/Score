@@ -8,8 +8,8 @@
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>40e32835-2e77-42d4-8275-dfdc11fa4497</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>039fdb88-83b4-49e0-92c6-851e79c13e8d</rd:DataSourceID>
     </DataSource>
@@ -132,7 +132,7 @@ ORDER BY
     </DataSet>
     <DataSet Name="MaintenanceModeReason">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <CommandText>SELECT 
     ReasonCode, 
     Reason
@@ -1268,7 +1268,7 @@ ORDER BY ReasonCode</CommandText>
             <DataSetName>MaintenanceModeDetail</DataSetName>
             <Top>1.61333in</Top>
             <Height>0.75in</Height>
-            <Width>9.95833in</Width>
+            <Width>9.95834in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>

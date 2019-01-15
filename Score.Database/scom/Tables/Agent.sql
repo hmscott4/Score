@@ -1,0 +1,25 @@
+﻿CREATE TABLE [scom].[Agent] (
+    [AgentID]                  UNIQUEIDENTIFIER NOT NULL,
+    [Name]                     NVARCHAR (255)   NOT NULL,
+    [DisplayName]              NVARCHAR (1024)  NOT NULL,
+    [Domain]                   NVARCHAR (255)   NOT NULL,
+    [ManagementGroup]          NVARCHAR (255)   NOT NULL,
+    [PrimaryManagementServer]  NVARCHAR (255)   NOT NULL,
+    [Version]                  NVARCHAR (255)   NOT NULL,
+    [PatchList]                NVARCHAR (255)   NOT NULL,
+    [ComputerName]             NVARCHAR (255)   NOT NULL,
+    [HealthState]              NVARCHAR (255)   NOT NULL,
+    [InstalledBy]              NVARCHAR (255)   NOT NULL,
+    [InstallTime]              DATETIME2 (3)    NOT NULL,
+    [ManuallyInstalled]        BIT              NOT NULL,
+    [ProxyingEnabled]          BIT              NOT NULL,
+    [IPAddress]                NVARCHAR (1024)  NULL,
+    [LastModified]             DATETIME2 (3)    NOT NULL,
+    [IsAvailable]              BIT              NULL,
+    [AvailabilityLastModified] DATETIME2 (3)    NULL,
+    [Active]                   BIT              NOT NULL,
+    [dbAddDate]                DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]             DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK__Agent__9AC3BFD17AC4750A] PRIMARY KEY CLUSTERED ([AgentID] ASC)
+);
+

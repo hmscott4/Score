@@ -2,8 +2,8 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>1af08f59-93b7-48ed-8ed9-0401851d0ddc</rd:DataSourceID>
     </DataSource>
@@ -11,7 +11,7 @@
   <DataSets>
     <DataSet Name="AlertDetail">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@Severity">
             <Value>=Parameters!Severity.Value</Value>
@@ -175,7 +175,7 @@ WHERE
     </DataSet>
     <DataSet Name="ResolutionState">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <CommandText>Select Name, ResolutionState
 FROM scom.AlertResolutionState
 ORDER BY ResolutionState</CommandText>
@@ -202,7 +202,7 @@ ORDER BY ResolutionState</CommandText>
     </DataSet>
     <DataSet Name="OrganizationDisplayName">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>OrganizationDisplayName</Value>
@@ -244,7 +244,7 @@ ORDER BY ResolutionState</CommandText>
     </DataSet>
     <DataSet Name="SystemTimeZone">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@Display">
             <Value>1</Value>
@@ -310,7 +310,7 @@ ORDER BY ResolutionState</CommandText>
     </DataSet>
     <DataSet Name="DefaultSystemTimeZoneOffset">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>DefaultTimeZoneCurrentOffset</Value>
@@ -352,7 +352,7 @@ ORDER BY ResolutionState</CommandText>
     </DataSet>
     <DataSet Name="QueueNames">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <CommandText>SELECT DISTINCT
     CustomField9 AS QueueName
 FROM
