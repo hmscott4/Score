@@ -1674,5 +1674,6 @@
     <Build Include="scom\Tables\Object.sql" />
     <Build Include="scom\Tables\ObjectAlertRelationship.sql" />
     <Build Include="scom\Tables\ObjectClass.sql" />
+    <Build Include="dbo\Stored Procedures\spSystemTimeZoneSelect.sql" />
   </ItemGroup>
 </Project>
