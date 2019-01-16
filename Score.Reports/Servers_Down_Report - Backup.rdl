@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="OperationsManager">
-      <DataSourceReference>OperationsManager</DataSourceReference>
+    <DataSource Name="ops">
+      <DataSourceReference>/Data Sources/OperationsManager</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
       <rd:DataSourceID>47605b18-e8ca-4c2c-9660-49084096c2b2</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="Servers_Down">
+    <DataSet Name="ops">
       <Query>
-        <DataSourceName>OperationsManager</DataSourceName>
+        <DataSourceName>ops</DataSourceName>
         <CommandText>SELECT bme.DisplayName, s.LastModified as LastModifiedUTC, dateadd(hh,-5,s.LastModified) as 'LastModifiedCST (GMT-5)'
 FROM state AS s, BaseManagedEntity as bme 
 WHERE s.basemanagedentityid = bme.basemanagedentityid AND s.monitorid 
@@ -302,7 +302,7 @@ ORDER BY s.Lastmodified DESC</CommandText>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>Servers_Down</DataSetName>
+            <DataSetName>ops</DataSetName>
             <Top>0.36in</Top>
             <Height>0.43in</Height>
             <Width>6.875in</Width>

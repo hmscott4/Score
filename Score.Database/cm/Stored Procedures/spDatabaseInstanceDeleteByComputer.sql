@@ -20,7 +20,7 @@ AS
 	WHERE [dnsHostName] = @dnsHostName
 
 	DELETE
-	FROM   [cm].[DatabaseInstanceByComputer]
+	FROM   [cm].[DatabaseInstance]
 	WHERE ([ComputerGUID] = @ComputerGUID)
 
 	COMMIT

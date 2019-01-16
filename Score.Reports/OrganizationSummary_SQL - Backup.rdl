@@ -1,19 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="SCORE">
-      <DataSourceReference>SCORE</DataSourceReference>
+    <DataSource Name="Catalog">
+      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>b5360b67-0d1f-462b-b1d1-12e45cc8843b</rd:DataSourceID>
     </DataSource>
     <DataSource Name="OperationsManager">
-      <DataSourceReference>OperationsManager</DataSourceReference>
+      <DataSourceReference>/Data Sources/OperationsManager</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>b32e5142-0c6d-4eaa-b679-5a03f9311d04</rd:DataSourceID>
     </DataSource>
+    <DataSource Name="SystemCenter">
+      <DataSourceReference>/Data Sources/SystemCenter</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>56de7131-0218-488a-8cd2-f75a1167f5e1</rd:DataSourceID>
+    </DataSource>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>f5d2fdb1-1365-4262-b8c2-acb3772a8289</rd:DataSourceID>
     </DataSource>
@@ -21,7 +26,7 @@
   <DataSets>
     <DataSet Name="OrganizationDisplayName">
       <Query>
-        <DataSourceName>SCORE</DataSourceName>
+        <DataSourceName>Catalog</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>OrganizationDisplayName</Value>
@@ -63,7 +68,7 @@
     </DataSet>
     <DataSet Name="ObjectStateSummary">
       <Query>
-        <DataSourceName>SCORE</DataSourceName>
+        <DataSourceName>Catalog</DataSourceName>
         <CommandText>SELECT
 	oc.genericname, 
                 o.DisplayName,
@@ -111,7 +116,7 @@ WHERE
     </DataSet>
     <DataSet Name="SQLAlerts">
       <Query>
-        <DataSourceName>SCORE</DataSourceName>
+        <DataSourceName>Catalog</DataSourceName>
         <CommandText>SELECT DISTINCT CAST(a.MonitoringObjectDisplayName as NVARCHAR(255)) as MonitoringObjectDisplayName, a.Name, Severity
 FROM scom.ObjectAlertRelationship oar
 INNER JOIN scom.Object o
@@ -734,7 +739,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                         </ChartDataPoint>
                       </ChartDataPoints>
                       <Type>Shape</Type>
-                      <Subtype>Doughnut</Subtype>
                       <Style />
                       <ChartEmptyPoints>
                         <Style />
@@ -1061,7 +1065,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                         </ChartDataPoint>
                       </ChartDataPoints>
                       <Type>Shape</Type>
-                      <Subtype>Doughnut</Subtype>
                       <Style />
                       <ChartEmptyPoints>
                         <Style />
@@ -2149,19 +2152,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
       <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>1</NumberOfColumns>
-      <NumberOfRows>1</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>SystemDatabases</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <EmbeddedImages>
     <EmbeddedImage Name="logo_Microsoft_SystemCenter_264x126px">
       <MIMEType>image/jpeg</MIMEType>
