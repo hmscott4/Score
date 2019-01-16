@@ -1669,5 +1669,10 @@
     <Build Include="Security\pm.sql" />
     <Build Include="Security\scom.sql" />
     <Build Include="Security\Permissions.sql" />
+    <Build Include="scom\Tables\AgentExclusions.sql" />
+    <Build Include="scom\Tables\MaintenanceReasonCode.sql" />
+    <Build Include="scom\Tables\Object.sql" />
+    <Build Include="scom\Tables\ObjectAlertRelationship.sql" />
+    <Build Include="scom\Tables\ObjectClass.sql" />
   </ItemGroup>
 </Project>
