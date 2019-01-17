@@ -137,6 +137,8 @@
     <Folder Include="scom\Stored Procedures\" />
     <Folder Include="ad\Stored Procedures\" />
     <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="_Deployment" />
+    <Folder Include="_Compare" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="scom\Tables\Alert.sql">
@@ -1684,5 +1686,10 @@
     <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql" />
     <Build Include="ad\Stored Procedures\spSubnetSelectBySubnet.sql" />
     <Build Include="ad\Tables\ComputerImport.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_Deployment\dbo.Config.data.sql" />
+    <None Include="_Deployment\scom.MaintenanceReasonCode.data.sql" />
+    <None Include="_Compare\SQL33.SCORE_Project.scmp" />
   </ItemGroup>
 </Project>
