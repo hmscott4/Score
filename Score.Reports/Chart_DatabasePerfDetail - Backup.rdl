@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="SCORE">
-      <DataSourceReference>SCORE</DataSourceReference>
+    <DataSource Name="Catalog">
+      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>ab155d0a-1668-4b2a-a496-9c96d93f4dc5</rd:DataSourceID>
     </DataSource>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>98b7ce9b-59e0-452a-a92b-23b9431a6aef</rd:DataSourceID>
     </DataSource>
@@ -142,7 +142,7 @@ ELSE
     </DataSet>
     <DataSet Name="SystemTimeZone">
       <Query>
-        <DataSourceName>SCORE</DataSourceName>
+        <DataSourceName>Catalog</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@Display">
             <Value>1</Value>
@@ -208,7 +208,7 @@ ELSE
     </DataSet>
     <DataSet Name="DefaultSystemTimeZoneOffset">
       <Query>
-        <DataSourceName>SCORE</DataSourceName>
+        <DataSourceName>Catalog</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>DefaultTimeZoneCurrentOffset</Value>
@@ -1479,6 +1479,7 @@ ELSE
                                       <BackgroundGradientType>None</BackgroundGradientType>
                                     </Style>
                                   </Chart>
+                                  <rd:Selected>true</rd:Selected>
                                 </CellContents>
                               </TablixHeader>
                               <TablixMembers>
@@ -1573,34 +1574,6 @@ ELSE
       </ValidValues>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>ServerName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>StartDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>EndDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>UTCOffset</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>3fdb7836-63d5-4508-8e21-806217a0a106</rd:ReportID>

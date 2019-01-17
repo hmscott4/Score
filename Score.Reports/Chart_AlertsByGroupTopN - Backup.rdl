@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>5792c8f5-7b67-4fe6-b408-230ee299e601</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="SCORE">
-      <DataSourceReference>SCORE</DataSourceReference>
+    <DataSource Name="Catalog">
+      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>d1ad20f1-1ced-4760-b4e7-a9e3d18c47bb</rd:DataSourceID>
     </DataSource>
@@ -171,7 +171,7 @@ GROUP BY Cast(Convert(Varchar(10), RaisedDateTime, 120) as DATETIME), Severity</
     </DataSet>
     <DataSet Name="SystemTimeZone">
       <Query>
-        <DataSourceName>SCORE</DataSourceName>
+        <DataSourceName>Catalog</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@Display">
             <Value>1</Value>
@@ -237,7 +237,7 @@ GROUP BY Cast(Convert(Varchar(10), RaisedDateTime, 120) as DATETIME), Severity</
     </DataSet>
     <DataSet Name="DefaultTimeZoneOffset">
       <Query>
-        <DataSourceName>SCORE</DataSourceName>
+        <DataSourceName>Catalog</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ConfigName">
             <Value>DefaultTimeZoneCurrentOffset</Value>
@@ -1129,49 +1129,6 @@ GROUP BY Cast(Convert(Varchar(10), RaisedDateTime, 120) as DATETIME), Severity</
       <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>4</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>ManagedGroupName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>StartDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>EndDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>TopN</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>ShowTitle</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>UTCOffset</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>AlertSeverity</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Language>en-US</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

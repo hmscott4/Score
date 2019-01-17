@@ -3,7 +3,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>64709240-abe6-4a97-b738-82e0e102cb63</rd:DataSourceID>
     </DataSource>

@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Report Include="AlertAgingReport.rdl" />
-    <Report Include="AlertDetails.rdl" />
     <Report Include="AlertSummary.rdl" />
     <Report Include="AlertSummaryByQueue.rdl" />
     <Report Include="Chart_AlertsByGroupTopN.rdl" />
@@ -81,6 +80,7 @@
     <Report Include="Chart_ServerMaintenanceMode.rdl" />
     <Report Include="Chart_WindowsDiskSpaceTrend.rdl" />
     <Report Include="Item_Alert.rdl" />
+    <Report Include="List_AlertDetails.rdl" />
     <Report Include="List_AlertStormObjects.rdl" />
     <Report Include="List_CorrelatedEvents.rdl" />
     <Report Include="List_LinuxServersTopNPerf.rdl" />

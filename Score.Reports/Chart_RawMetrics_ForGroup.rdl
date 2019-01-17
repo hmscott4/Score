@@ -161,7 +161,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @GroupName)</Command
                     <TablixCell>
                       <CellContents>
                         <Subreport Name="Subreport1">
-                          <ReportName>/Operations/Chart_RawMetrics</ReportName>
+                          <ReportName>Chart_RawMetrics</ReportName>
                           <Parameters>
                             <Parameter Name="StartDate">
                               <Value>=Parameters!StartDate.Value</Value>

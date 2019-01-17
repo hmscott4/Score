@@ -28,10 +28,6 @@
           <QueryParameter Name="@EndDate">
             <Value>=Parameters!EndDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@QueueName">
-            <Value>=Parameters!QueueName.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
-          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT 
                 a.AlertID,
@@ -68,7 +64,6 @@ WHERE
 	a.Severity IN (@Severity) AND
 	a.ResolutionState in (@ResolutionState) AND
 	DATEADD(Minute, @UTCOffset, [TimeRaised]) BETWEEN @StartDate AND @EndDate
-	AND (a.CustomField9 IN (@QueueName) )
 	AND a.Active = 1</CommandText>
       </Query>
       <Fields>
@@ -350,26 +345,6 @@ ORDER BY ResolutionState</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="QueueNames">
-      <Query>
-        <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT DISTINCT
-    CustomField9 AS QueueName
-FROM
-    scom.Alert
-WHERE
-   CustomField9 != '' 
-    AND CustomField9 IS NOT NULL
-ORDER BY 1</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-      <Fields>
-        <Field Name="QueueName">
-          <DataField>QueueName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -386,6 +361,7 @@ ORDER BY 1</CommandText>
                     <Style>
                       <FontFamily>Verdana</FontFamily>
                       <FontSize>24pt</FontSize>
+                      <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -402,6 +378,7 @@ ORDER BY 1</CommandText>
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -887,7 +864,7 @@ ORDER BY 1</CommandText>
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Item_Alert</ReportName>
+                                  <ReportName>Item_Alert</ReportName>
                                   <Parameters>
                                     <Parameter Name="AlertID">
                                       <Value>=Fields!AlertID.Value</Value>
@@ -911,6 +888,7 @@ ORDER BY 1</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1842,24 +1820,6 @@ ORDER BY 1</CommandText>
       </DefaultValue>
       <Prompt>ObjectPath</Prompt>
     </ReportParameter>
-    <ReportParameter Name="QueueName">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>QueueNames</DataSetName>
-          <ValueField>QueueName</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>QueueName</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>QueueNames</DataSetName>
-          <ValueField>QueueName</ValueField>
-          <LabelField>QueueName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
     <ReportParameter Name="UTCOffset">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -1922,11 +1882,6 @@ ORDER BY 1</CommandText>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>3</RowIndex>
           <ParameterName>ObjectPath</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>QueueName</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
