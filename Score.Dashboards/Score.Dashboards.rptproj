@@ -8,11 +8,11 @@
     <OverwriteDataSources>False</OverwriteDataSources>
     <TargetServerVersion>SSRS2016</TargetServerVersion>
     <Platform>Win32</Platform>
-    <TargetReportFolder>Score/Reports</TargetReportFolder>
+    <TargetReportFolder>Score/Dashboards</TargetReportFolder>
     <TargetDatasetFolder>Score/Datasets</TargetDatasetFolder>
     <TargetDatasourceFolder>Score/Data Sources</TargetDatasourceFolder>
-    <TargetReportPartFolder>Report Parts</TargetReportPartFolder>
-    <TargetServerURL>https://reports.abcd.lcl/reportserver</TargetServerURL>
+    <TargetReportPartFolder>Score/Report Parts</TargetReportPartFolder>
+    <TargetServerURL>http://reports.abcd.lcl/reportserver</TargetServerURL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'DebugLocal' ">
     <FullPath>DebugLocal</FullPath>
@@ -22,7 +22,7 @@
     <OverwriteDataSources>False</OverwriteDataSources>
     <TargetServerVersion>SSRS2016</TargetServerVersion>
     <Platform>Win32</Platform>
-    <TargetReportFolder>Score.Reports</TargetReportFolder>
+    <TargetReportFolder>Score.Dashboards</TargetReportFolder>
     <TargetDatasetFolder>Datasets</TargetDatasetFolder>
     <TargetDatasourceFolder>Data Sources</TargetDatasourceFolder>
     <TargetReportPartFolder>Report Parts</TargetReportPartFolder>
@@ -36,7 +36,7 @@
     <OverwriteDataSources>False</OverwriteDataSources>
     <TargetServerVersion>SSRS2016</TargetServerVersion>
     <Platform>Win32</Platform>
-    <TargetReportFolder>Score.Reports</TargetReportFolder>
+    <TargetReportFolder>Score.Dashboards</TargetReportFolder>
     <TargetDatasetFolder>Datasets</TargetDatasetFolder>
     <TargetDatasourceFolder>Data Sources</TargetDatasourceFolder>
     <TargetReportPartFolder>Report Parts</TargetReportPartFolder>
@@ -49,59 +49,12 @@
     <Reports>@(Report)</Reports>
   </PropertyGroup>
   <ItemGroup>
-    <DataSet Include="WindowsComputers.rsd" />
-    <DataSet Include="WindowsComputerTopPerformance.rsd" />
-    <DataSet Include="WindowsLogicalDiskSpaceTrend.rsd" />
-  </ItemGroup>
-  <ItemGroup>
     <DataSource Include="OperationsManager.rds" />
     <DataSource Include="OperationsManagerDW.rds" />
     <DataSource Include="SCORE.rds" />
   </ItemGroup>
   <ItemGroup>
-    <Report Include="AlertAgingReport.rdl" />
-    <Report Include="AlertDetails.rdl" />
-    <Report Include="AlertSummary.rdl" />
-    <Report Include="AlertSummaryByQueue.rdl" />
-    <Report Include="Chart_AlertsByGroupTopN.rdl" />
-    <Report Include="Chart_DailyAvailability.rdl" />
-    <Report Include="Chart_DailyAverageTopN.rdl" />
-    <Report Include="Chart_DatabasePerf.rdl" />
-    <Report Include="Chart_DatabasePerfDetail.rdl" />
-    <Report Include="Chart_DatabaseTopN.rdl" />
-    <Report Include="Chart_HostPerf.rdl" />
-    <Report Include="Chart_HostPerf_ForGroup.rdl" />
-    <Report Include="Chart_HostPerf_Linux.rdl" />
-    <Report Include="Chart_HostTopN.rdl" />
-    <Report Include="Chart_HourlyMetrics.rdl" />
-    <Report Include="Chart_RawMetrics.rdl" />
-    <Report Include="Chart_RawMetrics_ForGroup.rdl" />
-    <Report Include="Chart_ServerMaintenanceMode.rdl" />
-    <Report Include="Chart_WindowsDiskSpaceTrend.rdl" />
-    <Report Include="Item_Alert.rdl" />
-    <Report Include="List_AlertStormObjects.rdl" />
-    <Report Include="List_CorrelatedEvents.rdl" />
-    <Report Include="List_LinuxServersTopNPerf.rdl" />
-    <Report Include="List_ObjectAlerts.rdl" />
-    <Report Include="List_ObjectHealthState.rdl" />
-    <Report Include="List_PKICertificates.rdl" />
-    <Report Include="List_ServerMaintenanceModeDetail.rdl" />
-    <Report Include="List_ServerUptimeByGroup.rdl" />
-    <Report Include="List_ServerUtilization.rdl" />
-    <Report Include="List_SQLDatabaseSize.rdl" />
-    <Report Include="List_WindowsLogicalDiskSpace.rdl" />
-    <Report Include="List_WindowsLogicalDiskSpace_Historical.rdl" />
-    <Report Include="List_WindowsServers.rdl" />
-    <Report Include="List_WindowsServersTopNPerf.rdl" />
-    <Report Include="OrganizationReportCard.rdl" />
     <Report Include="OrganizationSummary.rdl" />
-    <Report Include="OrganizationSummaryByArea.rdl" />
-    <Report Include="OrganizationSummaryByHealth.rdl" />
-    <Report Include="OrganizationSummaryStatus.rdl" />
-    <Report Include="OrganizationSummary_SQL.rdl" />
-    <Report Include="OrganizationSummary_WindowsLogicalDisk.rdl" />
-    <Report Include="Report_MonthReview.rdl" />
-    <Report Include="ServerSummary.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

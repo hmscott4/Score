@@ -7,6 +7,15 @@
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>
     <Name>Score</Name>
+    <ManifestPath>$(OutDir)\$(ProjectName).psd1</ManifestPath>
+    <Author>Hugh Scott</Author>
+    <CompanyName>Microsoft Corporation</CompanyName>
+    <Copyright>(C) Microsoft Corporation, 2012-2019</Copyright>
+    <Guid>edb7b233-24eb-48e6-8a8c-093018c8e202</Guid>
+    <ProcessorArchitecture />
+    <PackageEntryPoint>Monitor.ps1</PackageEntryPoint>
+    <DotNetVersion>v4.6.1</DotNetVersion>
+    <PackageType>Console</PackageType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

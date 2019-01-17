@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>OperationsManager</DataSourceReference>
+      <CommandText>select 
+               c.DisplayName, 
+               c.ActiveDirectorySite, 
+               c.DomainDnsName, 
+               c.ForestDnsName, 
+               c.IPAddress, 
+               c.IsVirtualMachine, 
+               c.LogicalProcessors, 
+               c.PhysicalProcessors, 
+               c.NetbiosComputerName, 
+               c.NetbiosDomainName, 
+               c.OrganizationalUnit,
+               os.DisplayName as [OperatingSystem],
+               os.InstallDate_D848A085_8621_59DC_DBB2_AC3DAD80A8AC as [InstallDate],
+               os.OSVersion_53D6DEB6_BE2E_D1B6_D49E_A623518BD867 as [OSVersion],
+               os.PhysicalMemory_708ED231_4FFB_71C2_ECE5_F07618E28419 as [PhysicalMemory],
+               os.PowerPlan_68EE198F_ABF0_E151_D754_A2DAB9C44C23 as [PowerPlan]
+From MTV_Computer c left outer join MTV_Microsoft$Windows$OperatingSystem os on
+               c.PrincipalName = os.PrincipalName
+</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="DisplayName">
+        <DataField>DisplayName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ActiveDirectorySite">
+        <DataField>ActiveDirectorySite</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="DomainDnsName">
+        <DataField>DomainDnsName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ForestDnsName">
+        <DataField>ForestDnsName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="IPAddress">
+        <DataField>IPAddress</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="IsVirtualMachine">
+        <DataField>IsVirtualMachine</DataField>
+        <rd:TypeName>System.Boolean</rd:TypeName>
+      </Field>
+      <Field Name="LogicalProcessors">
+        <DataField>LogicalProcessors</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="PhysicalProcessors">
+        <DataField>PhysicalProcessors</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="NetbiosComputerName">
+        <DataField>NetbiosComputerName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="NetbiosDomainName">
+        <DataField>NetbiosDomainName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="OrganizationalUnit">
+        <DataField>OrganizationalUnit</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="OperatingSystem">
+        <DataField>OperatingSystem</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="InstallDate">
+        <DataField>InstallDate</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="OSVersion">
+        <DataField>OSVersion</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="PhysicalMemory">
+        <DataField>PhysicalMemory</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="PowerPlan">
+        <DataField>PowerPlan</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>
