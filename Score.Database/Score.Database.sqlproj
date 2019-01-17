@@ -1691,5 +1691,6 @@
     <None Include="_Deployment\dbo.Config.data.sql" />
     <None Include="_Deployment\scom.MaintenanceReasonCode.data.sql" />
     <None Include="_Compare\SQL33.SCORE_Project.scmp" />
+    <None Include="_Deployment\scom.ObjectClass.data.sql" />
   </ItemGroup>
 </Project>
