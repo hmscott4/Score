@@ -538,8 +538,6 @@
     <Build Include="Security\cmUpdate.sql" />
     <Build Include="Security\pmRead.sql" />
     <Build Include="Security\pmUpdate.sql" />
-    <Build Include="Security\NT SERVICE_HealthService.sql" />
-    <Build Include="Security\NT SERVICE_HealthService_1.sql" />
     <Build Include="cm\Stored Procedures\spWebApplicationURLSelect.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
@@ -1668,12 +1666,23 @@
     <Build Include="Security\cm.sql" />
     <Build Include="Security\pm.sql" />
     <Build Include="Security\scom.sql" />
-    <Build Include="Security\Permissions.sql" />
     <Build Include="scom\Tables\AgentExclusions.sql" />
     <Build Include="scom\Tables\MaintenanceReasonCode.sql" />
     <Build Include="scom\Tables\Object.sql" />
     <Build Include="scom\Tables\ObjectAlertRelationship.sql" />
     <Build Include="scom\Tables\ObjectClass.sql" />
     <Build Include="dbo\Stored Procedures\spSystemTimeZoneSelect.sql" />
+    <Build Include="scom\Stored Procedures\spAgentExclusionsInsert.sql" />
+    <Build Include="scom\Stored Procedures\spAgentInactivate.sql" />
+    <Build Include="scom\Stored Procedures\spObjectAlertRelationshipInactivate.sql" />
+    <Build Include="scom\Stored Procedures\spObjectAlertRelationshipInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spObjectAlertRelationshipUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spObjectInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spObjectUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spSyncHistoryInsert.sql" />
+    <Build Include="scom\Stored Procedures\spWindowsComputerSelectByDNSHostName.sql" />
+    <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql" />
+    <Build Include="ad\Stored Procedures\spSubnetSelectBySubnet.sql" />
+    <Build Include="ad\Tables\ComputerImport.sql" />
   </ItemGroup>
 </Project>
