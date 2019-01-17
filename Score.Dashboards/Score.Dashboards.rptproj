@@ -55,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Report Include="OrganizationSummary.rdl" />
+    <Report Include="OrganizationSummaryByArea.rdl" />
+    <Report Include="OrganizationSummaryByHealth.rdl" />
+    <Report Include="OrganizationSummaryStatus.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

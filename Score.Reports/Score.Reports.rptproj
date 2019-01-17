@@ -49,6 +49,8 @@
     <Reports>@(Report)</Reports>
   </PropertyGroup>
   <ItemGroup>
+    <DataSet Include="LinuxComputerTopPerformance.rsd" />
+    <DataSet Include="SQLServerSpaceUtilizationTrend.rsd" />
     <DataSet Include="WindowsComputers.rsd" />
     <DataSet Include="WindowsComputerTopPerformance.rsd" />
     <DataSet Include="WindowsLogicalDiskSpaceTrend.rsd" />
@@ -93,11 +95,6 @@
     <Report Include="List_WindowsLogicalDiskSpace_Historical.rdl" />
     <Report Include="List_WindowsServers.rdl" />
     <Report Include="List_WindowsServersTopNPerf.rdl" />
-    <Report Include="OrganizationReportCard.rdl" />
-    <Report Include="OrganizationSummary.rdl" />
-    <Report Include="OrganizationSummaryByArea.rdl" />
-    <Report Include="OrganizationSummaryByHealth.rdl" />
-    <Report Include="OrganizationSummaryStatus.rdl" />
     <Report Include="OrganizationSummary_SQL.rdl" />
     <Report Include="OrganizationSummary_WindowsLogicalDisk.rdl" />
     <Report Include="Report_MonthReview.rdl" />
