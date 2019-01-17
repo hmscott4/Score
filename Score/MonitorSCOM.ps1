@@ -282,7 +282,7 @@ Param (
 		$syncType = "Full"
 		[datetime]$lastUpdate = MaxDate $lastSyncStatus.LastFullSync $lastSyncStatus.LastIncrementalSync
 		[datetime]$lastFullSync = $lastSyncStatus.LastFullSync
-	} ElseIf ($lastSyncStatus.LastSyncType -eq "Incremental" -and $lastSyncStatus.LastFullSync -lt (Get-Date).AddHours(-8)) {
+	} ElseIf ($lastSyncStatus.LastSyncType -eq "Incremental" -and $lastSyncStatus.LastFullSync -lt (Get-Date).AddHours(-1)) {
 		# The last full sync was more than 8 hours ago, set $syncType to full
 		$syncType = "Full"
 		[datetime]$lastUpdate = MaxDate $lastSyncStatus.LastFullSync $lastSyncStatus.LastIncrementalSync
@@ -343,16 +343,6 @@ Param (
     ################################################################################
     # CONNECT TO SCOM
     ################################################################################  
-    # Check if the OperationsManager Module is loaded
-    # If(-not (Get-Module | Where-Object {$_.Name -eq "OperationsManager"}))
-    # {
-    #     Write-Verbose "The Operations Manager Module was not found...importing the Operations Manager Module"
-    #     Import-module OperationsManager
-    # }
-    #     Else
-	# {
-	#     Write-Verbose "The Operations Manager Module is loaded"
-	# }
     Import-Module OperationsManager
 
 
@@ -369,6 +359,7 @@ Param (
     If($connect.IsActive){
         # Record time stamp
         [datetime]$timeStart = (Get-Date)
+        $lastUpdate = $lastUpdate.ToUniversalTime()
 
 
         ################################################################################
@@ -666,15 +657,8 @@ Param (
     # CONNECT TO SCOM
     ################################################################################  
     # Check if the OperationsManager Module is loaded
-    If(-not (Get-Module | Where-Object {$_.Name -eq "OperationsManager"}))
-        {
-        # "The Operations Manager Module was not found...importing the Operations Manager Module"
-        Import-module OperationsManager
-        }
-            Else
-	    {
-	    # "The Operations Manager Module is loaded"
-	    }
+    Import-module OperationsManager
+
 
     # Connect to localhost when running on the management server or define a server to connect to.
     Try {
@@ -768,7 +752,7 @@ Param (
     [int]$warningCounter = 0
     [string]$moduleName = "WriteTimeZone"
 
-    [int]$configCounter = 0
+    [int]$zoneCounter = 0
 
 	AddLogEntry "TimeZone" "Info" $moduleName "Starting $syncType check for TimeZone..." $sqlConnection
 
@@ -868,15 +852,7 @@ Param (
     # CONNECT TO SCOM
     ################################################################################  
     # Check if the OperationsManager Module is loaded
-    If(-not (Get-Module | Where-Object {$_.Name -eq "OperationsManager"}))
-    {
-    # "The Operations Manager Module was not found...importing the Operations Manager Module"
     Import-module OperationsManager
-    }
-        Else
-	{
-	# "The Operations Manager Module is loaded"
-	}
 
     # Connect to localhost when running on the management server or define a server to connect to.
     Try {
@@ -890,7 +866,7 @@ Param (
     If($connect.IsActive){
         # Record time stamp
         [datetime]$timeStart = (Get-Date)
-        $lastUpdate = $lastUpdate.ToUniversalTime()
+	    $lastUpdate=$lastUpdate.ToUniversalTime()
 
         ################################################################################
         # GET SCOM ALERTS
@@ -899,17 +875,23 @@ Param (
             If($syncType -eq "Full") {
         	    $Alerts = Get-SCOMAlert
             } Else {
-                # $Alerts = Get-SCOMAlert | Where-Object {($_.LastModified -gt $lastUpdate) -or ($_.StateLastModified -gt $lastUpdate) }
-                $Alerts = Get-SCOMAlert | Where-Object {($_.LastModified -gt $lastUpdate) }
+                # $Alerts = Get-SCOMAlert | Where-Object {($_.LastModified -gt $lastUpdate)}
+                [string]$strlastUpdate = $lastUpdate.ToString()
+                [string]$criteria = "LastModified > '" + $strLastUpdate + "'"
+                $Alerts = Get-SCOMAlert -Criteria $criteria
                 AddLogEntry $ManagementGroup "Info" $moduleName "Getting SCOM alerts last modified since UTC $lastUpdate" $sqlConnection
             }
+            [int]$alertCount = $alerts.Count
+		    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $alertCount alerts from $ManagementGroup" $sqlConnection
+
         }
         Catch [System.Exception] {
 			$msg=$_.Exception.Message
 			AddLogEntry $ManagementGroup "Error" $moduleName "Get SCOM Alerts : $msg" $sqlConnection
 			$errorCounter++
 	    }
-	
+
+
 	    $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertUpsert"
         [Void]$sqlCommand.Parameters.Add("@AlertId", [system.data.SqlDbType]::uniqueidentifier)
         [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
@@ -1070,7 +1052,7 @@ Param (
         ################################################################################
         # SET ALERTS IN DATABASE TO INACTIVE
         ################################################################################
-        If($syncType -eq "Full"){
+        If($syncType -eq "Full" -and $errorCounter -eq 0){
             Try {
 	            $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertInactivateByDate"
                 [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
@@ -1090,20 +1072,20 @@ Param (
         ################################################################################
         # DELETE ALERTS FROM DATABASE THAT ARE NO LONGER ACTIVE
         ################################################################################
-        If($syncType -eq "Full") {
-            Try {
-	            $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertDeleteInactive"
-	            [void]$sqlCommand.ExecuteNonQuery()
-                $sqlCommand.Dispose()
-            }
-            Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
-			    $warningCounter++
-	        }
-        }
+        #If($syncType -eq "Full") {
+        #    Try {
+	    #        $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertDeleteInactive"
+	    #        [void]$sqlCommand.ExecuteNonQuery()
+        #        $sqlCommand.Dispose()
+        #    }
+        #    Catch [System.Exception] {
+		#	    $msg=$_.Exception.Message
+		#	    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
+		#	    $warningCounter++
+	    #    }
+        #}
 	
-	    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $alertCounter alerts from $ManagementGroup" $sqlConnection
+	    AddLogEntry $ManagementGroup "Info" $moduleName "Processed $alertCounter alerts from $ManagementGroup" $sqlConnection
 
         # Determine Exit status
 	    If($errorCounter -gt 0) {$syncStatus = "Error"}
@@ -1158,15 +1140,8 @@ Param (
     # CONNECT TO SCOM
     ################################################################################  
     # Check if the OperationsManager Module is loaded
-    If(-not (Get-Module | Where-Object {$_.Name -eq "OperationsManager"}))
-    {
-    # "The Operations Manager Module was not found...importing the Operations Manager Module"
-        Import-module OperationsManager
-    }
-    Else
-	{
-	    # "The Operations Manager Module is loaded"
-	}
+    Import-module OperationsManager
+ 
 
     # Connect to localhost when running on the management server or define a server to connect to.
     Try {
@@ -1179,6 +1154,7 @@ Param (
 	}
 
     If($connect.IsActive){
+        $lastUpdate=$lastUpdate.ToUniversalTime()
 
         ################################################################################
         # GET SCOM WINDOWS COMPUTERS
@@ -1293,6 +1269,21 @@ Param (
 	        }
 
         }
+
+        ############################################################################################################
+        # EXECUTE STORED PROC FOR AGENT EXCLUSIONS
+        ############################################################################################################
+        Try {
+	        $sqlCommand = GetStoredProc $sqlConnection "scom.spAgentExclusionsInsert"
+
+            [void]$sqlCommand.ExecuteNonQuery()
+            $sqlCommand.Dispose()
+        }
+        Catch [System.Exception] {
+			$msg=$_.Exception.Message
+			AddLogEntry $ManagementGroup "Info" $moduleName "Agent Exclusions Insert : $msg" $sqlConnection
+			$errorCounter++
+	    }
 	
 	    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $windowsComputerCounter Windows Computers from $ManagementGroup" $sqlConnection
 
@@ -1411,6 +1402,7 @@ Param (
 	}
 
     If($connect.IsActive){
+        $lastUpdate = $lastUpdate.ToUniversalTime()
 
         ################################################################################
         # GET SCOM OBJECT OF THE SPECIFIED CLASS
@@ -1454,6 +1446,10 @@ Param (
         [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
         [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
 
+
+	    $sqlCommand2 = GetStoredProc $sqlConnection "scom.spObjectAlertRelationshipUpsert"
+        [Void]$sqlCommand2.Parameters.Add("@ObjectID", [system.data.SqlDbType]::uniqueidentifier)
+        [Void]$sqlCommand2.Parameters.Add("@AlertID", [system.data.SqlDbType]::uniqueidentifier)
 	
         foreach($Object in $Objects){
             # If($Object.HealthState.ToString() -ne "Uninitialized" -and $Object.InMaintenanceMode -eq 0){
@@ -1492,10 +1488,10 @@ Param (
                     $ObjectState = GetObjectState -MonitoringHierarchy $object.GetMonitoringStateHierarchy() 
 
                     $sqlCommand.Parameters["@ID"].Value = $Object.Id
-                    $sqlCommand.Parameters["@Name"].Value = $Object.Name
+                    $sqlCommand.Parameters["@Name"].Value = NullToString $Object.Name ""
                     $sqlCommand.Parameters["@DisplayName"].Value = $Object.DisplayName
                     $sqlCommand.Parameters["@FullName"].Value = $Object.FullName
-                    $sqlCommand.Parameters["@Path"].Value = $Object.Path
+                    $sqlCommand.Parameters["@Path"].Value = NullToString $Object.Path ""
                     $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
                     $sqlCommand.Parameters["@HealthState"].Value = $Object.HealthState.ToString()
                     $sqlCommand.Parameters["@StateLastModified"].Value = $Object.StateLastModified
@@ -1515,6 +1511,18 @@ Param (
 
 	                [void]$sqlCommand.ExecuteNonQuery()
                     $objectCounter++
+
+                    #### GET RELATED ALERTS FOR OBJECT ####
+                    If($Object.HealthState.ToString() -ne "Success") {
+                        $relatedAlerts = $Object.GetMonitoringAlerts(1)
+                        foreach($relatedAlert in $relatedAlerts){
+                            # $sqlCommand2.Parameters["@ObjectId"].Value = $relatedAlert.MonitoringObjectID
+                            $sqlCommand2.Parameters["@ObjectId"].Value = $object.Id
+                            $sqlCommand2.Parameters["@AlertID"].Value = $relatedAlert.Id
+
+                            [void]$sqlCommand2.ExecuteNonQuery()
+                        }
+                    }
                 } 
                 Catch [System.Exception] {
 			        $msg=$_.Exception.Message
@@ -1523,8 +1531,10 @@ Param (
 	            }
             } 
         }
-	
+
+
 	    $sqlCommand.Dispose()
+        $sqlCommand2.Dispose()
 
         ############################################################################################################
         # IF FULL SYNC, INACTIVATE OBJECTS THAT WERE NOT UPDATED
@@ -1539,6 +1549,7 @@ Param (
                 $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
                 [void]$sqlCommand.ExecuteNonQuery()
                 $sqlCommand.Dispose()
+
             }
             Catch [System.Exception] {
 			    $msg=$_.Exception.Message
@@ -1547,6 +1558,23 @@ Param (
 	        }
 
         }
+
+        Try {
+            ############################################################################################################
+            # INACTIVATE ROWS IN OBJECTALERTRELATIONSHIP
+            ############################################################################################################
+            $sqlCommand.Dispose()
+
+            $sqlCommand = GetStoredProc $sqlConnection "scom.spObjectAlertRelationshipInactivate"
+
+            [void]$sqlCommand.ExecuteNonQuery() 
+            $sqlCommand.Dispose()
+        }
+        Catch [System.Exception] {
+            $msg=$_.Exception.Message
+            AddLogEntry $ManagementGroup "Warning" $moduleName "Object Alert Relationship Inactivate : $msg" $sqlConnection
+            $errorCounter++
+        }                     
 	
 	    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $objectCounter $objectClass from $ManagementGroup" $sqlConnection
 

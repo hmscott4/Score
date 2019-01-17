@@ -35,8 +35,7 @@ Param(
 	[Parameter(Mandatory=$false,Position=4)]
 	[string]$adSearchRoot=$null	,
 	[Parameter(Mandatory=$false,Position=5)]
-	[System.Management.Automation.CredentialAttribute()]
-    $Credential=([System.Management.Automation.PSCredential]::Empty)	
+	[System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)	
 )
 
 Set-StrictMode -Version Latest
