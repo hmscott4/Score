@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>000154f5-ec6c-4a71-ac3e-7d213ead1da8</rd:DataSourceID>
     </DataSource>
     <DataSource Name="SCORE">
-      <DataSourceReference>SCORE</DataSourceReference>
+      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>9a123171-e876-41d9-919a-1744e62b53ec</rd:DataSourceID>
     </DataSource>
@@ -318,7 +318,6 @@ GROUP BY
                     <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                     <Style>
                       <FontSize>24pt</FontSize>
-                      <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -335,7 +334,6 @@ GROUP BY
               <Border>
                 <Style>None</Style>
               </Border>
-              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1154,6 +1152,7 @@ GROUP BY
                             <BackgroundGradientType>None</BackgroundGradientType>
                           </Style>
                         </Chart>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1737,34 +1736,6 @@ GROUP BY
       </ValidValues>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>ServerName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>InstanceName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>DatabaseName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>IncludeSystemDBs</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>d2b77383-8e0e-473c-bf53-39836afc3268</rd:ReportID>

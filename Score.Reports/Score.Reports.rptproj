@@ -54,6 +54,7 @@
     <DataSet Include="WindowsComputers.rsd" />
     <DataSet Include="WindowsComputerTopPerformance.rsd" />
     <DataSet Include="WindowsLogicalDiskSpaceTrend.rsd" />
+    <DataSet Include="WindowsServersAndSCOM.rsd" />
   </ItemGroup>
   <ItemGroup>
     <DataSource Include="OperationsManager.rds" />

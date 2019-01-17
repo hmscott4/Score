@@ -72,8 +72,7 @@ ORDER BY Forest, NetBIOSName</CommandText>
     </DataSet>
     <DataSet Name="WindowsServersAndSCOM">
       <SharedDataSet>
-        <SharedDataSetReference>/Data Sets/WindowsServersAndSCOM</SharedDataSetReference>
-        <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
+        <SharedDataSetReference>WindowsServersAndSCOM</SharedDataSetReference>
       </SharedDataSet>
       <Fields>
         <Field Name="DNSRoot">
@@ -1505,6 +1504,7 @@ ORDER BY Forest, NetBIOSName</CommandText>
                     <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                     <Style>
                       <FontSize>24pt</FontSize>
+                      <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1522,6 +1522,7 @@ ORDER BY Forest, NetBIOSName</CommandText>
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>

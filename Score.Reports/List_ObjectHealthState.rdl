@@ -251,6 +251,7 @@
                     <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                     <Style>
                       <FontSize>24pt</FontSize>
+                      <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -268,6 +269,7 @@
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
