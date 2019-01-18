@@ -49,6 +49,9 @@
     <Reports>@(Report)</Reports>
   </PropertyGroup>
   <ItemGroup>
+    <DataSet Include="WindowsLogicalDiskSpaceTrend.rsd" />
+  </ItemGroup>
+  <ItemGroup>
     <DataSource Include="OperationsManager.rds" />
     <DataSource Include="OperationsManagerDW.rds" />
     <DataSource Include="SCORE.rds" />
@@ -58,6 +61,8 @@
     <Report Include="OrganizationSummaryByArea.rdl" />
     <Report Include="OrganizationSummaryByHealth.rdl" />
     <Report Include="OrganizationSummaryStatus.rdl" />
+    <Report Include="OrganizationSummary_SQL.rdl" />
+    <Report Include="OrganizationSummary_WindowsLogicalDisk.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

@@ -96,8 +96,6 @@
     <Report Include="List_WindowsLogicalDiskSpace_Historical.rdl" />
     <Report Include="List_WindowsServers.rdl" />
     <Report Include="List_WindowsServersTopNPerf.rdl" />
-    <Report Include="OrganizationSummary_SQL.rdl" />
-    <Report Include="OrganizationSummary_WindowsLogicalDisk.rdl" />
     <Report Include="Report_MonthReview.rdl" />
     <Report Include="ServerSummary.rdl" />
   </ItemGroup>
