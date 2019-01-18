@@ -3,21 +3,16 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>0adbebf3-bca7-4b8c-948b-8dfaca326b94</rd:DataSourceID>
-    </DataSource>
-    <DataSource Name="SystemCenter">
-      <DataSourceReference>/Data Sources/SystemCenter</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>82d1b760-8559-4730-8093-8523b062cc4a</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="ObjectStateSummary">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <CommandText>SELECT GenericName, HealthState, IsAvailable, InMaintenanceMode
 FROM (
 SELECT
@@ -56,25 +51,6 @@ WHERE
         <Field Name="InMaintenanceMode">
           <DataField>InMaintenanceMode</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="OpenAlertStorms">
-      <Query>
-        <DataSourceName>SystemCenter</DataSourceName>
-        <CommandText>SELECT
-	Count(*) as OpenAlertStorms
-FROM
-	dbo.Incident 
-WHERE 
-                TimeAdded &gt; GETUTCDATE()-3
-                AND Status != 'Closed'</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-      <Fields>
-        <Field Name="OpenAlertStorms">
-          <DataField>OpenAlertStorms</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -124,7 +100,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/DLA Summary By Health</ReportName>
+                              <ReportName>OrganizationSummaryByHealth</ReportName>
                               <Parameters>
                                 <Parameter Name="HealthState">
                                   <Value>=Fields!HealthState.Value</Value>
@@ -472,20 +448,6 @@ WHERE
           </Chart>
           <Rectangle Name="Rectangle1">
             <ReportItems>
-              <Image Name="DLA_Logo">
-                <Source>Embedded</Source>
-                <Value>dla_logo_v1</Value>
-                <Sizing>FitProportional</Sizing>
-                <Top>0.13706in</Top>
-                <Left>9.125in</Left>
-                <Height>0.86294in</Height>
-                <Width>0.75165in</Width>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                </Style>
-              </Image>
               <Textbox Name="Textbox1">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -493,7 +455,7 @@ WHERE
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>Defense Logistics Agency</Value>
+                        <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                         <Style>
                           <FontFamily>Tahoma</FontFamily>
                           <FontSize>36pt</FontSize>
@@ -510,7 +472,6 @@ WHERE
                 <Left>1.26958in</Left>
                 <Height>1in</Height>
                 <Width>7.67324in</Width>
-                <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -530,7 +491,7 @@ WHERE
                 <Left>0.23136in</Left>
                 <Height>0.86294in</Height>
                 <Width>0.77412in</Width>
-                <ZIndex>2</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -654,82 +615,6 @@ WHERE
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox6">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Alert Storm</Value>
-                    <Style>
-                      <FontFamily>Tahoma</FontFamily>
-                      <FontSize>12pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>2.4465in</Top>
-            <Left>1.84524in</Left>
-            <Height>0.25in</Height>
-            <Width>1.25661in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>Teal</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox9">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=Sum(Fields!OpenAlertStorms.Value,"OpenAlertStorms")</Value>
-                    <Style>
-                      <FontFamily>Tahoma</FontFamily>
-                      <FontSize>20pt</FontSize>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>2.6965in</Top>
-            <Left>1.84524in</Left>
-            <Height>0.58607in</Height>
-            <Width>1.25661in</Width>
-            <ZIndex>5</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>Teal</BackgroundColor>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox4">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -770,7 +655,7 @@ WHERE
             <Left>7.12936in</Left>
             <Height>0.25in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -821,7 +706,7 @@ WHERE
             <Left>7.12936in</Left>
             <Height>0.25in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -871,7 +756,7 @@ WHERE
             <Left>7.12936in</Left>
             <Height>0.58607in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -923,7 +808,7 @@ WHERE
             <Left>7.12936in</Left>
             <Height>0.58607in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -974,7 +859,7 @@ WHERE
             <Left>1.84524in</Left>
             <Height>0.58607in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1028,7 +913,7 @@ WHERE
             <Left>1.84524in</Left>
             <Height>0.25in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1081,7 +966,7 @@ WHERE
             <Left>1.84525in</Left>
             <Height>0.25in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1132,7 +1017,7 @@ WHERE
             <Left>1.84525in</Left>
             <Height>0.58607in</Height>
             <Width>1.25661in</Width>
-            <ZIndex>13</ZIndex>
+            <ZIndex>11</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>

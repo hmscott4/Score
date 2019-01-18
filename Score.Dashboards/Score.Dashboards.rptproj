@@ -56,13 +56,5 @@
     <DataSource Include="OperationsManagerDW.rds" />
     <DataSource Include="SCORE.rds" />
   </ItemGroup>
-  <ItemGroup>
-    <Report Include="OrganizationSummary.rdl" />
-    <Report Include="OrganizationSummaryByArea.rdl" />
-    <Report Include="OrganizationSummaryByHealth.rdl" />
-    <Report Include="OrganizationSummaryStatus.rdl" />
-    <Report Include="OrganizationSummary_SQL.rdl" />
-    <Report Include="OrganizationSummary_WindowsLogicalDisk.rdl" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="SCORE">
@@ -195,6 +195,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                     <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                     <Style>
                       <FontSize>24pt</FontSize>
+                      <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -212,6 +213,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1548,7 +1550,6 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
               </SortExpression>
             </SortExpressions>
             <Top>2.81771in</Top>
-            <Left>0in</Left>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
             <ZIndex>9</ZIndex>
@@ -1576,7 +1577,6 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             </Paragraphs>
             <rd:DefaultName>Textbox13</rd:DefaultName>
             <Top>2.49827in</Top>
-            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
             <ZIndex>10</ZIndex>
@@ -1969,6 +1969,19 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
       </ValidValues>
     </ReportParameter>
   </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>1</NumberOfColumns>
+      <NumberOfRows>1</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>ManagedGroupNames</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>2812ad85-92f9-4e8d-8360-58c87196285e</rd:ReportID>

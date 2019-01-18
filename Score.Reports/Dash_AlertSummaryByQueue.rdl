@@ -510,6 +510,7 @@ ORDER BY
                     <Style>
                       <FontFamily>Verdana</FontFamily>
                       <FontSize>24pt</FontSize>
+                      <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -526,6 +527,7 @@ ORDER BY
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -840,7 +842,7 @@ ORDER BY
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>1.4625in</Top>
+            <Top>1.47209in</Top>
             <Height>2.5in</Height>
             <Width>4in</Width>
             <ZIndex>1</ZIndex>
@@ -1161,7 +1163,7 @@ ORDER BY
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>1.4625in</Top>
+            <Top>1.47209in</Top>
             <Left>4in</Left>
             <Height>2.5in</Height>
             <Width>3.95444in</Width>
@@ -1191,7 +1193,7 @@ ORDER BY
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
-            <Top>0.53208in</Top>
+            <Top>0.54167in</Top>
             <Height>0.33333in</Height>
             <Width>8in</Width>
             <ZIndex>3</ZIndex>
@@ -1222,7 +1224,7 @@ ORDER BY
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.92167in</Top>
+            <Top>0.93126in</Top>
             <Height>0.25in</Height>
             <Width>8in</Width>
             <ZIndex>4</ZIndex>
@@ -1521,7 +1523,7 @@ ORDER BY
               </Style>
             </ChartNoDataMessage>
             <DataSetName>TopAlertsByCount</DataSetName>
-            <Top>4.03194in</Top>
+            <Top>4.04153in</Top>
             <Left>4in</Left>
             <Height>2.5in</Height>
             <Width>3.95444in</Width>
@@ -1919,7 +1921,7 @@ ORDER BY
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>TopAlertsByCount</DataSetName>
-            <Top>6.5875in</Top>
+            <Top>6.59709in</Top>
             <Left>4.32292in</Left>
             <Height>0.6in</Height>
             <Width>3.59097in</Width>
@@ -1947,7 +1949,7 @@ ORDER BY
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.15833in</Top>
+            <Top>1.16792in</Top>
             <Height>0.25in</Height>
             <Width>8in</Width>
             <ZIndex>7</ZIndex>
@@ -2249,7 +2251,7 @@ ORDER BY
               </Style>
             </ChartNoDataMessage>
             <DataSetName>TopOpenAlertsByName</DataSetName>
-            <Top>4.03194in</Top>
+            <Top>4.04153in</Top>
             <Height>2.5in</Height>
             <Width>4in</Width>
             <ZIndex>8</ZIndex>
@@ -2652,7 +2654,7 @@ ORDER BY
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>TopOpenAlertsByName</DataSetName>
-            <Top>6.5875in</Top>
+            <Top>6.59709in</Top>
             <Left>0.20417in</Left>
             <Height>0.6in</Height>
             <Width>3.59097in</Width>
@@ -2664,7 +2666,7 @@ ORDER BY
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>7.28125in</Height>
+        <Height>7.29084in</Height>
         <Style>
           <Border>
             <Style>None</Style>

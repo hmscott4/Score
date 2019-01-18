@@ -104,29 +104,24 @@ WHERE
           <DataField>InMaintenanceMode</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
         </Field>
-        <Field Name="SystemDatabase">
-          <Value>=IIf(Fields!DisplayName.Value="msdb","Yes",IIf(Fields!DisplayName.Value="master", "Yes", IIf(Fields!DisplayName.Value="model", "Yes", IIf(Fields!DisplayName.Value="tempdb", "Yes","No"))))</Value>
+        <Field Name="SystemDrive">
+          <Value>=Iif(Fields!DisplayName.Value="C:","Yes","No")</Value>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="SQLAlerts">
+    <DataSet Name="LogicalDiskAlerts">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT DISTINCT CAST(a.MonitoringObjectDisplayName as NVARCHAR(255)) as MonitoringObjectDisplayName, a.Name, Severity
+        <CommandText>SELECT a.MonitoringObjectDisplayName, a.Name, Severity
 FROM scom.ObjectAlertRelationship oar
 INNER JOIN scom.Object o
 	 on oar.ObjectID = o.ID
-INNER JOIN scom.Alert a on
+	 INNER JOIN scom.Alert a on
 		oar.AlertID = a.AlertId
-INNER JOIN scom.ObjectClass oc ON
-    o.ObjectClass = oc.Name
-WHERE 
-	oc.GenericName IN (N'SQL Database',N'SQL DB Engine')
-	-- oc.GenericName IN (N'SQL Database')
-	AND a.ResolutionState &lt; 255
-	AND a.Active = 1
-	AND a.Severity &gt; 0</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+WHERE o.ObjectClass = N'Microsoft.Windows.LogicalDisk'
+AND a.ResolutionState &lt; 255
+AND a.Active = 1
+AND a.Severity &gt; 0</CommandText>
       </Query>
       <Fields>
         <Field Name="Name">
@@ -141,121 +136,58 @@ WHERE
           <DataField>Severity</DataField>
           <rd:TypeName>System.Byte</rd:TypeName>
         </Field>
+        <Field Name="SystemDrive">
+          <Value>=IIf(Fields!MonitoringObjectDisplayName.Value="C:", "Yes", "No")</Value>
+        </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!SystemDrive.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!SystemDrive.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
-    <DataSet Name="SQLServerSpaceTrend">
-      <Query>
-        <DataSourceName>OperationsManagerDW</DataSourceName>
-        <CommandText>DECLARE @StartDate datetime
-DECLARE @EndDate datetime
-DECLARE @ObjectName nvarchar(255)
-DECLARE @CounterName nvarchar(255)
-
-SET @StartDate = DateAdd(DAY, -90, GetUTCDate())
-SET @EndDate = GETUTCDATE()
-SET @ObjectName = N'SQL Database'
-
-SELECT
-	SpaceAllocated.Path, 
-	SpaceAllocated.DisplayName , 
-	SpaceAllocated.FullName, 
-	--SpaceAllocated.ObjectName, 
-	--SpaceAllocated.CounterName, 
-	SpaceAllocated.InstanceName, 
-	SpaceAllocated.SpaceAllocated,
-	SpaceUsed.SpaceUsed,
-	SpaceAllocated.DateTime
-FROM
-
-(SELECT 
-	Path, 
-	DisplayName , 
-	FullName, 
-	ObjectName, 
-	CounterName, 
-	InstanceName, 
-	AverageValue [SpaceAllocated],
-	-- StandardDeviation,
-	[DateTime] 
-FROM 
-	Perf.vPerfDaily pvpr 
-		INNER JOIN vManagedEntity vme on pvpr.ManagedEntityRowId = vme.ManagedEntityRowId 
-		INNER JOIN vPerformanceRuleInstance vpri on pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId 
-		INNER JOIN vPerformanceRule vpr on vpr.RuleRowId = vpri.RuleRowId 
-WHERE 
-	vpr.ObjectName = @ObjectName
-	AND vpr.CounterName IN (N'DB Allocated Size (MB)',N'DB Allocated Space (MB)')
-	AND pvpr.[datetime] BETWEEN @StartDate AND @EndDate
-	AND DATEPART(WEEKDAY, pvpr.[DateTime]) = 1) as SpaceAllocated
-
-INNER JOIN (
-
-SELECT 
-	Path, 
-	DisplayName , 
-	FullName, 
-	ObjectName, 
-	CounterName, 
-	InstanceName, 
-	AverageValue [SpaceUsed],
-	-- StandardDeviation,
-	[DateTime] 
-FROM 
-	Perf.vPerfDaily pvpr 
-		INNER JOIN vManagedEntity vme on pvpr.ManagedEntityRowId = vme.ManagedEntityRowId 
-		INNER JOIN vPerformanceRuleInstance vpri on pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId 
-		INNER JOIN vPerformanceRule vpr on vpr.RuleRowId = vpri.RuleRowId 
-WHERE 
-	vpr.ObjectName = @ObjectName
-	AND vpr.CounterName IN (N'DB Used Space (MB)', N'DB Allocated Space Used (MB)')
-	AND pvpr.[datetime] BETWEEN @StartDate AND @EndDate
-	AND DATEPART(WEEKDAY, pvpr.[DateTime]) = 1
-) as SpaceUsed
-
-ON SpaceAllocated.Path = SpaceUsed.Path
-AND SpaceAllocated.DisplayName = SpaceUsed.DisplayName
-AND SpaceAllocated.FullName = SpaceUsed.FullName
-AND SpaceAllocated.ObjectName = SpaceUsed.ObjectName
-AND SpaceAllocated.InstanceName = SpaceUsed.InstanceName
-AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
-      </Query>
+    <DataSet Name="WindowsLogicalDiskSpaceTrend">
+      <SharedDataSet>
+        <SharedDataSetReference>WindowsLogicalDiskSpaceTrend</SharedDataSetReference>
+      </SharedDataSet>
       <Fields>
         <Field Name="Path">
           <DataField>Path</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DisplayName">
-          <DataField>DisplayName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="FullName">
           <DataField>FullName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="InstanceName">
-          <DataField>InstanceName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="DateTime">
           <DataField>DateTime</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="SpaceAllocatedMB">
-          <DataField>SpaceAllocated</DataField>
+        <Field Name="PctFree">
+          <DataField>PctFree</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="SpaceUsedMB">
-          <DataField>SpaceUsed</DataField>
+        <Field Name="MBFree">
+          <DataField>MBFree</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="SystemDatabase">
-          <Value>=IIf(Fields!DisplayName.Value="msdb","Yes",IIf(Fields!DisplayName.Value="master", "Yes", IIf(Fields!DisplayName.Value="model", "Yes", IIf(Fields!DisplayName.Value="tempdb", "Yes","No"))))</Value>
+        <Field Name="InstanceName">
+          <DataField>InstanceName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="SpaceAllocatedGB">
-          <Value>=Fields!SpaceAllocatedMB.Value/ 1024 - Fields!SpaceUsedMB.Value/ 1024</Value>
+        <Field Name="SystemDrive">
+          <DataField>SystemDrive</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="SpaceUsedGB">
-          <Value>=Fields!SpaceUsedMB.Value/ 1024</Value>
+        <Field Name="TBUsed">
+          <Value>=(Fields!MBFree.Value / Iif( Fields!PctFree.Value = 0, 0.000001, (Fields!PctFree.Value *.01))) / (1024 * 1024)</Value>
+        </Field>
+        <Field Name="TBFree">
+          <Value>=Fields!MBFree.Value / (1024 *1024)</Value>
         </Field>
       </Fields>
     </DataSet>
@@ -264,412 +196,8 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
     <ReportSection>
       <Body>
         <ReportItems>
-          <Rectangle Name="Rectangle6">
+          <Rectangle Name="Rectangle1">
             <ReportItems>
-              <Chart Name="Chart2">
-                <ChartCategoryHierarchy>
-                  <ChartMembers>
-                    <ChartMember>
-                      <Group Name="Chart2_CategoryGroup">
-                        <GroupExpressions>
-                          <GroupExpression>=Fields!DateTime.Value</GroupExpression>
-                        </GroupExpressions>
-                      </Group>
-                      <SortExpressions>
-                        <SortExpression>
-                          <Value>=Fields!DateTime.Value</Value>
-                        </SortExpression>
-                      </SortExpressions>
-                      <Label>=Fields!DateTime.Value</Label>
-                    </ChartMember>
-                  </ChartMembers>
-                </ChartCategoryHierarchy>
-                <ChartSeriesHierarchy>
-                  <ChartMembers>
-                    <ChartMember>
-                      <Label>Space Used GB</Label>
-                    </ChartMember>
-                    <ChartMember>
-                      <Label>Space Allocated GB</Label>
-                    </ChartMember>
-                  </ChartMembers>
-                </ChartSeriesHierarchy>
-                <ChartData>
-                  <ChartSeriesCollection>
-                    <ChartSeries Name="SpaceUsedGB">
-                      <ChartDataPoints>
-                        <ChartDataPoint>
-                          <ChartDataPointValues>
-                            <Y>=Sum(Fields!SpaceUsedGB.Value)</Y>
-                          </ChartDataPointValues>
-                          <ChartDataLabel>
-                            <Style />
-                          </ChartDataLabel>
-                          <ToolTip>=Ceiling(Sum(Fields!SpaceUsedGB.Value))</ToolTip>
-                          <Style />
-                          <ChartMarker>
-                            <Style />
-                          </ChartMarker>
-                          <DataElementOutput>Output</DataElementOutput>
-                        </ChartDataPoint>
-                      </ChartDataPoints>
-                      <Subtype>Stacked</Subtype>
-                      <Style />
-                      <ChartEmptyPoints>
-                        <Style />
-                        <ChartMarker>
-                          <Style />
-                        </ChartMarker>
-                        <ChartDataLabel>
-                          <Style />
-                        </ChartDataLabel>
-                      </ChartEmptyPoints>
-                      <ValueAxisName>Primary</ValueAxisName>
-                      <CategoryAxisName>Primary</CategoryAxisName>
-                      <ChartSmartLabel>
-                        <CalloutLineColor>Black</CalloutLineColor>
-                        <MinMovingDistance>0pt</MinMovingDistance>
-                      </ChartSmartLabel>
-                    </ChartSeries>
-                    <ChartSeries Name="SpaceAllocatedGB">
-                      <ChartDataPoints>
-                        <ChartDataPoint>
-                          <ChartDataPointValues>
-                            <Y>=Sum(Fields!SpaceAllocatedGB.Value)</Y>
-                          </ChartDataPointValues>
-                          <ChartDataLabel>
-                            <Style />
-                          </ChartDataLabel>
-                          <ToolTip>=Ceiling(Sum(Fields!SpaceAllocatedGB.Value))</ToolTip>
-                          <Style />
-                          <ChartMarker>
-                            <Style />
-                          </ChartMarker>
-                          <DataElementOutput>Output</DataElementOutput>
-                        </ChartDataPoint>
-                      </ChartDataPoints>
-                      <Subtype>Stacked</Subtype>
-                      <Style />
-                      <ChartEmptyPoints>
-                        <Style />
-                        <ChartMarker>
-                          <Style />
-                        </ChartMarker>
-                        <ChartDataLabel>
-                          <Style />
-                        </ChartDataLabel>
-                      </ChartEmptyPoints>
-                      <ValueAxisName>Primary</ValueAxisName>
-                      <CategoryAxisName>Primary</CategoryAxisName>
-                      <ChartSmartLabel>
-                        <CalloutLineColor>Black</CalloutLineColor>
-                        <MinMovingDistance>0pt</MinMovingDistance>
-                      </ChartSmartLabel>
-                    </ChartSeries>
-                  </ChartSeriesCollection>
-                </ChartData>
-                <ChartAreas>
-                  <ChartArea Name="Default">
-                    <ChartCategoryAxes>
-                      <ChartAxis Name="Primary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                          <Format>yyyy/MM/dd</Format>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption />
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Enabled>False</Enabled>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                      <ChartAxis Name="Secondary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Enabled>False</Enabled>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Location>Opposite</Location>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                    </ChartCategoryAxes>
-                    <ChartValueAxes>
-                      <ChartAxis Name="Primary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                          <Format>#,0;(#,0)</Format>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption>Gigabytes</Caption>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                      <ChartAxis Name="Secondary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Location>Opposite</Location>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                    </ChartValueAxes>
-                    <Style>
-                      <BackgroundGradientType>None</BackgroundGradientType>
-                    </Style>
-                  </ChartArea>
-                </ChartAreas>
-                <ChartLegends>
-                  <ChartLegend Name="Default">
-                    <Style>
-                      <BackgroundGradientType>None</BackgroundGradientType>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <Position>BottomCenter</Position>
-                    <ChartLegendTitle>
-                      <Caption />
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextAlign>Center</TextAlign>
-                      </Style>
-                    </ChartLegendTitle>
-                    <HeaderSeparatorColor>Black</HeaderSeparatorColor>
-                    <ColumnSeparatorColor>Black</ColumnSeparatorColor>
-                  </ChartLegend>
-                </ChartLegends>
-                <ChartTitles>
-                  <ChartTitle Name="Default">
-                    <Caption>SQL Database Space Utilization</Caption>
-                    <Style>
-                      <BackgroundGradientType>None</BackgroundGradientType>
-                      <FontWeight>Bold</FontWeight>
-                      <TextAlign>General</TextAlign>
-                      <VerticalAlign>Top</VerticalAlign>
-                    </Style>
-                  </ChartTitle>
-                </ChartTitles>
-                <Palette>BrightPastel</Palette>
-                <ChartBorderSkin>
-                  <Style>
-                    <BackgroundColor>Gray</BackgroundColor>
-                    <BackgroundGradientType>None</BackgroundGradientType>
-                    <Color>White</Color>
-                  </Style>
-                </ChartBorderSkin>
-                <ChartNoDataMessage Name="NoDataMessage">
-                  <Caption>No Data Available</Caption>
-                  <Style>
-                    <BackgroundGradientType>None</BackgroundGradientType>
-                    <TextAlign>General</TextAlign>
-                    <VerticalAlign>Top</VerticalAlign>
-                  </Style>
-                </ChartNoDataMessage>
-                <DataSetName>SQLServerSpaceTrend</DataSetName>
-                <Filters>
-                  <Filter>
-                    <FilterExpression>=Fields!SystemDatabase.Value</FilterExpression>
-                    <Operator>In</Operator>
-                    <FilterValues>
-                      <FilterValue>=Parameters!SystemDatabases.Value</FilterValue>
-                    </FilterValues>
-                  </Filter>
-                </Filters>
-                <Top>0.12153in</Top>
-                <Left>0.0287in</Left>
-                <Height>2.84051in</Height>
-                <Width>5.0338in</Width>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                  <BackgroundColor>White</BackgroundColor>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                </Style>
-              </Chart>
-              <Textbox Name="Textbox12">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>This chart shows aggregate SQL Server database consumption by week for the last 90 days.  This chart does not reflect space available to allocate either through autogrowth or space that may be available on disk.</Value>
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox11</rd:DefaultName>
-                <Top>3.07662in</Top>
-                <Left>0.72in</Left>
-                <Height>0.57671in</Height>
-                <Width>4.3425in</Width>
-                <ZIndex>1</ZIndex>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-            </ReportItems>
-            <KeepTogether>true</KeepTogether>
-            <Top>1.31125in</Top>
-            <Left>5.28in</Left>
-            <Height>3.80208in</Height>
-            <Width>5.22in</Width>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-            </Style>
-          </Rectangle>
-          <Rectangle Name="Rectangle5">
-            <ReportItems>
-              <Textbox Name="Textbox8">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>SQL Server DB Engine and Database Alerts</Value>
-                        <Style>
-                          <FontWeight>Bold</FontWeight>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox8</rd:DefaultName>
-                <Top>1.9213in</Top>
-                <Left>0.03472in</Left>
-                <Height>0.25in</Height>
-                <Width>5.01167in</Width>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Chart Name="Chart5">
                 <ChartCategoryHierarchy>
                   <ChartMembers>
@@ -734,7 +262,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                         </ChartDataPoint>
                       </ChartDataPoints>
                       <Type>Shape</Type>
-                      <Subtype>Doughnut</Subtype>
                       <Style />
                       <ChartEmptyPoints>
                         <Style />
@@ -930,7 +457,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                 </ChartLegends>
                 <ChartTitles>
                   <ChartTitle Name="Default">
-                    <Caption>=Count(Fields!HealthState.Value) &amp; " - SQL DB Engine"</Caption>
+                    <Caption>=Count(Fields!HealthState.Value) &amp; " - Windows Server"</Caption>
                     <Style>
                       <BackgroundGradientType>None</BackgroundGradientType>
                       <FontWeight>Bold</FontWeight>
@@ -948,7 +475,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                 <Value>Yes</Value>
                               </Parameter>
                               <Parameter Name="ObjectGenericName">
-                                <Value>SQL DB Engine</Value>
+                                <Value>Windows Server</Value>
                               </Parameter>
                             </Parameters>
                           </Drillthrough>
@@ -979,15 +506,14 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                     <FilterExpression>=Fields!genericname.Value</FilterExpression>
                     <Operator>Equal</Operator>
                     <FilterValues>
-                      <FilterValue>SQL DB Engine</FilterValue>
+                      <FilterValue>Windows Server</FilterValue>
                     </FilterValues>
                   </Filter>
                 </Filters>
-                <Top>0.13194in</Top>
-                <Left>0.03472in</Left>
+                <Top>0.13167in</Top>
+                <Left>0.16937in</Left>
                 <Height>1.66in</Height>
-                <Width>2.43889in</Width>
-                <ZIndex>1</ZIndex>
+                <Width>2.45798in</Width>
                 <Style>
                   <Border>
                     <Color>LightGrey</Color>
@@ -1038,12 +564,12 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                                  <ReportName>/Operations/List_WindowsLogicalDiskSpace</ReportName>
                                   <Parameters>
-                                    <Parameter Name="ObjectGenericName">
-                                      <Value>SQL Database</Value>
+                                    <Parameter Name="SystemDrive">
+                                      <Value>=Split(Join(Parameters!SystemDrive.Value, ","), ",")</Value>
                                     </Parameter>
-                                    <Parameter Name="HealthState">
+                                    <Parameter Name="SCOMHealth">
                                       <Value>=Fields!HealthState.Value</Value>
                                     </Parameter>
                                   </Parameters>
@@ -1061,7 +587,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                         </ChartDataPoint>
                       </ChartDataPoints>
                       <Type>Shape</Type>
-                      <Subtype>Doughnut</Subtype>
                       <Style />
                       <ChartEmptyPoints>
                         <Style />
@@ -1257,7 +782,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                 </ChartLegends>
                 <ChartTitles>
                   <ChartTitle Name="Default">
-                    <Caption>=Count(Fields!HealthState.Value) &amp; " - SQL Database"</Caption>
+                    <Caption>=Count(Fields!HealthState.Value) &amp; " - Windows Logical Disk"</Caption>
                     <Style>
                       <BackgroundGradientType>None</BackgroundGradientType>
                       <FontWeight>Bold</FontWeight>
@@ -1269,10 +794,13 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                       <Actions>
                         <Action>
                           <Drillthrough>
-                            <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                            <ReportName>/Operations/List_WindowsLogicalDiskSpace</ReportName>
                             <Parameters>
-                              <Parameter Name="ObjectGenericName">
-                                <Value>SQL Database</Value>
+                              <Parameter Name="SystemDrive">
+                                <Value>=Split(Join(Parameters!SystemDrive.Value, ","), ",")</Value>
+                              </Parameter>
+                              <Parameter Name="SCOMHealth">
+                                <Value>=Split("Success,Warning,Error,Maintenance,Uninitialized",",")</Value>
                               </Parameter>
                             </Parameters>
                           </Drillthrough>
@@ -1303,22 +831,22 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                     <FilterExpression>=Fields!genericname.Value</FilterExpression>
                     <Operator>Equal</Operator>
                     <FilterValues>
-                      <FilterValue>SQL Database</FilterValue>
+                      <FilterValue>Windows Logical Disk</FilterValue>
                     </FilterValues>
                   </Filter>
                   <Filter>
-                    <FilterExpression>=Fields!SystemDatabase.Value</FilterExpression>
+                    <FilterExpression>=Fields!SystemDrive.Value</FilterExpression>
                     <Operator>In</Operator>
                     <FilterValues>
-                      <FilterValue>=Parameters!SystemDatabases.Value</FilterValue>
+                      <FilterValue>=Parameters!SystemDrive.Value</FilterValue>
                     </FilterValues>
                   </Filter>
                 </Filters>
-                <Top>0.13194in</Top>
-                <Left>2.50125in</Left>
+                <Top>0.13167in</Top>
+                <Left>2.68291in</Left>
                 <Height>1.66in</Height>
-                <Width>2.54514in</Width>
-                <ZIndex>2</ZIndex>
+                <Width>2.57489in</Width>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
                     <Color>LightGrey</Color>
@@ -1328,49 +856,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                   <BackgroundGradientType>None</BackgroundGradientType>
                 </Style>
               </Chart>
-              <Textbox Name="Textbox2">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>Open Alerts: Alerts not in Resolved or Closed status.</Value>
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>Alert data may be up to 15 minutes old.  </Value>
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox2</rd:DefaultName>
-                <Top>3.08704in</Top>
-                <Left>0.03472in</Left>
-                <Height>0.40625in</Height>
-                <Width>5.01167in</Width>
-                <ZIndex>3</ZIndex>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Tablix Name="Tablix1">
                 <TablixBody>
                   <TablixColumns>
@@ -1468,7 +953,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                   <TablixMembers>
                     <TablixMember>
                       <TablixHeader>
-                        <Size>3.595in</Size>
+                        <Size>3.67176in</Size>
                         <CellContents>
                           <Textbox Name="Textbox6">
                             <CanGrow>true</CanGrow>
@@ -1557,7 +1042,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                         </SortExpression>
                       </SortExpressions>
                       <TablixHeader>
-                        <Size>3.595in</Size>
+                        <Size>3.67176in</Size>
                         <CellContents>
                           <Textbox Name="Name1">
                             <CanGrow>true</CanGrow>
@@ -1635,6 +1120,9 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                       <Drillthrough>
                                         <ReportName>/Executive/AlertDetails</ReportName>
                                         <Parameters>
+                                          <Parameter Name="ObjectName">
+                                            <Value>=IIf(Parameters!SystemDrive.Count=1 and Parameters!SystemDrive.Value(0)="Yes","C:","*")</Value>
+                                          </Parameter>
                                           <Parameter Name="OnlyOpenAlerts">
                                             <Value>True</Value>
                                           </Parameter>
@@ -1676,30 +1164,98 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                     </TablixMember>
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <DataSetName>SQLAlerts</DataSetName>
-                <SortExpressions>
-                  <SortExpression>
-                    <Value>=Fields!Severity.Value</Value>
-                  </SortExpression>
-                </SortExpressions>
-                <Top>2.29861in</Top>
-                <Left>0.03472in</Left>
+                <DataSetName>LogicalDiskAlerts</DataSetName>
+                <Top>2.26763in</Top>
+                <Left>0.16937in</Left>
                 <Height>0.5in</Height>
-                <Width>5.01167in</Width>
-                <ZIndex>4</ZIndex>
+                <Width>5.08843in</Width>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
                   </Border>
                 </Style>
               </Tablix>
+              <Textbox Name="Textbox2">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Open Alerts: Alerts not in Resolved or Closed status.</Value>
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Alert data may be up to 15 minutes old.  </Value>
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox2</rd:DefaultName>
+                <Top>2.83708in</Top>
+                <Left>0.16937in</Left>
+                <Height>0.59375in</Height>
+                <Width>5.08843in</Width>
+                <ZIndex>3</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox8">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Windows Server Logical Disk Alerts</Value>
+                        <Style>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox8</rd:DefaultName>
+                <Top>1.94819in</Top>
+                <Left>0.16937in</Left>
+                <Height>0.25in</Height>
+                <Width>5.08843in</Width>
+                <ZIndex>4</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
             <Top>1.31125in</Top>
-            <Left>0.0925in</Left>
-            <Height>3.8125in</Height>
-            <Width>5.10926in</Width>
-            <ZIndex>1</ZIndex>
+            <Height>3.56282in</Height>
+            <Width>5.375in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1716,6 +1272,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                     <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                     <Style>
                       <FontSize>24pt</FontSize>
+                      <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1728,11 +1285,12 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
             <Height>0.46251in</Height>
             <Width>10.5in</Width>
-            <ZIndex>2</ZIndex>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1746,7 +1304,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>SQL Server Database Summary</Value>
+                    <Value>Windows Server Logical Disk Summary</Value>
                     <Style>
                       <FontSize>18pt</FontSize>
                     </Style>
@@ -1762,7 +1320,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
             <Top>0.53195in</Top>
             <Height>0.33485in</Height>
             <Width>10.5in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1794,7 +1352,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
             <Top>0.93625in</Top>
             <Height>0.25152in</Height>
             <Width>10.5in</Width>
-            <ZIndex>4</ZIndex>
+            <ZIndex>3</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1805,8 +1363,381 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Rectangle Name="Rectangle2">
+            <ReportItems>
+              <Chart Name="Chart2">
+                <ChartCategoryHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Group Name="Chart2_CategoryGroup">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!DateTime.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!DateTime.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <Label>=Fields!DateTime.Value</Label>
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartCategoryHierarchy>
+                <ChartSeriesHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Label>TBUsed</Label>
+                    </ChartMember>
+                    <ChartMember>
+                      <Label>TBFree</Label>
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartSeriesHierarchy>
+                <ChartData>
+                  <ChartSeriesCollection>
+                    <ChartSeries Name="TBUsed">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!TBUsed.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style />
+                          </ChartDataLabel>
+                          <ToolTip>=Ceiling(Sum(Fields!TBUsed.Value))</ToolTip>
+                          <Style />
+                          <ChartMarker>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Subtype>Stacked</Subtype>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style />
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                    <ChartSeries Name="TBFree">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!TBFree.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style />
+                          </ChartDataLabel>
+                          <ToolTip>=Ceiling(Sum(Fields!TBFree.Value))</ToolTip>
+                          <Style />
+                          <ChartMarker>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Subtype>Stacked</Subtype>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style />
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                  </ChartSeriesCollection>
+                </ChartData>
+                <ChartAreas>
+                  <ChartArea Name="Default">
+                    <ChartCategoryAxes>
+                      <ChartAxis Name="Primary">
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                          <Format>yyyy/MM/dd</Format>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontSize>8pt</FontSize>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMinorTickMarks>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Scalar>true</Scalar>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption>Axis Title</Caption>
+                          <Style>
+                            <FontSize>8pt</FontSize>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMinorTickMarks>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartCategoryAxes>
+                    <ChartValueAxes>
+                      <ChartAxis Name="Primary">
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                          <Format>#,0;(#,0)</Format>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption>Terabytes</Caption>
+                          <Style>
+                            <FontSize>8pt</FontSize>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMinorTickMarks>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption>Axis Title</Caption>
+                          <Style>
+                            <FontSize>8pt</FontSize>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMinorTickMarks>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartValueAxes>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                    </Style>
+                  </ChartArea>
+                </ChartAreas>
+                <ChartLegends>
+                  <ChartLegend Name="Default">
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <Position>BottomCenter</Position>
+                    <ChartLegendTitle>
+                      <Caption />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <TextAlign>Center</TextAlign>
+                      </Style>
+                    </ChartLegendTitle>
+                    <HeaderSeparatorColor>Black</HeaderSeparatorColor>
+                    <ColumnSeparatorColor>Black</ColumnSeparatorColor>
+                  </ChartLegend>
+                </ChartLegends>
+                <ChartTitles>
+                  <ChartTitle Name="Default">
+                    <Caption>Windows Logical Disk Space Utilization</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontWeight>Bold</FontWeight>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                  </ChartTitle>
+                </ChartTitles>
+                <Palette>BrightPastel</Palette>
+                <ChartBorderSkin>
+                  <Style>
+                    <BackgroundColor>Gray</BackgroundColor>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <Color>White</Color>
+                  </Style>
+                </ChartBorderSkin>
+                <ChartNoDataMessage Name="NoDataMessage">
+                  <Caption>No Data Available</Caption>
+                  <Style>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <TextAlign>General</TextAlign>
+                    <VerticalAlign>Top</VerticalAlign>
+                  </Style>
+                </ChartNoDataMessage>
+                <DataSetName>WindowsLogicalDiskSpaceTrend</DataSetName>
+                <Filters>
+                  <Filter>
+                    <FilterExpression>=Fields!SystemDrive.Value</FilterExpression>
+                    <Operator>In</Operator>
+                    <FilterValues>
+                      <FilterValue>=Parameters!SystemDrive.Value</FilterValue>
+                    </FilterValues>
+                  </Filter>
+                </Filters>
+                <Height>2.91667in</Height>
+                <Width>4.83208in</Width>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <BackgroundColor>White</BackgroundColor>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </Chart>
+              <Textbox Name="Textbox12">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>This chart shows aggregate Windows Logical disk consumption by week for the last 90 days.  Disk size and usage information is reported using WMI and may not reflect actual physical storage consumption due to virtualization and practices such as thin provisioning of disks.</Value>
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox11</rd:DefaultName>
+                <Top>2.98611in</Top>
+                <Left>0.73958in</Left>
+                <Height>0.72254in</Height>
+                <Width>3.87375in</Width>
+                <ZIndex>1</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+            </ReportItems>
+            <KeepTogether>true</KeepTogether>
+            <Top>1.31125in</Top>
+            <Left>5.42583in</Left>
+            <Height>3.86458in</Height>
+            <Width>5.07417in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Rectangle>
         </ReportItems>
-        <Height>5.33903in</Height>
+        <Height>5.79042in</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1816,295 +1747,283 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
       <Width>10.5in</Width>
       <Page>
         <PageFooter>
-          <Height>0.35069in</Height>
+          <Height>0.375in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
-            <Rectangle Name="Rectangle1">
-              <ReportItems>
-                <Rectangle Name="Rectangle9">
-                  <KeepTogether>true</KeepTogether>
-                  <Top>0.03125in</Top>
-                  <Left>0.63123in</Left>
-                  <Height>0.14583in</Height>
-                  <Width>0.32292in</Width>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <BackgroundColor>Green</BackgroundColor>
-                  </Style>
-                </Rectangle>
-                <Textbox Name="Textbox20">
-                  <CanGrow>true</CanGrow>
-                  <KeepTogether>true</KeepTogether>
-                  <Paragraphs>
-                    <Paragraph>
-                      <TextRuns>
-                        <TextRun>
-                          <Value>Healthy</Value>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </TextRun>
-                      </TextRuns>
-                      <Style />
-                    </Paragraph>
-                  </Paragraphs>
-                  <rd:DefaultName>Textbox14</rd:DefaultName>
-                  <Top>0.01562in</Top>
-                  <Left>1.04165in</Left>
-                  <Height>0.17708in</Height>
-                  <Width>1.02083in</Width>
-                  <ZIndex>1</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
-                  </Style>
-                </Textbox>
-                <Rectangle Name="Rectangle10">
-                  <KeepTogether>true</KeepTogether>
-                  <Top>0.03125in</Top>
-                  <Left>2.16942in</Left>
-                  <Height>0.14583in</Height>
-                  <Width>0.32292in</Width>
-                  <ZIndex>2</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <BackgroundColor>Gold</BackgroundColor>
-                  </Style>
-                </Rectangle>
-                <Textbox Name="Textbox21">
-                  <CanGrow>true</CanGrow>
-                  <KeepTogether>true</KeepTogether>
-                  <Paragraphs>
-                    <Paragraph>
-                      <TextRuns>
-                        <TextRun>
-                          <Value>Warning</Value>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </TextRun>
-                      </TextRuns>
-                      <Style />
-                    </Paragraph>
-                  </Paragraphs>
-                  <rd:DefaultName>Textbox14</rd:DefaultName>
-                  <Top>0.01562in</Top>
-                  <Left>2.57985in</Left>
-                  <Height>0.17708in</Height>
-                  <Width>1.02083in</Width>
-                  <ZIndex>3</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
-                  </Style>
-                </Textbox>
-                <Rectangle Name="Rectangle18">
-                  <KeepTogether>true</KeepTogether>
-                  <Top>0.03125in</Top>
-                  <Left>3.70763in</Left>
-                  <Height>0.14583in</Height>
-                  <Width>0.32292in</Width>
-                  <ZIndex>4</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <BackgroundColor>Firebrick</BackgroundColor>
-                  </Style>
-                </Rectangle>
-                <Textbox Name="Textbox22">
-                  <CanGrow>true</CanGrow>
-                  <KeepTogether>true</KeepTogether>
-                  <Paragraphs>
-                    <Paragraph>
-                      <TextRuns>
-                        <TextRun>
-                          <Value>Critical</Value>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </TextRun>
-                      </TextRuns>
-                      <Style />
-                    </Paragraph>
-                  </Paragraphs>
-                  <rd:DefaultName>Textbox14</rd:DefaultName>
-                  <Top>0.01562in</Top>
-                  <Left>4.11806in</Left>
-                  <Height>0.17708in</Height>
-                  <Width>1.02083in</Width>
-                  <ZIndex>5</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
-                  </Style>
-                </Textbox>
-                <Rectangle Name="Rectangle19">
-                  <KeepTogether>true</KeepTogether>
-                  <Top>0.03125in</Top>
-                  <Left>5.24583in</Left>
-                  <Height>0.14583in</Height>
-                  <Width>0.32292in</Width>
-                  <ZIndex>6</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <BackgroundColor>Blue</BackgroundColor>
-                  </Style>
-                </Rectangle>
-                <Textbox Name="Textbox23">
-                  <CanGrow>true</CanGrow>
-                  <KeepTogether>true</KeepTogether>
-                  <Paragraphs>
-                    <Paragraph>
-                      <TextRuns>
-                        <TextRun>
-                          <Value>Maintenance</Value>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </TextRun>
-                      </TextRuns>
-                      <Style />
-                    </Paragraph>
-                  </Paragraphs>
-                  <rd:DefaultName>Textbox14</rd:DefaultName>
-                  <Top>0.01562in</Top>
-                  <Left>5.65626in</Left>
-                  <Height>0.17708in</Height>
-                  <Width>1.02083in</Width>
-                  <ZIndex>7</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
-                  </Style>
-                </Textbox>
-                <Rectangle Name="Rectangle21">
-                  <KeepTogether>true</KeepTogether>
-                  <Top>0.01562in</Top>
-                  <Left>6.77358in</Left>
-                  <Height>0.17708in</Height>
-                  <Width>0.32292in</Width>
-                  <ZIndex>8</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <BackgroundColor>Gray</BackgroundColor>
-                  </Style>
-                </Rectangle>
-                <Textbox Name="Textbox24">
-                  <CanGrow>true</CanGrow>
-                  <KeepTogether>true</KeepTogether>
-                  <Paragraphs>
-                    <Paragraph>
-                      <TextRuns>
-                        <TextRun>
-                          <Value>Uninitialized</Value>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </TextRun>
-                      </TextRuns>
-                      <Style />
-                    </Paragraph>
-                  </Paragraphs>
-                  <rd:DefaultName>Textbox14</rd:DefaultName>
-                  <Left>7.18401in</Left>
-                  <Height>0.20833in</Height>
-                  <Width>1.02083in</Width>
-                  <ZIndex>9</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
-                  </Style>
-                </Textbox>
-                <Textbox Name="Textbox25">
-                  <CanGrow>true</CanGrow>
-                  <KeepTogether>true</KeepTogether>
-                  <Paragraphs>
-                    <Paragraph>
-                      <TextRuns>
-                        <TextRun>
-                          <Value>NotAvailable</Value>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </TextRun>
-                      </TextRuns>
-                      <Style />
-                    </Paragraph>
-                  </Paragraphs>
-                  <rd:DefaultName>Textbox14</rd:DefaultName>
-                  <Top>0.01562in</Top>
-                  <Left>8.7222in</Left>
-                  <Height>0.17708in</Height>
-                  <Width>1.02083in</Width>
-                  <ZIndex>10</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
-                  </Style>
-                </Textbox>
-                <Rectangle Name="Rectangle22">
-                  <KeepTogether>true</KeepTogether>
-                  <Top>0.03125in</Top>
-                  <Left>8.31178in</Left>
-                  <Height>0.14583in</Height>
-                  <Width>0.32292in</Width>
-                  <ZIndex>11</ZIndex>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <BackgroundColor>Black</BackgroundColor>
-                  </Style>
-                </Rectangle>
-              </ReportItems>
+            <Rectangle Name="Rectangle9">
               <KeepTogether>true</KeepTogether>
-              <Top>0.06944in</Top>
-              <Height>0.28125in</Height>
-              <Width>10.5in</Width>
+              <Top>0.11458in</Top>
+              <Left>0.6941in</Left>
+              <Height>0.14583in</Height>
+              <Width>0.32292in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
+                <BackgroundColor>Green</BackgroundColor>
+              </Style>
+            </Rectangle>
+            <Textbox Name="Textbox20">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Healthy</Value>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox14</rd:DefaultName>
+              <Top>0.09895in</Top>
+              <Left>1.10452in</Left>
+              <Height>0.17708in</Height>
+              <Width>1.02083in</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Rectangle Name="Rectangle10">
+              <KeepTogether>true</KeepTogether>
+              <Top>0.11458in</Top>
+              <Left>2.23229in</Left>
+              <Height>0.14583in</Height>
+              <Width>0.32292in</Width>
+              <ZIndex>2</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <BackgroundColor>Gold</BackgroundColor>
+              </Style>
+            </Rectangle>
+            <Textbox Name="Textbox21">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Warning</Value>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox14</rd:DefaultName>
+              <Top>0.09895in</Top>
+              <Left>2.64272in</Left>
+              <Height>0.17708in</Height>
+              <Width>1.02083in</Width>
+              <ZIndex>3</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Rectangle Name="Rectangle18">
+              <KeepTogether>true</KeepTogether>
+              <Top>0.11458in</Top>
+              <Left>3.7705in</Left>
+              <Height>0.14583in</Height>
+              <Width>0.32292in</Width>
+              <ZIndex>4</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <BackgroundColor>Firebrick</BackgroundColor>
+              </Style>
+            </Rectangle>
+            <Textbox Name="Textbox22">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Critical</Value>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox14</rd:DefaultName>
+              <Top>0.09895in</Top>
+              <Left>4.18093in</Left>
+              <Height>0.17708in</Height>
+              <Width>1.02083in</Width>
+              <ZIndex>5</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Rectangle Name="Rectangle19">
+              <KeepTogether>true</KeepTogether>
+              <Top>0.11458in</Top>
+              <Left>5.3087in</Left>
+              <Height>0.14583in</Height>
+              <Width>0.32292in</Width>
+              <ZIndex>6</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <BackgroundColor>Blue</BackgroundColor>
+              </Style>
+            </Rectangle>
+            <Textbox Name="Textbox23">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Maintenance</Value>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox14</rd:DefaultName>
+              <Top>0.09895in</Top>
+              <Left>5.71913in</Left>
+              <Height>0.17708in</Height>
+              <Width>1.02083in</Width>
+              <ZIndex>7</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Rectangle Name="Rectangle21">
+              <KeepTogether>true</KeepTogether>
+              <Top>0.09895in</Top>
+              <Left>6.83645in</Left>
+              <Height>0.17708in</Height>
+              <Width>0.32292in</Width>
+              <ZIndex>8</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <BackgroundColor>Gray</BackgroundColor>
+              </Style>
+            </Rectangle>
+            <Textbox Name="Textbox24">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Uninitialized</Value>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox14</rd:DefaultName>
+              <Top>0.08333in</Top>
+              <Left>7.24688in</Left>
+              <Height>0.20833in</Height>
+              <Width>1.02083in</Width>
+              <ZIndex>9</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox25">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>NotAvailable</Value>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox14</rd:DefaultName>
+              <Top>0.09895in</Top>
+              <Left>8.78507in</Left>
+              <Height>0.17708in</Height>
+              <Width>1.02083in</Width>
+              <ZIndex>10</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Rectangle Name="Rectangle22">
+              <KeepTogether>true</KeepTogether>
+              <Top>0.11458in</Top>
+              <Left>8.37465in</Left>
+              <Height>0.14583in</Height>
+              <Width>0.32292in</Width>
+              <ZIndex>11</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <BackgroundColor>Black</BackgroundColor>
               </Style>
             </Rectangle>
           </ReportItems>
@@ -2125,7 +2044,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="SystemDatabases">
+    <ReportParameter Name="SystemDrive">
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
@@ -2133,7 +2052,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
           <Value>No</Value>
         </Values>
       </DefaultValue>
-      <Prompt>SystemDatabases</Prompt>
+      <Prompt>SystemDrive</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
@@ -2157,7 +2076,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>SystemDatabases</ParameterName>
+          <ParameterName>SystemDrive</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

@@ -3,21 +3,16 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="Catalog">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+    <DataSource Name="SCORE">
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>0adbebf3-bca7-4b8c-948b-8dfaca326b94</rd:DataSourceID>
-    </DataSource>
-    <DataSource Name="SystemCenter">
-      <DataSourceReference>/Data Sources/SystemCenter</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>82d1b760-8559-4730-8093-8523b062cc4a</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="ObjectStateSummary">
       <Query>
-        <DataSourceName>Catalog</DataSourceName>
+        <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@HealthState">
             <Value>=Parameters!HealthState.Value</Value>
@@ -61,22 +56,45 @@ ORDER BY [ObjectCount] DESC</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="OpenAlertStorms">
+    <DataSet Name="OrganizationDisplayName">
       <Query>
-        <DataSourceName>SystemCenter</DataSourceName>
-        <CommandText>SELECT
-	Count(*) as OpenAlertStorms
-FROM
-	dbo.Incident 
-WHERE 
-                TimeAdded &gt; GETUTCDATE()-3
-                AND Status != 'Closed'</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ConfigName">
+            <Value>OrganizationDisplayName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spConfigSelect</CommandText>
       </Query>
       <Fields>
-        <Field Name="OpenAlertStorms">
-          <DataField>OpenAlertStorms</DataField>
+        <Field Name="ID">
+          <DataField>ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ConfigName">
+          <DataField>ConfigName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ConfigValue">
+          <DataField>ConfigValue</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbAddBy">
+          <DataField>dbAddBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModBy">
+          <DataField>dbModBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -87,20 +105,6 @@ WHERE
         <ReportItems>
           <Rectangle Name="Rectangle1">
             <ReportItems>
-              <Image Name="DLA_Logo">
-                <Source>Embedded</Source>
-                <Value>dla_logo_v1</Value>
-                <Sizing>FitProportional</Sizing>
-                <Top>0.13706in</Top>
-                <Left>9.125in</Left>
-                <Height>0.86294in</Height>
-                <Width>0.75165in</Width>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                </Style>
-              </Image>
               <Textbox Name="Textbox1">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -108,7 +112,7 @@ WHERE
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>Defense Logistics Agency</Value>
+                        <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                         <Style>
                           <FontFamily>Tahoma</FontFamily>
                           <FontSize>36pt</FontSize>
@@ -125,7 +129,6 @@ WHERE
                 <Left>1.26958in</Left>
                 <Height>1in</Height>
                 <Width>7.67324in</Width>
-                <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -145,7 +148,7 @@ WHERE
                 <Left>0.23136in</Left>
                 <Height>0.86294in</Height>
                 <Width>0.77412in</Width>
-                <ZIndex>2</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>

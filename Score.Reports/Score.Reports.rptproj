@@ -62,9 +62,6 @@
     <DataSource Include="SCORE.rds" />
   </ItemGroup>
   <ItemGroup>
-    <Report Include="AlertAgingReport.rdl" />
-    <Report Include="AlertSummary.rdl" />
-    <Report Include="AlertSummaryByQueue.rdl" />
     <Report Include="Chart_AlertsByGroupTopN.rdl" />
     <Report Include="Chart_DailyAvailability.rdl" />
     <Report Include="Chart_DailyAverageTopN.rdl" />
@@ -80,6 +77,16 @@
     <Report Include="Chart_RawMetrics_ForGroup.rdl" />
     <Report Include="Chart_ServerMaintenanceMode.rdl" />
     <Report Include="Chart_WindowsDiskSpaceTrend.rdl" />
+    <Report Include="Dash_AlertAgingReport.rdl" />
+    <Report Include="Dash_AlertSummary.rdl" />
+    <Report Include="Dash_AlertSummaryByQueue.rdl" />
+    <Report Include="Dash_OrganizationSummary.rdl" />
+    <Report Include="Dash_OrganizationSummaryByArea.rdl" />
+    <Report Include="Dash_OrganizationSummaryByHealth.rdl" />
+    <Report Include="Dash_OrganizationSummaryStatus.rdl" />
+    <Report Include="Dash_OrganizationSummary_SQL.rdl" />
+    <Report Include="Dash_OrganizationSummary_WindowsLogicalDisk.rdl" />
+    <Report Include="Dash_ServerSummary.rdl" />
     <Report Include="Item_Alert.rdl" />
     <Report Include="List_AlertDetails.rdl" />
     <Report Include="List_AlertStormObjects.rdl" />
@@ -97,7 +104,6 @@
     <Report Include="List_WindowsServers.rdl" />
     <Report Include="List_WindowsServersTopNPerf.rdl" />
     <Report Include="Report_MonthReview.rdl" />
-    <Report Include="ServerSummary.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

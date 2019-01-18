@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="OperationsManagerDW">
@@ -349,6 +349,7 @@ ORDER BY DateTime DESC</CommandText>
             </Paragraphs>
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Left>0in</Left>
             <Height>0.4in</Height>
             <Width>10.5in</Width>
             <Style>
@@ -738,6 +739,7 @@ ORDER BY DateTime DESC</CommandText>
             <FixedRowHeaders>true</FixedRowHeaders>
             <DataSetName>CorrelatedEvents</DataSetName>
             <Top>1.905in</Top>
+            <Left>0in</Left>
             <Height>0.5in</Height>
             <Width>10.5in</Width>
             <ZIndex>1</ZIndex>
@@ -795,6 +797,7 @@ ORDER BY DateTime DESC</CommandText>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
             <Top>0.75917in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>1.90625in</Width>
             <ZIndex>3</ZIndex>
@@ -858,6 +861,7 @@ ORDER BY DateTime DESC</CommandText>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
             <Top>1.00917in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>1.90625in</Width>
             <ZIndex>5</ZIndex>
@@ -986,6 +990,7 @@ ORDER BY DateTime DESC</CommandText>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
             <Top>1.50917in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>1.90625in</Width>
             <ZIndex>9</ZIndex>
@@ -1049,6 +1054,7 @@ ORDER BY DateTime DESC</CommandText>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
             <Top>0.50917in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>1.90625in</Width>
             <ZIndex>11</ZIndex>
@@ -1115,24 +1121,6 @@ ORDER BY DateTime DESC</CommandText>
       </ValidValues>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>1</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>ServerName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>UTCOffset</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>b642e823-4382-4a77-8b7b-329aee851d5f</rd:ReportID>
