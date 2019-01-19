@@ -1,4 +1,12 @@
-﻿CREATE PROC scom.spObjecthealthStateUpsert (
+﻿/****************************************************************
+* Name: scom.spObjecthealthStateUpsert
+* Author: huscott
+* Date: 2015-02-24
+*
+* Description:
+*
+****************************************************************/
+CREATE PROC scom.spObjecthealthStateUpsert (
 	@ID uniqueidentifier
 	,@Name nvarchar(255)
 	,@DisplayName nvarchar(1024)
