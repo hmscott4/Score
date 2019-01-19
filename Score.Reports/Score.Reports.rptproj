@@ -80,8 +80,8 @@
     <Report Include="Dash_AlertAgingReport.rdl" />
     <Report Include="Dash_AlertSummary.rdl" />
     <Report Include="Dash_AlertSummaryByQueue.rdl" />
+    <Report Include="Dash_OrganizationSummary.old.rdl" />
     <Report Include="Dash_OrganizationSummary.rdl" />
-    <Report Include="Dash_OrganizationSummaryByArea.rdl" />
     <Report Include="Dash_OrganizationSummaryByHealth.rdl" />
     <Report Include="Dash_OrganizationSummaryStatus.rdl" />
     <Report Include="Dash_OrganizationSummary_SQL.rdl" />
