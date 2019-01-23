@@ -142,7 +142,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>OrganizationSummaryByHealth</ReportName>
+                              <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
                               <Parameters>
                                 <Parameter Name="HealthState">
                                   <Value>=Fields!HealthState.Value</Value>

@@ -800,7 +800,7 @@
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/List_ObjectAlerts</ReportName>
+                                  <ReportName>List_ObjectAlerts</ReportName>
                                   <Parameters>
                                     <Parameter Name="ObjectID">
                                       <Value>=Fields!ID.Value</Value>
@@ -828,6 +828,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
