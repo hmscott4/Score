@@ -54,6 +54,48 @@ WHERE
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="OrganizationDisplayName">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ConfigName">
+            <Value>OrganizationDisplayName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spConfigSelect</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ConfigName">
+          <DataField>ConfigName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ConfigValue">
+          <DataField>ConfigValue</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbAddBy">
+          <DataField>dbAddBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModBy">
+          <DataField>dbModBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -408,7 +450,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Executive/DLA Summary By Area</ReportName>
+                        <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
                       </Drillthrough>
                     </Action>
                   </Actions>
@@ -534,7 +576,7 @@ WHERE
               <Actions>
                 <Action>
                   <Drillthrough>
-                    <ReportName>/Executive/DLA Summary By Health</ReportName>
+                    <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
                     <Parameters>
                       <Parameter Name="HealthState">
                         <Value>Success</Value>
@@ -742,7 +784,7 @@ WHERE
               <Actions>
                 <Action>
                   <Drillthrough>
-                    <ReportName>/Executive/DLA Summary By Health</ReportName>
+                    <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
                     <Parameters>
                       <Parameter Name="HealthState">
                         <Value>Warning</Value>
@@ -794,7 +836,7 @@ WHERE
               <Actions>
                 <Action>
                   <Drillthrough>
-                    <ReportName>/Executive/DLA Summary By Health</ReportName>
+                    <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
                     <Parameters>
                       <Parameter Name="HealthState">
                         <Value>Error</Value>
@@ -845,7 +887,7 @@ WHERE
               <Actions>
                 <Action>
                   <Drillthrough>
-                    <ReportName>/Executive/DLA Summary By Health</ReportName>
+                    <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
                     <Parameters>
                       <Parameter Name="HealthState">
                         <Value>MaintenanceMode</Value>
@@ -1003,7 +1045,7 @@ WHERE
               <Actions>
                 <Action>
                   <Drillthrough>
-                    <ReportName>/Executive/DLA Summary By Health</ReportName>
+                    <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
                     <Parameters>
                       <Parameter Name="HealthState">
                         <Value>NotAvailable</Value>

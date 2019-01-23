@@ -760,7 +760,7 @@ ORDER BY ResolutionState</CommandText>
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Item_Alert</ReportName>
+                                  <ReportName>/Item_Alert</ReportName>
                                   <Parameters>
                                     <Parameter Name="AlertID">
                                       <Value>=Fields!AlertID.Value</Value>
@@ -1589,7 +1589,7 @@ ORDER BY ResolutionState</CommandText>
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Item_Alert</ReportName>
+                                  <ReportName>/Item_Alert</ReportName>
                                   <Parameters>
                                     <Parameter Name="AlertID">
                                       <Value>=Fields!AlertID.Value</Value>

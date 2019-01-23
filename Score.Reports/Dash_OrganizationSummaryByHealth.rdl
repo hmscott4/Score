@@ -222,7 +222,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="Active">
                                   <Value>Yes</Value>
@@ -674,7 +674,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                                  <ReportName>List_ObjectHealthState</ReportName>
                                   <Parameters>
                                     <Parameter Name="Active">
                                       <Value>Yes</Value>
@@ -702,6 +702,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

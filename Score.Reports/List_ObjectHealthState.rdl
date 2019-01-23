@@ -800,7 +800,7 @@
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/List_ObjectAlerts</ReportName>
+                                  <ReportName>/List_ObjectAlerts</ReportName>
                                   <Parameters>
                                     <Parameter Name="ObjectID">
                                       <Value>=Fields!ID.Value</Value>

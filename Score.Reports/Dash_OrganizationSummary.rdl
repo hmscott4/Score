@@ -184,7 +184,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="ObjectGenericName">
                                   <Value>=Fields!genericname.Value</Value>
@@ -414,7 +414,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                        <ReportName>List_ObjectHealthState</ReportName>
                         <Parameters>
                           <Parameter Name="Active">
                             <Value>Yes</Value>
@@ -510,7 +510,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="ObjectGenericName">
                                   <Value>=Fields!genericname.Value</Value>
@@ -741,7 +741,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                        <ReportName>List_ObjectHealthState</ReportName>
                         <Parameters>
                           <Parameter Name="Active">
                             <Value>Yes</Value>
@@ -837,7 +837,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="ObjectGenericName">
                                   <Value>=Fields!genericname.Value</Value>
@@ -1067,7 +1067,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                        <ReportName>List_ObjectHealthState</ReportName>
                         <Parameters>
                           <Parameter Name="Active">
                             <Value>Yes</Value>
@@ -1163,7 +1163,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="ObjectGenericName">
                                   <Value>=Fields!genericname.Value</Value>
@@ -1393,7 +1393,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                        <ReportName>List_ObjectHealthState</ReportName>
                         <Parameters>
                           <Parameter Name="Active">
                             <Value>Yes</Value>
@@ -1489,7 +1489,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="ObjectGenericName">
                                   <Value>=Fields!genericname.Value</Value>
@@ -1719,7 +1719,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                        <ReportName>List_ObjectHealthState</ReportName>
                         <Parameters>
                           <Parameter Name="Active">
                             <Value>Yes</Value>
@@ -1815,7 +1815,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="ObjectGenericName">
                                   <Value>=Fields!genericname.Value</Value>
@@ -2045,7 +2045,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                        <ReportName>List_ObjectHealthState</ReportName>
                         <Parameters>
                           <Parameter Name="Active">
                             <Value>Yes</Value>
@@ -2625,7 +2625,7 @@ WHERE
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                                  <ReportName>List_ObjectHealthState</ReportName>
                                   <Parameters>
                                     <Parameter Name="ObjectGenericName">
                                       <Value>=Fields!genericname.Value</Value>
@@ -2831,7 +2831,7 @@ WHERE
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                              <ReportName>List_ObjectHealthState</ReportName>
                               <Parameters>
                                 <Parameter Name="ObjectGenericName">
                                   <Value>=Fields!genericname.Value</Value>
@@ -3061,7 +3061,7 @@ WHERE
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                        <ReportName>List_ObjectHealthState</ReportName>
                         <Parameters>
                           <Parameter Name="Active">
                             <Value>Yes</Value>

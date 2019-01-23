@@ -1072,7 +1072,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="Domain">
                                       <Value>=Fields!DNSRoot.Value</Value>
@@ -1132,7 +1132,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="Domain">
                                       <Value>=Fields!DNSRoot.Value</Value>
@@ -1192,7 +1192,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="Domain">
                                       <Value>=Fields!DNSRoot.Value</Value>
@@ -1285,7 +1285,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="Domain">
                                       <Value>=Fields!DNSRoot.Value</Value>
@@ -1785,7 +1785,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="ADAccountStatus">
                                       <Value>="Enabled"</Value>
@@ -1843,7 +1843,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="ADAccountStatus">
                                       <Value>="Enabled"</Value>
@@ -1901,7 +1901,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="scomAgent">
                                       <Value>="Excluded"</Value>
@@ -1990,7 +1990,7 @@ FROM
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>List_WindowsServers</ReportName>
+                                  <ReportName>/Operations/List_WindowsServers</ReportName>
                                   <Parameters>
                                     <Parameter Name="scomAgent">
                                       <Value>=Split("Available,Not Available", ",")</Value>
@@ -2707,8 +2707,7 @@ FROM
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox47</rd:DefaultName>
-            <Top>3.83555in</Top>
-            <Left>0.00917in</Left>
+            <Top>3.80778in</Top>
             <Height>0.25in</Height>
             <Width>10in</Width>
             <ZIndex>8</ZIndex>
@@ -2730,7 +2729,7 @@ FROM
           </Border>
         </Style>
       </Body>
-      <Width>10.00917in</Width>
+      <Width>10in</Width>
       <Page>
         <PageFooter>
           <Height>0.375in</Height>
