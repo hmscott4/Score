@@ -3,5 +3,4 @@
 
 
 GO
-ALTER ROLE [scomRead] ADD MEMBER [abcd\opsmgrreader];
 

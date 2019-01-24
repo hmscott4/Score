@@ -5,5 +5,4 @@
 
 
 GO
-ALTER ROLE [cmRead] ADD MEMBER [abcd\opsmgrreader];
 

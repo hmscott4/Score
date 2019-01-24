@@ -1686,10 +1686,22 @@
     <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql" />
     <Build Include="ad\Stored Procedures\spSubnetSelectBySubnet.sql" />
     <Build Include="ad\Tables\ComputerImport.sql" />
-    <Build Include="dbo\Tables\ReportHeader.sql" />
-    <Build Include="dbo\Tables\ReportContent.sql" />
+    <Build Include="dbo\Tables\ReportHeader.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="dbo\Tables\ReportContent.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
     <Build Include="Security\scomUpdate.sql" />
     <Build Include="Security\scomRead.sql" />
+    <Build Include="dbo\Stored Procedures\spReportHeaderSelectByReportName.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportID.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="_Deployment\dbo.Config.data.sql" />
