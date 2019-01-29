@@ -1687,10 +1687,10 @@
     <Build Include="ad\Stored Procedures\spSubnetSelectBySubnet.sql" />
     <Build Include="ad\Tables\ComputerImport.sql" />
     <Build Include="dbo\Tables\ReportHeader.sql">
-      <AnsiNulls>Off</AnsiNulls>
+      <AnsiNulls>On</AnsiNulls>
     </Build>
     <Build Include="dbo\Tables\ReportContent.sql">
-      <AnsiNulls>Off</AnsiNulls>
+      <AnsiNulls>On</AnsiNulls>
     </Build>
     <Build Include="Security\scomUpdate.sql" />
     <Build Include="Security\scomRead.sql" />
@@ -1702,11 +1702,19 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportNameAndSortSequence.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportName.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="_Deployment\dbo.Config.data.sql" />
     <None Include="_Deployment\scom.MaintenanceReasonCode.data.sql" />
-    <None Include="_Compare\SQL33.SCORE_Project.scmp" />
+    <None Include="_Compare\SQLAG2.SCORE_Project.scmp" />
     <None Include="_Deployment\scom.ObjectClass.data.sql" />
   </ItemGroup>
   <ItemGroup>

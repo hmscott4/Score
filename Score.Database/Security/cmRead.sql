@@ -1,8 +1,3 @@
-﻿CREATE ROLE [cmRead]
+CREATE ROLE [cmRead]
     AUTHORIZATION [dbo];
-
-
-
-
 GO
-

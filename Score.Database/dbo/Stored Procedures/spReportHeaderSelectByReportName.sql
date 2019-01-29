@@ -1,4 +1,4 @@
-﻿CREATE PROC dbo.spReportHeaderSelectByReportName
+﻿CREATE PROC [dbo].[spReportHeaderSelectByReportName]
 @ReportName nvarchar(255)
 
 AS
@@ -15,6 +15,10 @@ SELECT [Id]
       ,[TitleFont]
       ,[TitleFontColor]
       ,[TitleFontSize]
+      ,[SubTitleBackground]
+      ,[SubTitleFont]
+      ,[SubTitleFontColor]
+      ,[SubTitleFontSize]
       ,[TableHeaderBackground]
       ,[TableHeaderFont]
       ,[TableHeaderFontColor]
@@ -33,5 +37,9 @@ SELECT [Id]
       ,[RowOddFontSize]
       ,[dbAddDate]
       ,[dbModDate]
+      ,[FooterBackground]
+      ,[FooterFont]
+      ,[FooterFontColor]
+      ,[FooterFontSize]
   FROM [dbo].[ReportHeader]
   WHERE [ReportName] = @ReportName

@@ -8,9 +8,9 @@
     <OverwriteDataSources>False</OverwriteDataSources>
     <TargetServerVersion>SSRS2016</TargetServerVersion>
     <Platform>Win32</Platform>
-    <TargetReportFolder>Score/Reports</TargetReportFolder>
-    <TargetDatasetFolder>Score/Datasets</TargetDatasetFolder>
-    <TargetDatasourceFolder>Score/Data Sources</TargetDatasourceFolder>
+    <TargetReportFolder>Score</TargetReportFolder>
+    <TargetDatasetFolder>Datasets</TargetDatasetFolder>
+    <TargetDatasourceFolder>Data Sources</TargetDatasourceFolder>
     <TargetReportPartFolder>Report Parts</TargetReportPartFolder>
     <TargetServerURL>https://reports.abcd.lcl/reportserver</TargetServerURL>
   </PropertyGroup>
