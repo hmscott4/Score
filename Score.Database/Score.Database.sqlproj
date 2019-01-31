@@ -1668,11 +1668,7 @@
     <Build Include="dbo\Stored Procedures\spSystemTimeZoneSelect.sql" />
     <Build Include="scom\Stored Procedures\spAgentExclusionsInsert.sql" />
     <Build Include="scom\Stored Procedures\spAgentInactivate.sql" />
-    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivate.sql" />
-    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivateByDate.sql" />
-    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipUpsert.sql" />
     <Build Include="scom\Stored Procedures\spObjectHealthStateInactivateByDate.sql" />
-    <Build Include="scom\Stored Procedures\spObjectHealthStateUpsert.sql" />
     <Build Include="scom\Stored Procedures\spSyncHistoryInsert.sql" />
     <Build Include="scom\Stored Procedures\spWindowsComputerSelectByDNSHostName.sql" />
     <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql" />
@@ -1699,6 +1695,47 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Stored Procedures\spReportContentSelectByReportName.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="GroupHealthState.sql" />
+    <Build Include="scom\Stored Procedures\spObjectHealthStateUpsert.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipUpsert.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivateByDate.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivate.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spGroupHealthStateUpsert.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spGroupHealthStateInactivateByDate.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipUpsert.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipInactivateByDate.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipInactivate.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Tables\GroupHealthStateAlertRelationship.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>

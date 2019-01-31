@@ -1,2 +1,3 @@
-CREATE ROLE [pmRead]
+﻿CREATE ROLE [pmRead]
     AUTHORIZATION [dbo];
+GO

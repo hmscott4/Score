@@ -1,3 +1,5 @@
-CREATE ROLE [scomUpdate]
+﻿CREATE ROLE [scomUpdate]
     AUTHORIZATION [dbo];
+
+
 GO
