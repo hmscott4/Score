@@ -1,74 +1,22 @@
-<#
-
-.SYNOPSIS
-
-	This script is intended to retrieve data from a SCOM Management Group and store it in the SCORE data warehouse.
-
-
-.DESCRIPTION
-
-	This script is intended to retrieve data from a SCOM Management Group and store it in the SCORE data warehouse.
-
-
-.PARAMETER ManagementGroup
-
-    The management group from which to retrieve data.  This is case sensitive and tied to the entry in the app.monitor.config file.
-
-.PARAMETER ObjectClasses
-
-	List of ObjectClasses to retrieve.  This is a constrained list.  Currently valid values are:
-	Config - Alert Resolution States
-	alert - Synchronize alerts
-	agent - Synchronize Windows Agents
-	WindowsComputer - Synchronize Windows Computers
-	TimeZone - Retrieve current list of time zones and time zone offsets from local computer
-	Generic - Synchronize object classes specified in the app.monitor.config file (under "ObjectClasses")
-	Group - Synchronize Group objects (currently, only groups with valid health rollups)
-
-.PARAMETER SyncType
-
-	Type of Synchronization to run
-	Full - Synchronize all objects
-	Incremental - Synchronize only those objects since the last synchronziation was executed
-
-
-.INPUTS
-
-  None
-
-.OUTPUTS
-
-  All data is written to the SCORE database.  The connection string for the SCORE database is stored in app.monitor.config.
-  All errors are stored to the table dbo.ProcessLog in the SCORE database.
-
-.NOTES
-
-  Version:        3.0
-  Author:         Hugh Scott
-  Creation Date:  2019/01/31
-
-  Purpose/Change: Initial script development
-
-.EXAMPLE
-
-	Example 1: Full Synchronization of alerts
-	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses config,alert -SyncType Full
-
-.EXAMPLE
-
-	Example 2: Full Synchronization of Windows Computers and Agents
-	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses agent,WindowsComputer -SyncType Full
-
-.EXAMPLE
-	Example 3: Full Synchronization of Generic objects (those listed in app.monitor.config) and groups
-	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses Generic,Group -SyncType Full
-
-.EXAMPLE
-	Example 4: Incremental Synchronization of Generic objects (those listed in app.monitor.config) and groups
-	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses Generic,Group -SyncType Incremental
-
-#>
-
+#************************************************************************************************************************************
+# FileName:		MonitorSCOM.ps1
+# Date:			2016/05/11
+# Author:		Hugh Scott
+#
+# Description:
+# This module is intended for two purposes:
+# 1.  Retrieve existing agents from a scom management server
+# 2.  Retrieve alerts fro a SCOM Management server
+#
+# Usage:
+#   ./MonitorSCOM.ps1 -ManagementGroup "FOO" -ObjectClasses "WindowsComputer","Agent" -SyncType "Full"
+#   ./MonitorSCOM.ps1 -ManagementGroup "FOO" -ObjectClasses "Generic","Agent" -SyncType "Full" -Classes "<SCOM Object Class Name>"
+#
+# Modification History:
+# Date			Developer		Comments
+# 2016/05/11	Hugh Scott		- Original
+#
+#************************************************************************************************************************************
 [CmdletBinding()]
 Param(
 	[Parameter(Mandatory=$True,Position=1)]
@@ -114,7 +62,7 @@ Param(
     [string]$moduleName = "GetSCOMSyncStatus"
 
     [string]$ManagementGroup = $scomManagementGroup["GroupName"]
-    # [string]$ManagementServer = $scomManagementGroup["ServerName"]
+    [string]$ManagementServer = $scomManagementGroup["ServerName"]
 
     Try {
 	
@@ -229,7 +177,7 @@ Param(
 
     # Retrieve SCOM Management Group Information
     [string]$ManagementGroup = $scomManagementGroup["GroupName"]
-    # [string]$ManagementServer = $scomManagementGroup["ServerName"]
+    [string]$ManagementServer = $scomManagementGroup["ServerName"]
 
 	Try {
 	
@@ -1007,28 +955,28 @@ Param (
         foreach($Alert in $Alerts){
             Try {
 	            [datetime]$timeNow = (Get-Date)
-                If($null -eq $Alert.MonitoringObjectName){$MonitoringObjectName = [System.DBNull]::Value} Else {$MonitoringObjectName = $Alert.MonitoringObjectName}
-                If($null -eq $Alert.MonitoringObjectPath){$MonitoringObjectPath = [System.DBNull]::Value} Else {$MonitoringObjectPath = $Alert.MonitoringObjectPath}
-                If($null -eq $Alert.Owner){$Owner = [System.DBNull]::Value} Else {$Owner = $Alert.Owner}
-                If($null -eq $Alert.ResolvedBy){$ResolvedBy = [System.DBNull]::Value} Else {$ResolvedBy = $Alert.ResolvedBy}
-                If($null -eq $Alert.TimeResolved){$TimeResolved = [System.DBNull]::Value} Else {$TimeResolved = $Alert.TimeResolved }
-                If($null -eq $Alert.Context){$Context = [System.DBNull]::Value} Else {$Context = $Alert.Context }
+                If($Alert.MonitoringObjectName -eq $null){$MonitoringObjectName = [System.DBNull]::Value} Else {$MonitoringObjectName = $Alert.MonitoringObjectName}
+                If($Alert.MonitoringObjectPath -eq $null){$MonitoringObjectPath = [System.DBNull]::Value} Else {$MonitoringObjectPath = $Alert.MonitoringObjectPath}
+                If($Alert.Owner -eq $null){$Owner = [System.DBNull]::Value} Else {$Owner = $Alert.Owner}
+                If($Alert.ResolvedBy -eq $null){$ResolvedBy = [System.DBNull]::Value} Else {$ResolvedBy = $Alert.ResolvedBy}
+                If($Alert.TimeResolved -eq $null){$TimeResolved = [System.DBNull]::Value} Else {$TimeResolved = $Alert.TimeResolved }
+                If($Alert.Context -eq $null){$Context = [System.DBNull]::Value} Else {$Context = $Alert.Context }
             
-                If($null -eq $Alert.CustomField1){$CustomField1 = [System.DBNull]::Value} Else {$CustomField1 = $Alert.CustomField1}
-                If($null -eq $Alert.CustomField2){$CustomField2 = [System.DBNull]::Value} Else {$CustomField2 = $Alert.CustomField2}
-                If($null -eq $Alert.CustomField3){$CustomField3 = [System.DBNull]::Value} Else {$CustomField3 = $Alert.CustomField3}
-                If($null -eq $Alert.CustomField4){$CustomField4 = [System.DBNull]::Value} Else {$CustomField4 = $Alert.CustomField4}
-                If($null -eq $Alert.CustomField5){$CustomField5 = [System.DBNull]::Value} Else {$CustomField5 = $Alert.CustomField5}
-                If($null -eq $Alert.CustomField6){$CustomField6 = [System.DBNull]::Value} Else {$CustomField6 = $Alert.CustomField6}
-                If($null -eq $Alert.CustomField7){$CustomField7 = [System.DBNull]::Value} Else {$CustomField7 = $Alert.CustomField7}
-                If($null -eq $Alert.CustomField8){$CustomField8 = [System.DBNull]::Value} Else {$CustomField8 = $Alert.CustomField8}
-                If($null -eq $Alert.CustomField9){$CustomField9 = [System.DBNull]::Value} Else {$CustomField9 = $Alert.CustomField9}
-                If($null -eq $Alert.CustomField10){$CustomField10 = [System.DBNull]::Value} Else {$CustomField10 = $Alert.CustomField10}
+                If($Alert.CustomField1 -eq $null){$CustomField1 = [System.DBNull]::Value} Else {$CustomField1 = $Alert.CustomField1}
+                If($Alert.CustomField2 -eq $null){$CustomField2 = [System.DBNull]::Value} Else {$CustomField2 = $Alert.CustomField2}
+                If($Alert.CustomField3 -eq $null){$CustomField3 = [System.DBNull]::Value} Else {$CustomField3 = $Alert.CustomField3}
+                If($Alert.CustomField4 -eq $null){$CustomField4 = [System.DBNull]::Value} Else {$CustomField4 = $Alert.CustomField4}
+                If($Alert.CustomField5 -eq $null){$CustomField5 = [System.DBNull]::Value} Else {$CustomField5 = $Alert.CustomField5}
+                If($Alert.CustomField6 -eq $null){$CustomField6 = [System.DBNull]::Value} Else {$CustomField6 = $Alert.CustomField6}
+                If($Alert.CustomField7 -eq $null){$CustomField7 = [System.DBNull]::Value} Else {$CustomField7 = $Alert.CustomField7}
+                If($Alert.CustomField8 -eq $null){$CustomField8 = [System.DBNull]::Value} Else {$CustomField8 = $Alert.CustomField8}
+                If($Alert.CustomField9 -eq $null){$CustomField9 = [System.DBNull]::Value} Else {$CustomField9 = $Alert.CustomField9}
+                If($Alert.CustomField10 -eq $null){$CustomField10 = [System.DBNull]::Value} Else {$CustomField10 = $Alert.CustomField10}
 
-                If($null -eq $Alert.TicketID){$TicketID = [System.DBNull]::Value} Else {$TicketID = $Alert.TicketID}
-                If($null -eq $Alert.ConnectorID){$ConnectorID = [System.DBNull]::Value} Else {$ConnectorID = $Alert.ConnectorID}
-                If($null -eq $Alert.TfsWorkItemId){$TfsWorkItemId = [System.DBNull]::Value} Else {$TfsWorkItemId = $Alert.TfsWorkItemId}
-                If($null -eq $Alert.TfsWorkItemOwner){$TfsWorkItemOwner = [System.DBNull]::Value} Else {$TfsWorkItemOwner = $Alert.TfsWorkItemOwner}
+                If($Alert.TicketID -eq $null){$TicketID = [System.DBNull]::Value} Else {$TicketID = $Alert.TicketID}
+                If($Alert.ConnectorID -eq $null){$ConnectorID = [System.DBNull]::Value} Else {$ConnectorID = $Alert.ConnectorID}
+                If($Alert.TfsWorkItemId -eq $null){$TfsWorkItemId = [System.DBNull]::Value} Else {$TfsWorkItemId = $Alert.TfsWorkItemId}
+                If($Alert.TfsWorkItemOwner -eq $null){$TfsWorkItemOwner = [System.DBNull]::Value} Else {$TfsWorkItemOwner = $Alert.TfsWorkItemOwner}
 
 
 		        $sqlCommand.Parameters["@AlertId"].Value = $Alert.Id
@@ -1251,22 +1199,22 @@ Param (
 
 	
         foreach($WindowsComputer in $WindowsComputers){
-            $IsVirtualNode = $WindowsComputer | Select-Object -ExpandProperty *.IsVirtualNode
+            $IsVirtualNode = $WindowsComputer | select -ExpandProperty *.IsVirtualNode
             # Write-Host $WindowsComputer.DisplayName : $IsVirtualNode.Value
-            If($null -eq $IsVirtualNode.Value){
+            If($IsVirtualNode.Value -eq $null){
                 Try {
 	                [datetime]$timeNow = (Get-Date)
-                    If($null -eq $WindowsComputer.MaintenanceModeLastModified){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $WindowsComputer.MaintenanceModeLastModified}
-                    # $DNSHostName = $WindowsComputer | Select-Object -ExpandProperty *.DNSName
-                    $IpAddress = $WindowsComputer | Select-Object -ExpandProperty *.IpAddress
-                    $ActiveDirectoryObjectSid = $WindowsComputer | Select-Object -ExpandProperty *.ActiveDirectoryObjectSid
-                    $NetbiosDomainName = $WindowsComputer | Select-Object -ExpandProperty *.NetbiosDomainName
-                    $DomainDNSName = $WindowsComputer | Select-Object -ExpandProperty *.DomainDNSName
-                    $OrganizationalUnit = $WindowsComputer | Select-Object -ExpandProperty *.OrganizationalUnit
-                    $ForestDNSName = $WindowsComputer | Select-Object -ExpandProperty *.ForestDNSName
-                    $ActiveDirectorySite = $WindowsComputer | Select-Object -ExpandProperty *.ActiveDirectorySite
-                    $IsVirtualMachine = $WindowsComputer | Select-Object -ExpandProperty *.IsVirtualMachine
-                    If($null -eq $ActiveDirectoryObjectSid.Value){$ObjectSid = [System.DBNull]::Value} Else {$ObjectSid = $ActiveDirectoryObjectSid.Value }
+                    If($WindowsComputer.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $WindowsComputer.MaintenanceModeLastModified}
+                    $DNSHostName = $WindowsComputer | select -ExpandProperty *.DNSName
+                    $IpAddress = $WindowsComputer | select -ExpandProperty *.IpAddress
+                    $ActiveDirectoryObjectSid = $WindowsComputer | select -ExpandProperty *.ActiveDirectoryObjectSid
+                    $NetbiosDomainName = $WindowsComputer | select -ExpandProperty *.NetbiosDomainName
+                    $DomainDNSName = $WindowsComputer | select -ExpandProperty *.DomainDNSName
+                    $OrganizationalUnit = $WindowsComputer | select -ExpandProperty *.OrganizationalUnit
+                    $ForestDNSName = $WindowsComputer | select -ExpandProperty *.ForestDNSName
+                    $ActiveDirectorySite = $WindowsComputer | select -ExpandProperty *.ActiveDirectorySite
+                    $IsVirtualMachine = $WindowsComputer | select -ExpandProperty *.IsVirtualMachine
+                    If($ActiveDirectoryObjectSid.Value -eq $null){$ObjectSid = [System.DBNull]::Value} Else {$ObjectSid = $ActiveDirectoryObjectSid.Value }
 
                     $sqlCommand.Parameters["@ID"].Value = $WindowsComputer.Id
                     $sqlCommand.Parameters["@DNSHostName"].Value = $WindowsComputer.DisplayName
@@ -1511,9 +1459,9 @@ Param (
             Try{
                 # Check to see if the Windows computer property *.IsVirtualNode exists
                 $hasVirtualNodeMember = $Object | Get-Member -name *.IsVirtualNode
-                If($null -eq $hasVirtualNodeMember){
+                If($hasVirtualNodeMember -ne $null){
                     # Write-Host $object.DisplayName
-                    $IsVirtualNode = $Object | Select-Object -ExpandProperty *.IsVirtualNode
+                    $IsVirtualNode = $Object | select -ExpandProperty *.IsVirtualNode
                     if($IsVirtualNode.Value -eq "True"){
                         # This is a virtual Node; we want to skip this
                         $skipObject = $true
@@ -1534,7 +1482,7 @@ Param (
                 Try {
 
                     [datetime]$timeNow = (Get-Date)
-                    If($null -eq $Object.MaintenanceModeLastModified ){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Object.MaintenanceModeLastModified}
+                    If($Object.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Object.MaintenanceModeLastModified}
 
                     
                     $ObjectState = GetObjectState -MonitoringHierarchy $object.GetMonitoringStateHierarchy() 
@@ -1751,7 +1699,7 @@ Param (
                 [datetime]$timeNow = (Get-Date)
 
 				# Handle null value for MaintenModeLastModified
-                If($null -eq $Group.MaintenanceModeLastModified){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Group.MaintenanceModeLastModified}
+                If($Group.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Group.MaintenanceModeLastModified}
 				# Handle ReadOnlyCollection for MonitoringClassIds
 				[string]$tmpValue=""
                 ForEach($value in $Group.MonitoringClassIds){
