@@ -176,7 +176,7 @@ param(
 	Try {
 		$sqlServer = New-Object ('Microsoft.SqlServer.Management.Smo.Server') $serverConnection
 		# In order to initiate the connection, you have to retrieve a property
-		if($sqlServer.Version -eq $null){
+		if($null -eq $sqlServer.Version){
 			return $null
 		} else {
 			return $sqlServer
@@ -445,7 +445,7 @@ param (
 	catch [System.Exception] {
 		$msg = $_.Exception.Message
 		# AddLogEntry $dnsHostName "Error" "GetCIMResult" "$msg. Query : $queryString"
-        Write-Host "$dnsHostName : $msg"
+        # Write-Host "$dnsHostName : $msg"
 		return $null
 	}
 }
@@ -605,7 +605,6 @@ param(
 	} else {
 		[string]$machineName = $dnsHostName
 	}
-	$registryValues = @()
 
 	$registryClass = GetRegistryClassName $registryClassName
 	$registryEntry = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($registryClass, $machineName)

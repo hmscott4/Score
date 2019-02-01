@@ -717,7 +717,7 @@ $clusterNoChecks = @("CompShr","Clus","Disk","DiskSpc","HotFix","InstApp","Net",
 # Using guidelines seen on www.powershell.com
 # Dr. Tobias Weltner
 
-if(($throttleLimit -eq $null) -or ($throttleLimit -eq 0)){
+if(($null -eq $throttleLimit) -or ($throttleLimit -eq 0)){
 	$throttleLimit = 4
 }
 $sessionState = [system.management.automation.runspaces.initialsessionstate]::CreateDefault()
@@ -905,7 +905,7 @@ do {
 	$threadCounter = 0
 	$done = $true
 	foreach ($handle in $handles) {
-	if ($handle -ne $null) {
+	if ($null -eq $handle) {
 	  	if ($handle.IsCompleted) {
 		    [psobject]$result = $threads[$threadCounter].EndInvoke($handle)
 			$errorCounter += $result.ErrorCount

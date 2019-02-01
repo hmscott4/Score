@@ -314,7 +314,7 @@ Param(
 	}
     Catch [System.Exception] {
 		$msg = $_.Exception.Message
-	    AddLogEntry $adDomain "Error" "SetSyncStatus" $msg $sqlConnection
+	    AddLogEntry $adDomain "Error" $moduleName $msg $sqlConnection
         $errorCounter++
     }
 }
@@ -585,7 +585,7 @@ param(
 	    foreach($computer in $computers)
 	    {
 			try {
-				if($computer.LastLogonDate -eq $null){$dLastLogon = [System.DBNull]::Value} else {$dLastLogon = [DateTime]::FromFileTime([Int64] $computer.lastlogontimestamp)}
+				if($null -eq $computer.LastLogonDate){$dLastLogon = [System.DBNull]::Value} else {$dLastLogon = [DateTime]::FromFileTime([Int64] $computer.lastlogontimestamp)}
 				
 				$sqlCommand.Parameters["@objectGUID"].value = $computer.objectGUID
 				$sqlCommand.Parameters["@SID"].value = $computer.SID.ToString()
@@ -741,7 +741,7 @@ param(
 	    foreach($user in $users)
 	    {
             try {
-			    if($user.LastLogonDate -eq $null){$dLastLogon = [System.DBNull]::Value} else {$dLastLogon = [DateTime]::FromFileTime([Int64]$user.lastlogontimestamp)}
+			    if($null -eq $user.LastLogonDate){$dLastLogon = [System.DBNull]::Value} else {$dLastLogon = [DateTime]::FromFileTime([Int64]$user.lastlogontimestamp)}
                 
 		        $sqlCommand.Parameters["@objectGUID"].Value = $user.objectGUID
 		        $sqlCommand.Parameters["@SID"].Value = $user.SID.ToString()
@@ -1404,11 +1404,11 @@ if($adObjectType -contains "forest"){
     If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
         $oForest = Get-ADForest -Server $adDomain -Credential $Credential
         $adForest = $oForest.RootDomain
-        $oForestDomain = Get-ADDomain -Server $adForest -Credential $Credential
+        # $oForestDomain = Get-ADDomain -Server $adForest -Credential $Credential
     } Else {
         $oForest = Get-ADForest -Server $adDomain
         $adForest = $oForest.RootDomain
-        $oForestDomain = Get-ADDomain -Server $adForest
+        # $oForestDomain = Get-ADDomain -Server $adForest
     }
 }
 
