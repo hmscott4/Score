@@ -33,7 +33,7 @@ AS
 SET NOCOUNT ON
 SET XACT_ABORT ON
 
-IF EXISTS (SELECT FullName FROM scom.[ObjectHealthState] WHERE (FullName = @FullName AND [ID] != @ID))
+IF EXISTS (SELECT FullName FROM scom.[ObjectHealthState] WHERE (FullName = @FullName AND [Id] != @Id))
 BEGIN
 	DELETE 
 	FROM scom.[ObjectHealthState]
@@ -86,7 +86,7 @@ BEGIN TRAN
 		[Configuration],
 		[Performance],
 		[Security] ,
-		[Other]) on ([target].ID = @ID)
+		[Other]) on ([target].Id = @Id)
 
 
 	WHEN MATCHED 
