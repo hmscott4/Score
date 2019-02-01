@@ -7,8 +7,7 @@
 *
 ****************************************************************/
 CREATE PROC [scom].[spGroupHealthStateInactivateByDate] (
-	@BeforeDate datetime2(3),
-	@MonitoringObjectClassIds nvarchar(1024)
+	@BeforeDate datetime2(3)
 )
 
 AS
@@ -22,6 +21,5 @@ UPDATE [scom].[GroupHealthState]
 SET Active = 0
 WHERE dbLastUpdate < @BeforeDate 
 	AND Active = 1
-	AND MonitoringObjectClassIds = @MonitoringObjectClassIds
 
 COMMIT

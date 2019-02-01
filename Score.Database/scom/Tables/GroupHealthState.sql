@@ -4,7 +4,7 @@
     [DisplayName]                 NVARCHAR (255)   NOT NULL,
     [FullName]                    NVARCHAR (255)   NOT NULL,
     [Path]                        NVARCHAR (1024)  NULL,
-    [MonitoringObjectClassIds]    NVARCHAR (255)   NOT NULL,
+    [MonitoringClassIds]    NVARCHAR (255)   NOT NULL,
     [HealthState]                 NVARCHAR (255)   NOT NULL,
     [StateLastModified]           DATETIME2 (3)    NULL,
     [IsAvailable]                 BIT              NOT NULL,
@@ -28,4 +28,5 @@
 GO
 CREATE UNIQUE CLUSTERED INDEX [UX_scom_GroupHealthState_FullName]
     ON [scom].[GroupHealthState]([FullName] ASC) WITH (FILLFACTOR = 80);
+
 

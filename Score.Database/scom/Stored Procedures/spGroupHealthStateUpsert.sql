@@ -12,7 +12,7 @@ CREATE PROC [scom].[spGroupHealthStateUpsert]
 	@DisplayName nvarchar(255),
 	@FullName nvarchar(255),
 	@Path nvarchar(1024) = Null,
-	@MonitoringObjectClassIds nvarchar(1024),
+	@MonitoringClassIds nvarchar(1024),
 	@HealthState nvarchar(255) = N'',
 	@StateLastModified datetime2(3) = Null,
 	@IsAvailable bit = Null,
@@ -49,7 +49,7 @@ BEGIN TRAN
 		@DisplayName,
 		@FullName,
 		@Path,
-		@MonitoringObjectClassIds,
+		@MonitoringClassIds,
 		@HealthState,
 		@StateLastModified,
 		@IsAvailable ,
@@ -71,7 +71,7 @@ BEGIN TRAN
 		DisplayName,
 		FullName,
 		[Path],
-		MonitoringObjectClassIds,
+		MonitoringClassIds,
 		HealthState,
 		StateLastModified,
 		IsAvailable,
@@ -96,7 +96,7 @@ BEGIN TRAN
 		  ,[DisplayName] = @DisplayName
 		  ,[FullName] = @FullName
 		  ,[Path] = @Path
-		  ,[MonitoringObjectClassIds] = @MonitoringObjectClassIds
+		  ,[MonitoringClassIds] = @MonitoringClassIds
 		  ,[HealthState] = @HealthState
 		  ,[StateLastModified] = @StateLastModified
 		  ,[IsAvailable] = @IsAvailable
@@ -119,7 +119,7 @@ BEGIN TRAN
 			DisplayName,
 			FullName,
 			[Path],
-			MonitoringObjectClassIds,
+			MonitoringClassIds,
 			HealthState,
 			StateLastModified,
 			IsAvailable,
@@ -141,7 +141,7 @@ BEGIN TRAN
 			@DisplayName,
 			@FullName,
 			@Path,
-			@MonitoringObjectClassIds,
+			@MonitoringClassIds,
 			@HealthState,
 			@StateLastModified,
 			@IsAvailable ,

@@ -1602,7 +1602,7 @@ Param (
 #
 # Update SCOM Object Information for specified class
 #************************************************************************************************************************************
-function WriteSCOMObjects {
+function WriteSCOMGroups {
 [CmdletBinding()]
 Param (
 	[Parameter(Mandatory=$True,Position=1)]
@@ -1670,7 +1670,7 @@ Param (
         [Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
         [Void]$sqlCommand.Parameters.Add("@FullName", [system.data.SqlDbType]::nvarchar)
         [Void]$sqlCommand.Parameters.Add("@Path", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectClassIds", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@MonitoringClassIds", [system.data.SqlDbType]::nvarchar)
         [Void]$sqlCommand.Parameters.Add("@HealthState", [system.data.SqlDbType]::nvarchar)
         [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
         [Void]$sqlCommand.Parameters.Add("@IsAvailable", [system.data.SqlDbType]::bit)
@@ -1689,24 +1689,32 @@ Param (
 
 
 	    $sqlCommand2 = GetStoredProc $sqlConnection "scom.spGroupHealthStateAlertRelationshipUpsert"
-        [Void]$sqlCommand2.Parameters.Add("@ObjectID", [system.data.SqlDbType]::uniqueidentifier)
+        [Void]$sqlCommand2.Parameters.Add("@GroupID", [system.data.SqlDbType]::uniqueidentifier)
         [Void]$sqlCommand2.Parameters.Add("@AlertID", [system.data.SqlDbType]::uniqueidentifier)
 	
         foreach($Group in $Groups){
             Try {
 
+				# Set Current Timestamp
                 [datetime]$timeNow = (Get-Date)
-                If($Group.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Object.MaintenanceModeLastModified}
 
+				# Handle null value for MaintenModeLastModified
+                If($Group.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Group.MaintenanceModeLastModified}
+				# Handle ReadOnlyCollection for MonitoringClassIds
+				[string]$tmpValue=""
+                ForEach($value in $Group.MonitoringClassIds){
+                    $tmpValue = $value.guid + ", "
+                }
+                $tmpValue = $tmpValue.Substring(0,$tmpValue.Length -2)
                     
-                $GroupState = GetObjectState -MonitoringHierarchy $object.GetMonitoringStateHierarchy() 
+                $GroupState = GetObjectState -MonitoringHierarchy $Group.GetMonitoringStateHierarchy() 
 
                 $sqlCommand.Parameters["@ID"].Value = $Group.Id
                 $sqlCommand.Parameters["@Name"].Value = NullToString $Group.Name ""
                 $sqlCommand.Parameters["@DisplayName"].Value = $Group.DisplayName
                 $sqlCommand.Parameters["@FullName"].Value = $Group.FullName
                 $sqlCommand.Parameters["@Path"].Value = NullToString $Group.Path ""
-                $sqlCommand.Parameters["@MonitoringObjectClassIds"].Value = $Group.MonitoringObjectClassIds
+                $sqlCommand.Parameters["@MonitoringClassIds"].Value = $Group.MonitoringClassIds
                 $sqlCommand.Parameters["@HealthState"].Value = $Group.HealthState.ToString()
                 $sqlCommand.Parameters["@StateLastModified"].Value = $Group.StateLastModified
                 $sqlCommand.Parameters["@IsAvailable"].Value = $Group.IsAvailable
@@ -1731,7 +1739,7 @@ Param (
                     $relatedAlerts = $Group.GetMonitoringAlerts(1)
                     foreach($relatedAlert in $relatedAlerts){
                         # $sqlCommand2.Parameters["@ObjectId"].Value = $relatedAlert.MonitoringObjectID
-                        $sqlCommand2.Parameters["@ObjectId"].Value = $Group.Id
+                        $sqlCommand2.Parameters["@GroupId"].Value = $Group.Id
                         $sqlCommand2.Parameters["@AlertID"].Value = $relatedAlert.Id
 
                         [void]$sqlCommand2.ExecuteNonQuery()
@@ -1756,10 +1764,10 @@ Param (
             Try {
 	            $sqlCommand = GetStoredProc $sqlConnection "scom.spGroupHealthStateInactivateByDate"
                 [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
-                [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
+                # [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
 
                 $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
-                $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
+                # $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
                 [void]$sqlCommand.ExecuteNonQuery()
                 $sqlCommand.Dispose()
 

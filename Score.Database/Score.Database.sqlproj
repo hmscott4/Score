@@ -1698,7 +1698,6 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="GroupHealthState.sql" />
     <Build Include="scom\Stored Procedures\spObjectHealthStateUpsert.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
@@ -1739,14 +1738,12 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="scom\Tables\GroupHealthState.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="_Deployment\dbo.Config.data.sql" />
     <None Include="_Deployment\scom.MaintenanceReasonCode.data.sql" />
     <None Include="_Compare\SQLAG2.SCORE_Project.scmp" />
     <None Include="_Deployment\scom.ObjectClass.data.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="Score.Database.refactorlog" />
   </ItemGroup>
 </Project>

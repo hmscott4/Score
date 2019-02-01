@@ -6,9 +6,9 @@ AS
 SET NOCOUNT ON
 SET XACT_ABORT ON
 
-DECLARE @ReportID uniqueidentifier
+DECLARE @ReportId uniqueidentifier
 
-SELECT @ReportID = ID
+SELECT @ReportID = Id
 FROM dbo.ReportHeader
 WHERE ReportName = @ReportName
 
@@ -23,5 +23,5 @@ SELECT [Id]
       ,[dbAddDate]
       ,[dbModDate]
   FROM [dbo].[ReportContent]
-  WHERE [ReportId] = @ReportID
+  WHERE [ReportId] = @ReportId
   ORDER BY [SortSequence]
