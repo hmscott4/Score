@@ -100,15 +100,6 @@ ALTER DATABASE SCOPED CONFIGURATION SET QUERY_OPTIMIZER_HOTFIXES = OFF;
 GO
 USE [SCORE]
 GO
-/****** Object:  User [NT SERVICE\HealthService]    Script Date: 2/1/2019 9:59:37 AM ******/
-CREATE USER [NT SERVICE\HealthService] FOR LOGIN [NT SERVICE\HealthService] WITH DEFAULT_SCHEMA=[dbo]
-GO
-/****** Object:  User [abcd\opsmgrreader]    Script Date: 2/1/2019 9:59:37 AM ******/
-CREATE USER [abcd\opsmgrreader] FOR LOGIN [ABCD\opsmgrreader] WITH DEFAULT_SCHEMA=[scom]
-GO
-/****** Object:  User [##MS_PolicyTsqlExecutionLogin##]    Script Date: 2/1/2019 9:59:37 AM ******/
-CREATE USER [##MS_PolicyTsqlExecutionLogin##] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
-GO
 /****** Object:  DatabaseRole [scomUpdate]    Script Date: 2/1/2019 9:59:37 AM ******/
 CREATE ROLE [scomUpdate]
 GO
@@ -135,18 +126,6 @@ CREATE ROLE [adUpdate]
 GO
 /****** Object:  DatabaseRole [adRead]    Script Date: 2/1/2019 9:59:37 AM ******/
 CREATE ROLE [adRead]
-GO
-ALTER ROLE [adRead] ADD MEMBER [abcd\opsmgrreader]
-GO
-ALTER ROLE [cmRead] ADD MEMBER [abcd\opsmgrreader]
-GO
-ALTER ROLE [pmRead] ADD MEMBER [abcd\opsmgrreader]
-GO
-ALTER ROLE [scomRead] ADD MEMBER [abcd\opsmgrreader]
-GO
-ALTER ROLE [scomUpdate] ADD MEMBER [abcd\opsmgrreader]
-GO
-ALTER ROLE [db_datareader] ADD MEMBER [##MS_PolicyTsqlExecutionLogin##]
 GO
 /****** Object:  Schema [ad]    Script Date: 2/1/2019 9:59:37 AM ******/
 CREATE SCHEMA [ad]
