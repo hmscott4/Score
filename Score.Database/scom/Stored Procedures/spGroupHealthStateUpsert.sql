@@ -7,7 +7,7 @@
 *
 ****************************************************************/
 CREATE PROC [scom].[spGroupHealthStateUpsert]
-	@Id uniqueidentifier,
+	@ID UNIQUEIDENTIFIER,
 	@Name nvarchar(255),
 	@DisplayName nvarchar(255),
 	@FullName nvarchar(255),
@@ -44,7 +44,7 @@ BEGIN TRAN
 
 	MERGE [scom].[GroupHealthState] as [target]
 	USING (SELECT 	
-		@Id ,
+		@ID ,
 		@Name,
 		@DisplayName,
 		@FullName,
@@ -66,7 +66,7 @@ BEGIN TRAN
 		@Security ,
 		@Other	 ) as [Source]
 
-		(Id,
+		(ID,
 		Name,
 		DisplayName,
 		FullName,
@@ -86,12 +86,12 @@ BEGIN TRAN
 		[Configuration],
 		[Performance],
 		[Security] ,
-		[Other]) on ([target].Id = @Id)
+		[Other]) on ([target].ID = @ID)
 
 
 	WHEN MATCHED 
 	THEN UPDATE 
-	   SET [Id] = @Id
+	   SET [ID] = @ID
 		  ,[Name] = @Name
 		  ,[DisplayName] = @DisplayName
 		  ,[FullName] = @FullName
@@ -114,7 +114,7 @@ BEGIN TRAN
 
 	WHEN NOT MATCHED
 	THEN INSERT (
-			Id,
+			ID,
 			Name,
 			DisplayName,
 			FullName,
@@ -136,7 +136,7 @@ BEGIN TRAN
 			[Security] ,
 			[Other])
 		VALUES (
-			@Id ,
+			@ID ,
 			@Name,
 			@DisplayName,
 			@FullName,
