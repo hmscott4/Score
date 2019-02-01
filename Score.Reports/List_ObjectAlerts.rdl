@@ -13,11 +13,11 @@
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ObjectID">
-            <Value>=Parameters!ObjectID.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@UTCOffset">
             <Value>=Parameters!UTCOffset.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ObjectID">
+            <Value>=Parameters!ObjectID.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT 
@@ -52,7 +52,7 @@
 FROM 
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
-                INNER JOIN scom.ObjectAlertRelationShip oar ON
+                INNER JOIN scom.ObjectHealthStateAlertRelationShip oar ON
                                 a.AlertID = oar.AlertID
 WHERE
                 oar.ObjectID = @ObjectID
@@ -60,33 +60,29 @@ WHERE
                 AND a.Active = 1</CommandText>
       </Query>
       <Fields>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="AlertID">
           <DataField>AlertID</DataField>
           <rd:TypeName>System.Guid</rd:TypeName>
         </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="MonitoringObjectName">
           <DataField>MonitoringObjectName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Category">
-          <DataField>Category</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="MonitoringObjectDisplayName">
-          <DataField>MonitoringObjectDisplayName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="MonitoringObjectPath">
           <DataField>MonitoringObjectPath</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="DateRaised">
-          <DataField>DateRaised</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+        <Field Name="MonitoringObjectDisplayName">
+          <DataField>MonitoringObjectDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Category">
+          <DataField>Category</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="IsMonitorAlert">
           <DataField>IsMonitorAlert</DataField>
@@ -96,45 +92,49 @@ WHERE
           <DataField>TimeRaised</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="DateResolved">
-          <DataField>DateResolved</DataField>
+        <Field Name="DateRaised">
+          <DataField>DateRaised</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="TimeResolved">
           <DataField>TimeResolved</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="Severity">
-          <DataField>Severity</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="DateResolved">
+          <DataField>DateResolved</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="TimeRaisedLocal">
           <DataField>TimeRaisedLocal</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="Priority">
-          <DataField>Priority</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="DateRaisedLocal">
           <DataField>DateRaisedLocal</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="ResolutionStateName">
-          <DataField>ResolutionStateName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TimeResolvedLocal">
           <DataField>TimeResolvedLocal</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="AgeHours">
-          <DataField>AgeHours</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
         <Field Name="DateResolvedLocal">
           <DataField>DateResolvedLocal</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Severity">
+          <DataField>Severity</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Priority">
+          <DataField>Priority</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ResolutionStateName">
+          <DataField>ResolutionStateName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="AgeHours">
+          <DataField>AgeHours</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="RepeatCount">
           <DataField>RepeatCount</DataField>

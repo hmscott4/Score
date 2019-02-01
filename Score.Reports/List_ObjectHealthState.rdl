@@ -87,11 +87,11 @@
       ,ISNULL([oar].[Alerts], 0) as Alerts
 	  ,[oc].[GenericName]
   FROM 
-	[scom].[Object] [o] INNER JOIN [scom].[ObjectClass] oc ON
+	[scom].[ObjectHealthState] [o] INNER JOIN [scom].[ObjectClass] oc ON
 		o.ObjectClass = oc.Name
                 LEFT OUTER JOIN (
                      SELECT [ObjectID], COUNT(*) as Alerts 
-                     FROM [scom].[ObjectAlertRelationship] oar 
+                     FROM [scom].[ObjectHealthStateAlertRelationship] oar 
                         INNER JOIN [scom].[Alert] a
                            ON oar.AlertID = a.AlertID
                      WHERE oar.Active = 1 AND a.ResolutionState &lt; 255
@@ -828,7 +828,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

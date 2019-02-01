@@ -1,27 +1,76 @@
-﻿#************************************************************************************************************************************
-# Filename: MonitorDomain.ps1
-# Date:		2015/03/20
-# Author:	Hugh Scott
-#
-# This script contains functions and a wrapper to check Active Directory
-# Computers, Users, Groups, GroupMembers, Sites and Subnets
-#
-# Parameters:
-#	$adDomain
-#	$adObjectType [Domain | Forest | Computer | User | Group | GroupMember | Site | Subnet ]
-#	[$syncType] [ *Full | Incremental ]
-#	[$adSearchRoot]
-#
-# Usage:
-#   ./MonitorDomain.ps1 -adDomain myDomain.net -adObjectType "computer" -synctype "Full"
-#   ./MonitorDomain.ps1 -adDomain myDomain.net -adObjectType "computer" -synctype "Incremental"
-#   ./MonitorDomain.ps1 -adDomain myDomain.net -adObjectType "computer" -synctype "Full" -adSearchRoot "OU=this,DC=that,DC=com"
-#
-# Modification History:
-# Date			Developer		Comments
-# 2015/03/20	Hugh Scott		Complete Rewrite of code.
-#
-#************************************************************************************************************************************
+﻿<#
+
+.SYNOPSIS
+
+	This script is intended to retrieve data from a Active Directory and store it in the SCORE data warehouse.
+
+
+.DESCRIPTION
+
+	This script is intended to retrieve data from a Active Directory and store it in the SCORE data warehouse.
+
+
+.PARAMETER adDomain
+
+    The Active Directory domain from which objects will be retrieved.  This is the DNS name for the Domain (e.g. abcd.lcl).
+
+.PARAMETER adObjectType
+
+	List of ObjectClasses to retrieve.  This is a constrained list.  Currently valid values are:
+	"forest","domain","computer","user","site","group","groupmember","subnet"
+
+	"forest" - Information about the Active Directory Forest
+	"domain" - Information about the Active Directory Domain
+	"site" - Information about Active Directory Sites; should only be used when pointed to the root Forest
+	"subnet" - Information about Active Directory Subnets; should only be used when pointed to the root Forest
+	"computer" - Information about Windows Server computer objects (workstations are currently ignored)
+	"user" - Information about Active Directory Users
+	"group" - Information about Active Directory Groups
+	"groupmember" - Associates Groups and Group Members (users or computers)
+
+.PARAMETER SyncType
+
+	Type of Synchronization to run
+	Full - Synchronize all objects
+	Incremental - Synchronize only those objects that have changed since the last synchronziation was executed
+
+
+.INPUTS
+
+  None
+
+.OUTPUTS
+
+  All data is written to the SCORE database.  The connection string for the SCORE database is stored in app.monitor.config.
+  All errors are stored to the table dbo.ProcessLog in the SCORE database.
+
+.NOTES
+
+  Version:        3.0
+  Author:         Hugh Scott
+  Creation Date:  2019/01/31
+
+  Purpose/Change: Initial script development
+
+.EXAMPLE
+
+	Example 1: Full Synchronization of Active Directory Forest, Domain, Site and Subnet
+	.\MonitorDomain.ps1 -adDomain abcd.lcl -adObjectType "Forest","Domain","Site","Subnet" -SyncType Full
+
+.EXAMPLE
+
+	Example 2: Full Synchronization of Windows Computers
+	.\MonitorDomain.ps1 -adDomain abcd.lcl -adObjectType WindowsComputer -SyncType Full
+
+.EXAMPLE
+	Example 3: Full Synchronization of Active Directory Forest, Domain, Site and Subnet for an untrusted forest
+	.\MonitorDomain.ps1 -adDomain abcd.lcl -adObjectType "Forest","Domain","Site","Subnet" -SyncType Full -Credential $cred
+
+.EXAMPLE
+	Example 4: Incremental Synchronization of Windows Computer objects
+	.\MonitorDomain.ps1 -adDomain abcd.lcl -adObjectType WindowsComputer -SyncType Incremental
+
+#>
 [CmdletBinding()]
 Param(  
 	[Parameter(Mandatory=$True,Position=1)]

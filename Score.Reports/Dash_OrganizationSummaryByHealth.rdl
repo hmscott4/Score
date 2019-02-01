@@ -34,7 +34,7 @@ SELECT
 	IsAvailable, 
 	InMaintenanceMode 
 FROM 
-	scom.[Object] o inner join scom.[ObjectClass] oc 
+	scom.[ObjectHealthState] o inner join scom.[ObjectClass] oc 
 		on o.ObjectClass = oc.Name
 WHERE
 	o.Active = 1
@@ -702,7 +702,6 @@ ORDER BY [ObjectCount] DESC</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

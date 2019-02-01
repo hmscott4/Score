@@ -1,22 +1,74 @@
-#************************************************************************************************************************************
-# FileName:		MonitorSCOM.ps1
-# Date:			2016/05/11
-# Author:		Hugh Scott
-#
-# Description:
-# This module is intended for two purposes:
-# 1.  Retrieve existing agents from a scom management server
-# 2.  Retrieve alerts fro a SCOM Management server
-#
-# Usage:
-#   ./MonitorSCOM.ps1 -ManagementGroup "FOO" -ObjectClasses "WindowsComputer","Agent" -SyncType "Full"
-#   ./MonitorSCOM.ps1 -ManagementGroup "FOO" -ObjectClasses "Generic","Agent" -SyncType "Full" -Classes "<SCOM Object Class Name>"
-#
-# Modification History:
-# Date			Developer		Comments
-# 2016/05/11	Hugh Scott		- Original
-#
-#************************************************************************************************************************************
+<#
+
+.SYNOPSIS
+
+	This script is intended to retrieve data from a SCOM Management Group and store it in the SCORE data warehouse.
+
+
+.DESCRIPTION
+
+	This script is intended to retrieve data from a SCOM Management Group and store it in the SCORE data warehouse.
+
+
+.PARAMETER ManagementGroup
+
+    The management group from which to retrieve data.  This is case sensitive and tied to the entry in the app.monitor.config file.
+
+.PARAMETER ObjectClasses
+
+	List of ObjectClasses to retrieve.  This is a constrained list.  Currently valid values are:
+	Config - Alert Resolution States
+	alert - Synchronize alerts
+	agent - Synchronize Windows Agents
+	WindowsComputer - Synchronize Windows Computers
+	TimeZone - Retrieve current list of time zones and time zone offsets from local computer
+	Generic - Synchronize object classes specified in the app.monitor.config file (under "ObjectClasses")
+	Group - Synchronize Group objects (currently, only groups with valid health rollups)
+
+.PARAMETER SyncType
+
+	Type of Synchronization to run
+	Full - Synchronize all objects
+	Incremental - Synchronize only those objects since the last synchronziation was executed
+
+
+.INPUTS
+
+  None
+
+.OUTPUTS
+
+  All data is written to the SCORE database.  The connection string for the SCORE database is stored in app.monitor.config.
+  All errors are stored to the table dbo.ProcessLog in the SCORE database.
+
+.NOTES
+
+  Version:        3.0
+  Author:         Hugh Scott
+  Creation Date:  2019/01/31
+
+  Purpose/Change: Initial script development
+
+.EXAMPLE
+
+	Example 1: Full Synchronization of alerts
+	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses config,alert -SyncType Full
+
+.EXAMPLE
+
+	Example 2: Full Synchronization of Windows Computers and Agents
+	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses agent,WindowsComputer -SyncType Full
+
+.EXAMPLE
+	Example 3: Full Synchronization of Generic objects (those listed in app.monitor.config) and groups
+	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses Generic,Group -SyncType Full
+
+.EXAMPLE
+	Example 4: Incremental Synchronization of Generic objects (those listed in app.monitor.config) and groups
+	.\MonitorSCOM.ps1 -ManagementGroup ABCD_OM -ObjectClasses Generic,Group -SyncType Incremental
+
+#>
+
 [CmdletBinding()]
 Param(
 	[Parameter(Mandatory=$True,Position=1)]

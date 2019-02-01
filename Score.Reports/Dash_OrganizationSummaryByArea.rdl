@@ -71,7 +71,7 @@
 	IsAvailable, 
 	InMaintenanceMode 
 FROM 
-	scom.[Object] o inner join scom.[ObjectClass] oc 
+	scom.[ObjectHealthState] o inner join scom.[ObjectClass] oc 
 		on o.ObjectClass = oc.Name
 WHERE
 	o.Active = 1
@@ -111,7 +111,7 @@ WHERE
 	IsAvailable, 
 	InMaintenanceMode 
 FROM 
-	scom.[Object] o inner join scom.[ObjectClass] oc 
+	scom.[ObjectHealthState] o inner join scom.[ObjectClass] oc 
 		on o.ObjectClass = oc.Name
 WHERE
 	o.Active = 1
