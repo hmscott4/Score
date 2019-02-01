@@ -1714,7 +1714,7 @@ Param (
                 $sqlCommand.Parameters["@DisplayName"].Value = $Group.DisplayName
                 $sqlCommand.Parameters["@FullName"].Value = $Group.FullName
                 $sqlCommand.Parameters["@Path"].Value = NullToString $Group.Path ""
-                $sqlCommand.Parameters["@MonitoringClassIds"].Value = $Group.MonitoringClassIds
+                $sqlCommand.Parameters["@MonitoringClassIds"].Value = $tmpValue
                 $sqlCommand.Parameters["@HealthState"].Value = $Group.HealthState.ToString()
                 $sqlCommand.Parameters["@StateLastModified"].Value = $Group.StateLastModified
                 $sqlCommand.Parameters["@IsAvailable"].Value = $Group.IsAvailable
