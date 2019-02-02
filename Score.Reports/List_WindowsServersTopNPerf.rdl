@@ -63,7 +63,7 @@
     </DataSet>
     <DataSet Name="WindowsComputerTopPerformance">
       <SharedDataSet>
-        <SharedDataSetReference>/Data Sets/WindowsComputerTopPerformance</SharedDataSetReference>
+        <SharedDataSetReference>WindowsComputerTopPerformance</SharedDataSetReference>
         <QueryParameters>
           <QueryParameter Name="@Hours">
             <Value>=Parameters!Period.Value</Value>
@@ -74,7 +74,6 @@
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
-        <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
       </SharedDataSet>
       <Fields>
         <Field Name="NTILE">
@@ -159,75 +158,203 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="ReportHeaderSettings">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportName">
+            <Value>=Globals!ReportName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spReportHeaderSelectByReportName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Id">
+          <DataField>Id</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ReportName">
+          <DataField>ReportName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportDisplayName">
+          <DataField>ReportDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportBackground">
+          <DataField>ReportBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleBackground">
+          <DataField>TitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFont">
+          <DataField>TitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontColor">
+          <DataField>TitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontSize">
+          <DataField>TitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleBackground">
+          <DataField>SubTitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFont">
+          <DataField>SubTitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontColor">
+          <DataField>SubTitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontSize">
+          <DataField>SubTitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderBackground">
+          <DataField>TableHeaderBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFont">
+          <DataField>TableHeaderFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontColor">
+          <DataField>TableHeaderFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontSize">
+          <DataField>TableHeaderFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterBackground">
+          <DataField>TableFooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFont">
+          <DataField>TableFooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontColor">
+          <DataField>TableFooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontSize">
+          <DataField>TableFooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenBackground">
+          <DataField>RowEvenBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFont">
+          <DataField>RowEvenFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontColor">
+          <DataField>RowEvenFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontSize">
+          <DataField>RowEvenFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddBackground">
+          <DataField>RowOddBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFont">
+          <DataField>RowOddFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontColor">
+          <DataField>RowOddFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontSize">
+          <DataField>RowOddFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="FooterBackground">
+          <DataField>FooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFont">
+          <DataField>FooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontColor">
+          <DataField>FooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontSize">
+          <DataField>FooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DefaultTimeZoneOffset">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ConfigName">
+            <Value>DefaultTimeZoneCurrentOffset</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spConfigSelect</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ConfigName">
+          <DataField>ConfigName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ConfigValue">
+          <DataField>ConfigValue</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbAddBy">
+          <DataField>dbAddBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModBy">
+          <DataField>dbModBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
         <ReportItems>
-          <Textbox Name="ReportTitle">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Windows Operating System Top N Performance</Value>
-                    <Style>
-                      <FontSize>18pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
-            <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Top>0.625in</Top>
-            <Height>0.4in</Height>
-            <Width>13.89179in</Width>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="ReportTitle2">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
-                    <Style>
-                      <FontSize>24pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
-            <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Height>0.44167in</Height>
-            <Width>13.89179in</Width>
-            <ZIndex>1</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox28">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -248,7 +375,6 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Top>1.12722in</Top>
             <Height>0.15833in</Height>
             <Width>13.89179in</Width>
-            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -448,7 +574,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Chart_HostPerf</ReportName>
+                                  <ReportName>Chart_HostPerf</ReportName>
                                   <Parameters>
                                     <Parameter Name="ServerName">
                                       <Value>=Fields!fqdn.Value</Value>
@@ -460,7 +586,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                                       <Value>=Now</Value>
                                     </Parameter>
                                     <Parameter Name="UTCOffset">
-                                      <Value>=-240</Value>
+                                      <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -557,7 +683,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>3.47167in</Left>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -751,7 +877,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Chart_HostPerf</ReportName>
+                                  <ReportName>Chart_HostPerf</ReportName>
                                   <Parameters>
                                     <Parameter Name="ServerName">
                                       <Value>=Fields!fqdn.Value</Value>
@@ -763,7 +889,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                                       <Value>=Now</Value>
                                     </Parameter>
                                     <Parameter Name="UTCOffset">
-                                      <Value>-240</Value>
+                                      <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -859,7 +985,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Top>2.24875in</Top>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>4</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -886,7 +1012,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Top>1.92931in</Top>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>3</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -918,7 +1044,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>3.47167in</Left>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -950,7 +1076,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>3.47167in</Left>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1150,7 +1276,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Chart_HostPerf</ReportName>
+                                  <ReportName>Chart_HostPerf</ReportName>
                                   <Parameters>
                                     <Parameter Name="ServerName">
                                       <Value>=Fields!fqdn.Value</Value>
@@ -1162,7 +1288,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                                       <Value>=Now</Value>
                                     </Parameter>
                                     <Parameter Name="UTCOffset">
-                                      <Value>=-240</Value>
+                                      <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -1259,7 +1385,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>3.47167in</Left>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1364,7 +1490,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>% Mem</Value>
+                                  <Value>Pgs / Sec</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -1455,7 +1581,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Chart_HostPerf</ReportName>
+                                  <ReportName>Chart_HostPerf</ReportName>
                                   <Parameters>
                                     <Parameter Name="ServerName">
                                       <Value>=Fields!fqdn.Value</Value>
@@ -1467,7 +1593,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                                       <Value>=Now</Value>
                                     </Parameter>
                                     <Parameter Name="UTCOffset">
-                                      <Value>=-240</Value>
+                                      <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -1563,7 +1689,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Top>3.26263in</Top>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1590,7 +1716,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Top>2.94319in</Top>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1699,7 +1825,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Queue</Value>
+                                  <Value>MBytes</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -1790,7 +1916,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Chart_HostPerf</ReportName>
+                                  <ReportName>Chart_HostPerf</ReportName>
                                   <Parameters>
                                     <Parameter Name="ServerName">
                                       <Value>=Fields!fqdn.Value</Value>
@@ -1802,7 +1928,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                                       <Value>=Now</Value>
                                     </Parameter>
                                     <Parameter Name="UTCOffset">
-                                      <Value>=-240</Value>
+                                      <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -1899,7 +2025,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>6.96819in</Left>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1927,7 +2053,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>6.96819in</Left>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1959,7 +2085,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>10.46471in</Left>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>13</ZIndex>
+            <ZIndex>11</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2199,7 +2325,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Chart_HostPerf</ReportName>
+                                  <ReportName>Chart_HostPerf</ReportName>
                                   <Parameters>
                                     <Parameter Name="ServerName">
                                       <Value>=Fields!fqdn.Value</Value>
@@ -2211,7 +2337,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                                       <Value>=Now</Value>
                                     </Parameter>
                                     <Parameter Name="UTCOffset">
-                                      <Value>=-240</Value>
+                                      <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -2345,7 +2471,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>10.46471in</Left>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>14</ZIndex>
+            <ZIndex>12</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2581,7 +2707,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/Chart_HostPerf</ReportName>
+                                  <ReportName>Chart_HostPerf</ReportName>
                                   <Parameters>
                                     <Parameter Name="ServerName">
                                       <Value>=Fields!fqdn.Value</Value>
@@ -2593,7 +2719,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                                       <Value>=Now</Value>
                                     </Parameter>
                                     <Parameter Name="UTCOffset">
-                                      <Value>=-240</Value>
+                                      <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -2726,7 +2852,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>10.46471in</Left>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>15</ZIndex>
+            <ZIndex>13</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2754,7 +2880,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Left>10.46471in</Left>
             <Height>0.25in</Height>
             <Width>3.42708in</Width>
-            <ZIndex>16</ZIndex>
+            <ZIndex>14</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2785,7 +2911,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Top>1.35499in</Top>
             <Height>0.15833in</Height>
             <Width>13.89179in</Width>
-            <ZIndex>17</ZIndex>
+            <ZIndex>15</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2816,11 +2942,86 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
             <Top>1.59042in</Top>
             <Height>0.15833in</Height>
             <Width>13.89179in</Width>
+            <ZIndex>16</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ReportTitle2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Height>0.5in</Height>
+            <Width>13.89179in</Width>
+            <ZIndex>17</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>=First(Fields!TitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ReportTitle3">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Windows Server Performance Top 10</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Top>0.56944in</Top>
+            <Height>0.4375in</Height>
+            <Width>13.89179in</Width>
             <ZIndex>18</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>=First(Fields!SubTitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -2898,11 +3099,29 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="UTCOffset">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DefaultTimeZoneOffset</DataSetName>
+          <ValueField>ConfigValue</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>UTCOffset</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DefaultTimeZoneOffset</DataSetName>
+          <ValueField>ConfigValue</ValueField>
+          <LabelField>ConfigValue</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>1</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfRows>3</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2913,6 +3132,11 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>Period</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>UTCOffset</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

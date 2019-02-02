@@ -358,47 +358,161 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="ReportHeaderSettings">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportName">
+            <Value>=Globals!ReportName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spReportHeaderSelectByReportName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Id">
+          <DataField>Id</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ReportName">
+          <DataField>ReportName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportDisplayName">
+          <DataField>ReportDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportBackground">
+          <DataField>ReportBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleBackground">
+          <DataField>TitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFont">
+          <DataField>TitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontColor">
+          <DataField>TitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontSize">
+          <DataField>TitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleBackground">
+          <DataField>SubTitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFont">
+          <DataField>SubTitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontColor">
+          <DataField>SubTitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontSize">
+          <DataField>SubTitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderBackground">
+          <DataField>TableHeaderBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFont">
+          <DataField>TableHeaderFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontColor">
+          <DataField>TableHeaderFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontSize">
+          <DataField>TableHeaderFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterBackground">
+          <DataField>TableFooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFont">
+          <DataField>TableFooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontColor">
+          <DataField>TableFooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontSize">
+          <DataField>TableFooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenBackground">
+          <DataField>RowEvenBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFont">
+          <DataField>RowEvenFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontColor">
+          <DataField>RowEvenFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontSize">
+          <DataField>RowEvenFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddBackground">
+          <DataField>RowOddBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFont">
+          <DataField>RowOddFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontColor">
+          <DataField>RowOddFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontSize">
+          <DataField>RowOddFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="FooterBackground">
+          <DataField>FooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFont">
+          <DataField>FooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontColor">
+          <DataField>FooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontSize">
+          <DataField>FooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
         <ReportItems>
-          <Textbox Name="ReportTitle">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
-                    <Style>
-                      <FontFamily>Verdana</FontFamily>
-                      <FontSize>24pt</FontSize>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
-            <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Left>0.01389in</Left>
-            <Height>0.5in</Height>
-            <Width>8in</Width>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>DarkSlateBlue</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Chart Name="Chart1">
             <ChartCategoryHierarchy>
               <ChartMembers>
@@ -700,7 +814,6 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Top>1.3875in</Top>
             <Height>2.5in</Height>
             <Width>4in</Width>
-            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1012,7 +1125,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Left>4.01in</Left>
             <Height>2.5in</Height>
             <Width>4in</Width>
-            <ZIndex>2</ZIndex>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1309,7 +1422,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Top>3.9375in</Top>
             <Height>2.5in</Height>
             <Width>4in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1318,38 +1431,6 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
               <BackgroundGradientType>None</BackgroundGradientType>
             </Style>
           </Chart>
-          <Textbox Name="Textbox1">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Alert Summary Report</Value>
-                    <Style>
-                      <FontSize>18pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox1</rd:DefaultName>
-            <Top>0.58208in</Top>
-            <Left>0.01389in</Left>
-            <Height>0.33333in</Height>
-            <Width>8in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox2">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -1369,7 +1450,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Left>0.01389in</Left>
             <Height>0.25in</Height>
             <Width>8in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>3</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1665,7 +1746,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Top>6.4725in</Top>
             <Height>2.5in</Height>
             <Width>4in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1887,7 +1968,6 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1951,7 +2031,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Left>0.28125in</Left>
             <Height>0.4in</Height>
             <Width>3.59097in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2244,7 +2324,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Left>4.01in</Left>
             <Height>2.5in</Height>
             <Width>4in</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2531,13 +2611,87 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <Left>4.34333in</Left>
             <Height>0.4in</Height>
             <Width>3.49606in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="ReportTitle2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Height>0.5in</Height>
+            <Width>8in</Width>
+            <ZIndex>8</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>=First(Fields!TitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ReportTitle3">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Alert Summary Report</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Top>0.54167in</Top>
+            <Height>0.4375in</Height>
+            <Width>8in</Width>
+            <ZIndex>9</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>9.5125in</Height>
         <Style>

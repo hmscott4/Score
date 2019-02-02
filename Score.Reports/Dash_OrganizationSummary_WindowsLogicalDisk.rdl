@@ -113,8 +113,8 @@ WHERE
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <CommandText>SELECT a.MonitoringObjectDisplayName, a.Name, Severity
-FROM scom.ObjectAlertRelationship oar
-INNER JOIN scom.Object o
+FROM scom.ObjectHealthStateAlertRelationship oar
+INNER JOIN scom.ObjectHealthState o
 	 on oar.ObjectID = o.ID
 	 INNER JOIN scom.Alert a on
 		oar.AlertID = a.AlertId
@@ -191,6 +191,156 @@ AND a.Severity &gt; 0</CommandText>
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="ReportHeaderSettings">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportName">
+            <Value>=Globals!ReportName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spReportHeaderSelectByReportName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Id">
+          <DataField>Id</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ReportName">
+          <DataField>ReportName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportDisplayName">
+          <DataField>ReportDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportBackground">
+          <DataField>ReportBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleBackground">
+          <DataField>TitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFont">
+          <DataField>TitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontColor">
+          <DataField>TitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontSize">
+          <DataField>TitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleBackground">
+          <DataField>SubTitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFont">
+          <DataField>SubTitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontColor">
+          <DataField>SubTitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontSize">
+          <DataField>SubTitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderBackground">
+          <DataField>TableHeaderBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFont">
+          <DataField>TableHeaderFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontColor">
+          <DataField>TableHeaderFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontSize">
+          <DataField>TableHeaderFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterBackground">
+          <DataField>TableFooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFont">
+          <DataField>TableFooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontColor">
+          <DataField>TableFooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontSize">
+          <DataField>TableFooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenBackground">
+          <DataField>RowEvenBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFont">
+          <DataField>RowEvenFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontColor">
+          <DataField>RowEvenFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontSize">
+          <DataField>RowEvenFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddBackground">
+          <DataField>RowOddBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFont">
+          <DataField>RowOddFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontColor">
+          <DataField>RowOddFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontSize">
+          <DataField>RowOddFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="FooterBackground">
+          <DataField>FooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFont">
+          <DataField>FooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontColor">
+          <DataField>FooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontSize">
+          <DataField>FooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -239,7 +389,7 @@ AND a.Severity &gt; 0</CommandText>
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                                  <ReportName>List_ObjectHealthState</ReportName>
                                   <Parameters>
                                     <Parameter Name="ObjectGenericName">
                                       <Value>=Fields!genericname.Value</Value>
@@ -469,7 +619,7 @@ AND a.Severity &gt; 0</CommandText>
                       <Actions>
                         <Action>
                           <Drillthrough>
-                            <ReportName>/Operations/List_ObjectHealthState</ReportName>
+                            <ReportName>List_ObjectHealthState</ReportName>
                             <Parameters>
                               <Parameter Name="Active">
                                 <Value>Yes</Value>
@@ -564,7 +714,7 @@ AND a.Severity &gt; 0</CommandText>
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Operations/List_WindowsLogicalDiskSpace</ReportName>
+                                  <ReportName>List_WindowsLogicalDiskSpace</ReportName>
                                   <Parameters>
                                     <Parameter Name="SystemDrive">
                                       <Value>=Split(Join(Parameters!SystemDrive.Value, ","), ",")</Value>
@@ -794,7 +944,7 @@ AND a.Severity &gt; 0</CommandText>
                       <Actions>
                         <Action>
                           <Drillthrough>
-                            <ReportName>/Operations/List_WindowsLogicalDiskSpace</ReportName>
+                            <ReportName>List_WindowsLogicalDiskSpace</ReportName>
                             <Parameters>
                               <Parameter Name="SystemDrive">
                                 <Value>=Split(Join(Parameters!SystemDrive.Value, ","), ",")</Value>
@@ -1118,7 +1268,7 @@ AND a.Severity &gt; 0</CommandText>
                                   <Actions>
                                     <Action>
                                       <Drillthrough>
-                                        <ReportName>/Executive/AlertDetails</ReportName>
+                                        <ReportName>List_AlertDetails</ReportName>
                                         <Parameters>
                                           <Parameter Name="ObjectName">
                                             <Value>=IIf(Parameters!SystemDrive.Count=1 and Parameters!SystemDrive.Value(0)="Yes","C:","*")</Value>
@@ -1154,6 +1304,7 @@ AND a.Severity &gt; 0</CommandText>
                                   <PaddingBottom>2pt</PaddingBottom>
                                 </Style>
                               </Textbox>
+                              <rd:Selected>true</rd:Selected>
                             </CellContents>
                           </TablixHeader>
                           <TablixMembers>
@@ -1253,7 +1404,7 @@ AND a.Severity &gt; 0</CommandText>
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>1.31125in</Top>
+            <Top>1.56125in</Top>
             <Height>3.56282in</Height>
             <Width>5.375in</Width>
             <Style>
@@ -1262,75 +1413,6 @@ AND a.Severity &gt; 0</CommandText>
               </Border>
             </Style>
           </Rectangle>
-          <Textbox Name="ReportTitle2">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
-                    <Style>
-                      <FontSize>24pt</FontSize>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
-            <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Height>0.46251in</Height>
-            <Width>10.5in</Width>
-            <ZIndex>1</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>DarkSlateBlue</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="ReportTitle3">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Windows Server Logical Disk Summary</Value>
-                    <Style>
-                      <FontSize>18pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
-            <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Top>0.53195in</Top>
-            <Height>0.33485in</Height>
-            <Width>10.5in</Width>
-            <ZIndex>2</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="ReportTitle4">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -1349,10 +1431,10 @@ AND a.Severity &gt; 0</CommandText>
             </Paragraphs>
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Top>0.93625in</Top>
+            <Top>1.18625in</Top>
             <Height>0.25152in</Height>
             <Width>10.5in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1725,17 +1807,92 @@ AND a.Severity &gt; 0</CommandText>
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>1.31125in</Top>
+            <Top>1.56125in</Top>
             <Left>5.42583in</Left>
             <Height>3.86458in</Height>
             <Width>5.07417in</Width>
-            <ZIndex>4</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Rectangle>
+          <Textbox Name="ReportTitle2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Top>0.00417in</Top>
+            <Height>0.5in</Height>
+            <Width>10.5in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>=First(Fields!TitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ReportTitle3">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Windows Logical Disk Summary</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Top>0.55973in</Top>
+            <Height>0.4375in</Height>
+            <Width>10.5in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>5.79042in</Height>
         <Style>
@@ -1753,8 +1910,8 @@ AND a.Severity &gt; 0</CommandText>
           <ReportItems>
             <Rectangle Name="Rectangle9">
               <KeepTogether>true</KeepTogether>
-              <Top>0.11458in</Top>
-              <Left>0.6941in</Left>
+              <Top>0.10069in</Top>
+              <Left>0.16937in</Left>
               <Height>0.14583in</Height>
               <Width>0.32292in</Width>
               <Style>
@@ -1781,8 +1938,8 @@ AND a.Severity &gt; 0</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.09895in</Top>
-              <Left>1.10452in</Left>
+              <Top>0.08506in</Top>
+              <Left>0.57979in</Left>
               <Height>0.17708in</Height>
               <Width>1.02083in</Width>
               <ZIndex>1</ZIndex>
@@ -1798,8 +1955,8 @@ AND a.Severity &gt; 0</CommandText>
             </Textbox>
             <Rectangle Name="Rectangle10">
               <KeepTogether>true</KeepTogether>
-              <Top>0.11458in</Top>
-              <Left>2.23229in</Left>
+              <Top>0.10069in</Top>
+              <Left>1.70756in</Left>
               <Height>0.14583in</Height>
               <Width>0.32292in</Width>
               <ZIndex>2</ZIndex>
@@ -1827,8 +1984,8 @@ AND a.Severity &gt; 0</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.09895in</Top>
-              <Left>2.64272in</Left>
+              <Top>0.08506in</Top>
+              <Left>2.11799in</Left>
               <Height>0.17708in</Height>
               <Width>1.02083in</Width>
               <ZIndex>3</ZIndex>
@@ -1844,8 +2001,8 @@ AND a.Severity &gt; 0</CommandText>
             </Textbox>
             <Rectangle Name="Rectangle18">
               <KeepTogether>true</KeepTogether>
-              <Top>0.11458in</Top>
-              <Left>3.7705in</Left>
+              <Top>0.10069in</Top>
+              <Left>3.24577in</Left>
               <Height>0.14583in</Height>
               <Width>0.32292in</Width>
               <ZIndex>4</ZIndex>
@@ -1873,8 +2030,8 @@ AND a.Severity &gt; 0</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.09895in</Top>
-              <Left>4.18093in</Left>
+              <Top>0.08506in</Top>
+              <Left>3.6562in</Left>
               <Height>0.17708in</Height>
               <Width>1.02083in</Width>
               <ZIndex>5</ZIndex>
@@ -1890,8 +2047,8 @@ AND a.Severity &gt; 0</CommandText>
             </Textbox>
             <Rectangle Name="Rectangle19">
               <KeepTogether>true</KeepTogether>
-              <Top>0.11458in</Top>
-              <Left>5.3087in</Left>
+              <Top>0.10069in</Top>
+              <Left>4.78397in</Left>
               <Height>0.14583in</Height>
               <Width>0.32292in</Width>
               <ZIndex>6</ZIndex>
@@ -1919,8 +2076,8 @@ AND a.Severity &gt; 0</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.09895in</Top>
-              <Left>5.71913in</Left>
+              <Top>0.08506in</Top>
+              <Left>5.1944in</Left>
               <Height>0.17708in</Height>
               <Width>1.02083in</Width>
               <ZIndex>7</ZIndex>
@@ -1936,8 +2093,8 @@ AND a.Severity &gt; 0</CommandText>
             </Textbox>
             <Rectangle Name="Rectangle21">
               <KeepTogether>true</KeepTogether>
-              <Top>0.09895in</Top>
-              <Left>6.83645in</Left>
+              <Top>0.08506in</Top>
+              <Left>6.31172in</Left>
               <Height>0.17708in</Height>
               <Width>0.32292in</Width>
               <ZIndex>8</ZIndex>
@@ -1965,8 +2122,8 @@ AND a.Severity &gt; 0</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.08333in</Top>
-              <Left>7.24688in</Left>
+              <Top>0.06944in</Top>
+              <Left>6.72215in</Left>
               <Height>0.20833in</Height>
               <Width>1.02083in</Width>
               <ZIndex>9</ZIndex>
@@ -1997,8 +2154,8 @@ AND a.Severity &gt; 0</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.09895in</Top>
-              <Left>8.78507in</Left>
+              <Top>0.08506in</Top>
+              <Left>8.26034in</Left>
               <Height>0.17708in</Height>
               <Width>1.02083in</Width>
               <ZIndex>10</ZIndex>
@@ -2014,8 +2171,8 @@ AND a.Severity &gt; 0</CommandText>
             </Textbox>
             <Rectangle Name="Rectangle22">
               <KeepTogether>true</KeepTogether>
-              <Top>0.11458in</Top>
-              <Left>8.37465in</Left>
+              <Top>0.10069in</Top>
+              <Left>7.84992in</Left>
               <Height>0.14583in</Height>
               <Width>0.32292in</Width>
               <ZIndex>11</ZIndex>

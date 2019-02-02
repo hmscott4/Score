@@ -100,7 +100,6 @@
     <Report Include="List_ServerUtilization.rdl" />
     <Report Include="List_SQLDatabaseSize.rdl" />
     <Report Include="List_WindowsLogicalDiskSpace.rdl" />
-    <Report Include="List_WindowsLogicalDiskSpace_Historical.rdl" />
     <Report Include="List_WindowsServers.rdl" />
     <Report Include="List_WindowsServersTopNPerf.rdl" />
     <Report Include="Report_MonthReview.rdl" />

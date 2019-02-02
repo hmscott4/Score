@@ -183,6 +183,156 @@ ORDER BY ReasonCode</CommandText>
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="ReportHeaderSettings">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportName">
+            <Value>=Globals!ReportName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spReportHeaderSelectByReportName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Id">
+          <DataField>Id</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ReportName">
+          <DataField>ReportName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportDisplayName">
+          <DataField>ReportDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportBackground">
+          <DataField>ReportBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleBackground">
+          <DataField>TitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFont">
+          <DataField>TitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontColor">
+          <DataField>TitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontSize">
+          <DataField>TitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleBackground">
+          <DataField>SubTitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFont">
+          <DataField>SubTitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontColor">
+          <DataField>SubTitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontSize">
+          <DataField>SubTitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderBackground">
+          <DataField>TableHeaderBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFont">
+          <DataField>TableHeaderFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontColor">
+          <DataField>TableHeaderFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontSize">
+          <DataField>TableHeaderFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterBackground">
+          <DataField>TableFooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFont">
+          <DataField>TableFooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontColor">
+          <DataField>TableFooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontSize">
+          <DataField>TableFooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenBackground">
+          <DataField>RowEvenBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFont">
+          <DataField>RowEvenFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontColor">
+          <DataField>RowEvenFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontSize">
+          <DataField>RowEvenFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddBackground">
+          <DataField>RowOddBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFont">
+          <DataField>RowOddFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontColor">
+          <DataField>RowOddFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontSize">
+          <DataField>RowOddFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="FooterBackground">
+          <DataField>FooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFont">
+          <DataField>FooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontColor">
+          <DataField>FooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontSize">
+          <DataField>FooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -197,10 +347,10 @@ ORDER BY ReasonCode</CommandText>
                   <TextRun>
                     <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
                     <Style>
-                      <FontFamily>Segoe UI Light</FontFamily>
-                      <FontSize>28pt</FontSize>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
                       <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
+                      <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -217,7 +367,7 @@ ORDER BY ReasonCode</CommandText>
               <Border>
                 <Style>None</Style>
               </Border>
-              <BackgroundColor>DarkSlateBlue</BackgroundColor>
+              <BackgroundColor>=First(Fields!TitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -231,11 +381,12 @@ ORDER BY ReasonCode</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Operations Manager Maintenance Windows Summary</Value>
+                    <Value>Operations Manager Maintenance Window Summary</Value>
                     <Style>
-                      <FontFamily>Segoe UI Light</FontFamily>
-                      <FontSize>18pt</FontSize>
+                      <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
                       <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -341,7 +492,7 @@ ORDER BY ReasonCode</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Operations/List_ServerMaintenanceModeDetail</ReportName>
+                              <ReportName>List_ServerMaintenanceModeDetail</ReportName>
                               <Parameters>
                                 <Parameter Name="WindowStart">
                                   <Value>=Fields!StartDateTime.Value</Value>
@@ -399,6 +550,7 @@ ORDER BY ReasonCode</CommandText>
                         <Color>Gainsboro</Color>
                         <Style>None</Style>
                       </Border>
+                      <FontFamily>Arial</FontFamily>
                       <FontSize>8pt</FontSize>
                       <Color>#5c5c5c</Color>
                     </Style>
@@ -512,6 +664,7 @@ ORDER BY ReasonCode</CommandText>
                         <Color>Gainsboro</Color>
                         <Style>None</Style>
                       </Border>
+                      <FontFamily>Arial</FontFamily>
                       <FontSize>8pt</FontSize>
                       <Color>#5c5c5c</Color>
                     </Style>
@@ -627,11 +780,10 @@ ORDER BY ReasonCode</CommandText>
                 <Caption>Groups of Servers Placed in Maintenance Mode</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
-                  <FontSize>9pt</FontSize>
+                  <FontFamily>Arial</FontFamily>
                   <FontWeight>Normal</FontWeight>
                   <TextAlign>Left</TextAlign>
                   <VerticalAlign>Top</VerticalAlign>
-                  <Color>#a6a6a6</Color>
                 </Style>
                 <Position>TopLeft</Position>
               </ChartTitle>

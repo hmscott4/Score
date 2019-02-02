@@ -585,6 +585,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                                 <TextRun>
                                   <Value>Object Class</Value>
                                   <Style>
+                                    <FontFamily>Arial</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -621,6 +622,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                                 <TextRun>
                                   <Value>Object Count</Value>
                                   <Style>
+                                    <FontFamily>Arial</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -661,6 +663,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                                 <TextRun>
                                   <Value>=Fields!genericname.Value</Value>
                                   <Style>
+                                    <FontFamily>Arial</FontFamily>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
                                   </Style>
@@ -715,6 +718,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                                 <TextRun>
                                   <Value>=Fields!ObjectCount.Value</Value>
                                   <Style>
+                                    <FontFamily>Arial</FontFamily>
                                     <Format>#,##0</Format>
                                   </Style>
                                 </TextRun>
@@ -776,6 +780,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

@@ -7,7 +7,7 @@ SET NOCOUNT ON
 SET XACT_ABORT ON
 
 
-SELECT [Id]
+SELECT TOP 1 [Id]
       ,[ReportName]
       ,[ReportDisplayName]
       ,[ReportBackground]
@@ -42,4 +42,5 @@ SELECT [Id]
       ,[FooterFontColor]
       ,[FooterFontSize]
   FROM [dbo].[ReportHeader]
-  WHERE [ReportName] = @ReportName
+  WHERE [ReportName] = @ReportName OR [ReportName] = '<default>'
+  ORDER BY [ReportName] DESC

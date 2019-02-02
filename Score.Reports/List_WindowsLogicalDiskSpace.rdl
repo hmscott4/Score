@@ -268,10 +268,11 @@ FROM CTE_LogicalDiskSpace td INNER JOIN (
     Active,
     Availability
 FROM
-    scom.Object
+    scom.ObjectHealthState
 WHERE
-    ObjectClass='Microsoft.Windows.LogicalDisk'
+    ObjectClass='Microsoft.Windows.Server.LogicalDisk'
     AND Active = 1</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
         <Field Name="ID">
@@ -326,43 +327,161 @@ WHERE
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="ReportHeaderSettings">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportName">
+            <Value>=Globals!ReportName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spReportHeaderSelectByReportName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Id">
+          <DataField>Id</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ReportName">
+          <DataField>ReportName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportDisplayName">
+          <DataField>ReportDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportBackground">
+          <DataField>ReportBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleBackground">
+          <DataField>TitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFont">
+          <DataField>TitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontColor">
+          <DataField>TitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TitleFontSize">
+          <DataField>TitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleBackground">
+          <DataField>SubTitleBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFont">
+          <DataField>SubTitleFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontColor">
+          <DataField>SubTitleFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTitleFontSize">
+          <DataField>SubTitleFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderBackground">
+          <DataField>TableHeaderBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFont">
+          <DataField>TableHeaderFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontColor">
+          <DataField>TableHeaderFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableHeaderFontSize">
+          <DataField>TableHeaderFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterBackground">
+          <DataField>TableFooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFont">
+          <DataField>TableFooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontColor">
+          <DataField>TableFooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TableFooterFontSize">
+          <DataField>TableFooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenBackground">
+          <DataField>RowEvenBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFont">
+          <DataField>RowEvenFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontColor">
+          <DataField>RowEvenFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowEvenFontSize">
+          <DataField>RowEvenFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddBackground">
+          <DataField>RowOddBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFont">
+          <DataField>RowOddFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontColor">
+          <DataField>RowOddFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RowOddFontSize">
+          <DataField>RowOddFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="FooterBackground">
+          <DataField>FooterBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFont">
+          <DataField>FooterFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontColor">
+          <DataField>FooterFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FooterFontSize">
+          <DataField>FooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
         <ReportItems>
-          <Textbox Name="ReportTitle">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Windows Server Logical Disk Report </Value>
-                    <Style>
-                      <FontFamily>Verdana</FontFamily>
-                      <FontSize>20pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
-            <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Top>0.6875in</Top>
-            <Height>0.4in</Height>
-            <Width>10.5in</Width>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox8">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -383,7 +502,6 @@ WHERE
             <Top>1.20708in</Top>
             <Height>0.2in</Height>
             <Width>10.5in</Width>
-            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -414,7 +532,7 @@ WHERE
             <Top>1.46959in</Top>
             <Height>0.2in</Height>
             <Width>10.5in</Width>
-            <ZIndex>2</ZIndex>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -445,7 +563,7 @@ WHERE
             <Top>1.73903in</Top>
             <Height>0.2in</Height>
             <Width>10.5in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -476,7 +594,7 @@ WHERE
             <Top>2.00847in</Top>
             <Height>0.2in</Height>
             <Width>10.5in</Width>
-            <ZIndex>4</ZIndex>
+            <ZIndex>3</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -507,47 +625,11 @@ WHERE
             <Top>2.31611in</Top>
             <Height>0.2in</Height>
             <Width>10.5in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="ReportTitle2">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
-                    <Style>
-                      <FontFamily>Verdana</FontFamily>
-                      <FontSize>24pt</FontSize>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
-            <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Height>0.50667in</Height>
-            <Width>10.5in</Width>
-            <ZIndex>6</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>DarkSlateBlue</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -940,7 +1022,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -973,7 +1055,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1008,7 +1090,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1041,7 +1123,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=1, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!HealthState.Value="Success","Green",Iif(Fields!HealthState.Value="Warning","Gold",Iif(Fields!HealthState.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1076,7 +1158,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1112,7 +1194,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1148,7 +1230,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(Lookup(Fields!FullName.Value, Fields!FullName.Value, Fields!SampleValue.Value, "LogicalDiskFreeMB") &lt; Parameters!Critical.Value, "Firebrick", IIf(Lookup(Fields!FullName.Value, Fields!FullName.Value, Fields!SampleValue.Value, "LogicalDiskFreeMB") &lt; Parameters!Warning.Value, "Gold", IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")))</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1184,7 +1266,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1219,7 +1301,7 @@ WHERE
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(RowNumber("Tablix3") MOD 2 = 0, "LightSteelBlue", "No Color")</BackgroundColor>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"No Color","LightSteelBlue")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1298,13 +1380,87 @@ WHERE
             <Top>2.58556in</Top>
             <Height>0.50903in</Height>
             <Width>10.50639in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="ReportTitle3">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!ConfigValue.Value, "OrganizationDisplayName")</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Height>0.5in</Height>
+            <Width>10.5in</Width>
+            <ZIndex>6</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>=First(Fields!TitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ReportTitle2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Windows Server Logical Disk Space Report</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Top>0.62542in</Top>
+            <Height>0.4375in</Height>
+            <Width>10.5in</Width>
+            <ZIndex>7</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>3.23in</Height>
         <Style>
