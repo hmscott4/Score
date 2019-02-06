@@ -130,7 +130,7 @@ FROM
                               ON vme.ManagedEntityRowId = cme.ManagedEntityRowId
                               AND cme.[Level] IN (2, 3, 4, 5 )
 WHERE 
-               ObjectName in (N'LogicalDisk',N'Processor',N'Processor Information',N'Memory',N'System',N'Network Interface')
+               ObjectName in (N'LogicalDisk',N'Cluster Disk',N'Cluster Shared Volume',N'Processor',N'Processor Information',N'Memory',N'System',N'Network Interface',N'Network Adapter')
                AND CounterName IN (N'% Processor Time',N'PercentMemoryUsed',N'% Idle Time',N'Avg. Disk sec/Transfer',N'Processor Queue Length',N'Pages/sec',N'Bytes Total/Sec')
                AND DateTime BETWEEN DateAdd(Minute, @UTCOffset, @StartDate) AND DateAdd(Minute, @UTCOffset, @EndDate)
 GROUP BY 
@@ -164,8 +164,8 @@ FROM
                               ON vme.ManagedEntityRowId = cme.ManagedEntityRowId
                               AND cme.[Level] IN (2, 3, 4, 5 )
 WHERE 
-               ObjectName in (N'LogicalDisk')
-               AND CounterName IN (N'% Free Space',N'Free Megabytes')
+               ObjectName in (N'LogicalDisk',N'Cluster Disk',N'Cluster Shared Volume')
+               AND CounterName IN (N'% Free Space',N'Free Megabytes',N'Free Space / Percent', N'Free Space / MB')
                AND DateTime BETWEEN DateAdd(Minute, @UTCOffset, @StartDate) AND DateAdd(Minute, @UTCOffset, @EndDate)
 GROUP BY 
                vme.[Path],
