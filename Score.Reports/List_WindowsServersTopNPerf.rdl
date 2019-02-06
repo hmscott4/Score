@@ -2848,6 +2848,11 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                 </FilterValues>
               </Filter>
             </Filters>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!Rank.Value</Value>
+              </SortExpression>
+            </SortExpressions>
             <Top>2.24875in</Top>
             <Left>10.46471in</Left>
             <Height>0.5in</Height>

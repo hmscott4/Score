@@ -1597,7 +1597,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "No Color", "LightSteelBlue")</BackgroundColor>
+                                <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "Transparent", "LightSteelBlue")</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -1734,7 +1734,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                 <Color>LightGrey</Color>
                                 <Style>Solid</Style>
                               </Border>
-                              <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "No Color", "LightSteelBlue")</BackgroundColor>
+                              <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "Transparent", "LightSteelBlue")</BackgroundColor>
                               <PaddingLeft>2pt</PaddingLeft>
                               <PaddingRight>2pt</PaddingRight>
                               <PaddingTop>2pt</PaddingTop>
@@ -1812,7 +1812,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                     <Color>LightGrey</Color>
                                     <Style>Solid</Style>
                                   </Border>
-                                  <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "No Color", "LightSteelBlue")</BackgroundColor>
+                                  <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "Transparent", "LightSteelBlue")</BackgroundColor>
                                   <PaddingLeft>2pt</PaddingLeft>
                                   <PaddingRight>2pt</PaddingRight>
                                   <PaddingTop>2pt</PaddingTop>

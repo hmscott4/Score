@@ -499,6 +499,7 @@ ORDER BY vme.[Path] ,
               </Style>
             </ChartNoDataMessage>
             <DataSetName>RawMetrics</DataSetName>
+            <Top>0.01042in</Top>
             <Height>3.72793in</Height>
             <Width>6.4675in</Width>
             <Style>
@@ -510,7 +511,7 @@ ORDER BY vme.[Path] ,
             </Style>
           </Chart>
         </ReportItems>
-        <Height>3.72793in</Height>
+        <Height>3.73835in</Height>
         <Style>
           <Border>
             <Style>None</Style>

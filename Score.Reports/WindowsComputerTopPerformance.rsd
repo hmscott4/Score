@@ -166,15 +166,13 @@ FROM
 WHERE 
                ObjectName in (N'LogicalDisk')
                AND CounterName IN (N'% Free Space',N'Free Megabytes')
-        AND InstanceName = N'C:'
                AND DateTime BETWEEN DateAdd(Minute, @UTCOffset, @StartDate) AND DateAdd(Minute, @UTCOffset, @EndDate)
 GROUP BY 
                vme.[Path],
         vpr.ObjectName,
                vpr.CounterName,
         vpri.InstanceName
-
-</CommandText>
+ORDER BY ObjectName, CounterName, NTILE, Rank</CommandText>
     </Query>
     <Fields>
       <Field Name="NTILE">
