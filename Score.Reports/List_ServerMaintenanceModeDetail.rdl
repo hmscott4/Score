@@ -361,7 +361,6 @@ ORDER BY ReasonCode</CommandText>
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
-                      <FontWeight>Bold</FontWeight>
                       <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>

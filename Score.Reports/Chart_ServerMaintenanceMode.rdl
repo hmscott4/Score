@@ -349,7 +349,6 @@ ORDER BY ReasonCode</CommandText>
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
-                      <FontWeight>Bold</FontWeight>
                       <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
@@ -432,7 +431,7 @@ ORDER BY ReasonCode</CommandText>
             <ChartSeriesHierarchy>
               <ChartMembers>
                 <ChartMember>
-                  <Label>Start Offset</Label>
+                  <Label>Start Date Time</Label>
                 </ChartMember>
                 <ChartMember>
                   <Label>Duration Minutes</Label>
@@ -445,7 +444,7 @@ ORDER BY ReasonCode</CommandText>
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Min(Fields!StartOffset.Value)</Y>
+                        <Y>=Min(Fields!StartDateTime.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
@@ -482,7 +481,7 @@ ORDER BY ReasonCode</CommandText>
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Min(Fields!DurationMinutes.Value)</Y>
+                        <Y>=Sum(Fields!DurationMinutes.Value/1440.0)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
@@ -707,8 +706,8 @@ ORDER BY ReasonCode</CommandText>
                       <Length>0.5</Length>
                     </ChartMinorTickMarks>
                     <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
+                    <Minimum>=DateAdd(DateInterval.Hour, -12, Parameters!ReportStartTime.Value)</Minimum>
+                    <Maximum>=DateAdd(DateInterval.Hour, 12, Parameters!ReportEndTime.Value)</Maximum>
                     <ChartAxisScaleBreak>
                       <Style />
                     </ChartAxisScaleBreak>

@@ -14,8 +14,8 @@ INNER JOIN vPerformanceRuleInstance vpri
 INNER JOIN vPerformanceRule vpr 
                ON vpr.RuleRowId = vpri.RuleRowId 
 WHERE 
-               vpr.ObjectName = N'LogicalDisk'
-               AND vpr.CounterName IN (N'% Free Space')
+               vpr.ObjectName IN ( N'LogicalDisk',N'Cluster Disk',N'Cluster Shared Volume')
+               AND vpr.CounterName IN (N'% Free Space', N'Free Space / Percent')
                AND PercentFree.DateTime &gt; DateAdd(DAY, -90, GetUTCDate())
                AND DATEPART(WEEKDAY,PercentFree.DateTime ) = 1
 ) PctFree inner join 
@@ -29,8 +29,8 @@ INNER JOIN vPerformanceRuleInstance vpri
 INNER JOIN vPerformanceRule vpr 
                ON vpr.RuleRowId = vpri.RuleRowId 
 WHERE 
-               vpr.ObjectName = N'LogicalDisk'
-               AND vpr.CounterName IN (N'Free Megabytes')
+               vpr.ObjectName IN ( N'LogicalDisk',N'Cluster Disk',N'Cluster Shared Volume')
+               AND vpr.CounterName IN (N'Free Megabytes', N'Free Space / MB')
                AND PercentFree.DateTime &gt; DateAdd(DAY, -90, GetUTCDate())
                AND DATEPART(WEEKDAY,PercentFree.DateTime ) = 1
 ) MBFree 
@@ -39,8 +39,7 @@ ON PctFree.FullName = MBFree.FullName
 AND PctFree.ObjectName = MBFree.ObjectName
 -- AND PctFree.CounterName = MBFree.CounterName
 AND PctFree.InstanceName = MBFree.InstanceName
-AND PctFree.Datetime = MBFree.Datetime
-</CommandText>
+AND PctFree.Datetime = MBFree.Datetime</CommandText>
     </Query>
     <Fields>
       <Field Name="Path">

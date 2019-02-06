@@ -31,3 +31,9 @@ AS
 		VALUES (@GroupID, @AlertID, 1, GetDate(), GetDate())
 
 	END
+
+GO
+
+
+GRANT EXEC ON [scom].[spGroupHealthStateAlertRelationshipUpsert] TO [scomUpdate]
+GO

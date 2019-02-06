@@ -19,7 +19,12 @@ BEGIN TRAN
 
 UPDATE [scom].[GroupHealthState]
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate 
+WHERE dbLastUpdate < DATEADD(MINUTE,-15,@BeforeDate)
 	AND Active = 1
 
 COMMIT
+
+GO
+
+GRANT EXEC ON [scom].[spGroupHealthStateInactivateByDate] TO [scomUpdate]
+GO

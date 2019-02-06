@@ -42,7 +42,7 @@ END
 
 BEGIN TRAN
 
-	MERGE [scom].[GroupHealthState] as [target]
+	MERGE [scom].[GroupHealthState] AS [target]
 	USING (SELECT 	
 		@ID ,
 		@Name,
@@ -64,7 +64,7 @@ BEGIN TRAN
 		@Configuration ,
 		@Performance , 
 		@Security ,
-		@Other	 ) as [Source]
+		@Other	 ) AS [Source]
 
 		(ID,
 		Name,
@@ -86,7 +86,7 @@ BEGIN TRAN
 		[Configuration],
 		[Performance],
 		[Security] ,
-		[Other]) on ([target].ID = @ID)
+		[Other]) ON ([target].ID = @ID)
 
 
 	WHEN MATCHED 
@@ -160,3 +160,8 @@ BEGIN TRAN
 		)
 	;
 COMMIT
+
+GO
+
+GRANT EXEC ON [scom].[spGroupHealthStateUpsert] TO [scomUpdate]
+GO

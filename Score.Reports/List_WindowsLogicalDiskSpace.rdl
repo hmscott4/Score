@@ -33,8 +33,8 @@ INNER JOIN vPerformanceRuleInstance vpri
 INNER JOIN vPerformanceRule vpr 
 	ON vpr.RuleRowId = vpri.RuleRowId 
 WHERE 
-	vpr.ObjectName = N'LogicalDisk'
-	AND vpr.CounterName = N'% Free Space'
+	vpr.ObjectName IN ( N'LogicalDisk',N'Cluster Disk',N'Cluster Shared Volume')
+	AND vpr.CounterName IN (N'% Free Space', N'Free Space / Percent')
 	AND pvpr.DateTime &gt; DateAdd(Minute, -180, GetUTCDate())
 )
 
@@ -206,8 +206,8 @@ INNER JOIN vPerformanceRuleInstance vpri
 INNER JOIN vPerformanceRule vpr 
 	ON vpr.RuleRowId = vpri.RuleRowId 
 WHERE 
-	vpr.ObjectName = N'LogicalDisk'
-	AND vpr.CounterName = N'Free Megabytes'
+	vpr.ObjectName IN ( N'LogicalDisk',N'Cluster Disk',N'Cluster Shared Volume')
+	AND vpr.CounterName IN (N'Free Megabytes', N'Free Space / MB')
 	AND pvpr.DateTime &gt; DateAdd(Minute, -180, GetUTCDate())
 )
 
@@ -256,22 +256,24 @@ FROM CTE_LogicalDiskSpace td INNER JOIN (
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <CommandText>SELECT
-    ID,
-    Name,
-    DisplayName,
-    FullName,
-    Path,
-    ObjectClass,
-    HealthState,
-    IsAvailable,
-    InMaintenanceMode,
-    Active,
-    Availability
+    ohs.ID,
+    ohs.Name,
+    ohs.DisplayName,
+    ohs.FullName,
+    ohs.Path,
+    ohs.ObjectClass,
+    ohs.HealthState,
+    ohs.IsAvailable,
+    ohs.InMaintenanceMode,
+    ohs.Active,
+    ohs.Availability
 FROM
-    scom.ObjectHealthState
+    scom.ObjectHealthState ohs INNER JOIN scom.ObjectClass oc ON
+        ohs.ObjectClass = oc.Name
 WHERE
-    ObjectClass='Microsoft.Windows.Server.LogicalDisk'
-    AND Active = 1</CommandText>
+    oc.GenericName='Windows Logical Disk'
+    AND ohs.Active = 1
+    AND oc.Active = 1</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>

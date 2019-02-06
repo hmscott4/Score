@@ -7,26 +7,26 @@
 *
 ****************************************************************/
 CREATE PROC [scom].[spObjectHealthStateUpsert]
-	@ID uniqueidentifier,
-	@Name nvarchar(255),
-	@DisplayName nvarchar(255),
-	@FullName nvarchar(255),
-	@Path nvarchar(1024) = Null,
-	@ObjectClass nvarchar(255),
-	@HealthState nvarchar(255) = N'',
-	@StateLastModified datetime2(3) = Null,
-	@IsAvailable bit = Null,
-	@AvailabilityLastModified datetime2(3) = Null,
-	@InMaintenanceMode bit = Null,
-	@MaintenanceModeLastModified datetime2(3) = Null,
-	@ManagementGroup nvarchar(255),
-	@Active bit,
-	@dbLastUpdate datetime2(3),
-	@Availability nvarchar(255),
-	@Configuration nvarchar(255),
-	@Performance nvarchar(255),
-	@Security nvarchar(255),
-	@Other nvarchar(255)
+	@ID UNIQUEIDENTIFIER,
+	@Name NVARCHAR(255),
+	@DisplayName NVARCHAR(255),
+	@FullName NVARCHAR(255),
+	@Path NVARCHAR(1024) = NULL,
+	@ObjectClass NVARCHAR(255),
+	@HealthState NVARCHAR(255) = N'',
+	@StateLastModified DATETIME2(3) = NULL,
+	@IsAvailable BIT = NULL,
+	@AvailabilityLastModified DATETIME2(3) = NULL,
+	@InMaintenanceMode BIT = NULL,
+	@MaintenanceModeLastModified DATETIME2(3) = NULL,
+	@ManagementGroup NVARCHAR(255),
+	@Active BIT,
+	@dbLastUpdate DATETIME2(3),
+	@Availability NVARCHAR(255),
+	@Configuration NVARCHAR(255),
+	@Performance NVARCHAR(255),
+	@Security NVARCHAR(255),
+	@Other NVARCHAR(255)
 
 AS
 
@@ -42,7 +42,7 @@ END
 
 BEGIN TRAN
 
-	MERGE [scom].[ObjectHealthState] as [target]
+	MERGE [scom].[ObjectHealthState] AS [target]
 	USING (SELECT 	
 		@ID ,
 		@Name,
@@ -64,7 +64,7 @@ BEGIN TRAN
 		@Configuration ,
 		@Performance , 
 		@Security ,
-		@Other	 ) as [Source]
+		@Other	 ) AS [Source]
 
 		(ID,
 		Name,
@@ -86,7 +86,7 @@ BEGIN TRAN
 		[Configuration],
 		[Performance],
 		[Security] ,
-		[Other]) on ([target].ID = @ID)
+		[Other]) ON ([target].ID = @ID)
 
 
 	WHEN MATCHED 
@@ -160,3 +160,8 @@ BEGIN TRAN
 		)
 	;
 COMMIT
+
+GO
+
+GRANT EXEC ON [scom].[spObjectHealthStateUpsert] TO [scomUpdate]
+GO

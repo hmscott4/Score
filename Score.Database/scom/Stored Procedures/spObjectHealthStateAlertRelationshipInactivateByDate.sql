@@ -20,7 +20,7 @@ BEGIN TRAN
 
 UPDATE scom.[ObjectHealthStateAlertRelationship]
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate 
+WHERE dbLastUpdate < DateAdd(Minute, -15, @BeforeDate )
 	AND Active = 1
 
 COMMIT
