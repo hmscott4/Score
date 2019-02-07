@@ -57,6 +57,25 @@ INSERT  INTO @CounterValues ( ObjectName , CounterName )
 VALUES  ( N'LogicalDisk' , N'Avg. Disk sec/Transfer' )
 INSERT  INTO @CounterValues ( ObjectName , CounterName )
 VALUES  ( N'LogicalDisk', N'% Free Space' )
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Disk' , N'% Idle Time')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Disk' , N'Free Space / Percent')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Disk' , N'Avg. Disk sec/Transfer' )
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Shared Volume' , N'% Idle Time')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Shared Volume' , N'Free Space / Percent')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Shared Volume' , N'Avg. Disk sec/Transfer' )
+
 INSERT  INTO @CounterValues ( ObjectName , CounterName )
 VALUES  ( N'Network%' , N'Bytes Total/Sec' )
 
@@ -2717,9 +2736,9 @@ ELSE
             <Filters>
               <Filter>
                 <FilterExpression>=Fields!CounterName.Value</FilterExpression>
-                <Operator>Equal</Operator>
+                <Operator>Like</Operator>
                 <FilterValues>
-                  <FilterValue>="% Free Space"</FilterValue>
+                  <FilterValue>="*Free Space*"</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
