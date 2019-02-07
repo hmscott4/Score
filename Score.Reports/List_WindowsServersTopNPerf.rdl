@@ -679,6 +679,11 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                 </FilterValues>
               </Filter>
             </Filters>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!Rank.Value</Value>
+              </SortExpression>
+            </SortExpressions>
             <Top>2.24875in</Top>
             <Left>3.47167in</Left>
             <Height>0.5in</Height>
@@ -753,7 +758,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>fqdn</Value>
+                                  <Value>Server Name</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -982,6 +987,11 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                 </FilterValues>
               </Filter>
             </Filters>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!Rank.Value</Value>
+              </SortExpression>
+            </SortExpressions>
             <Top>2.24875in</Top>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
@@ -1381,6 +1391,11 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                 </FilterValues>
               </Filter>
             </Filters>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!Rank.Value</Value>
+              </SortExpression>
+            </SortExpressions>
             <Top>3.26263in</Top>
             <Left>3.47167in</Left>
             <Height>0.5in</Height>
@@ -1686,6 +1701,11 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                 </FilterValues>
               </Filter>
             </Filters>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!Rank.Value</Value>
+              </SortExpression>
+            </SortExpressions>
             <Top>3.26263in</Top>
             <Height>0.5in</Height>
             <Width>3.42708in</Width>
@@ -1825,7 +1845,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>MBytes</Value>
+                                  <Value>MBytes/Sec</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -2467,6 +2487,11 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                 </FilterValues>
               </Filter>
             </Filters>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!Rank.Value</Value>
+              </SortExpression>
+            </SortExpressions>
             <Top>3.26263in</Top>
             <Left>10.46471in</Left>
             <Height>0.5in</Height>
