@@ -21,24 +21,18 @@
           <QueryParameter Name="@StartDate">
             <Value>=Parameters!StartDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@TimeZone">
-            <Value>=Parameters!TimeZone.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
-          </QueryParameter>
           <QueryParameter Name="@EndDate">
             <Value>=Parameters!EndDate.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ServerName">
             <Value>=Parameters!ServerName.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@UTCOffset">
+            <Value>=Parameters!UTCOffset.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
-        <CommandText>DECLARE @UTCStart [DATETIME]
-DECLARE @UTCEnd [DATETIME]
-
-SET @UTCStart = Cast(@StartDate as DateTime) AT TIME ZONE 'UTC'
-SET @UTCEnd = Cast(@EndDate as DateTime) AT TIME ZONE 'UTC'
-
-DECLARE @CounterValues TABLE
+        <CommandText>DECLARE @CounterValues TABLE
     (
       ObjectName NVARCHAR(256) ,
       CounterName NVARCHAR(256)
@@ -63,6 +57,25 @@ INSERT  INTO @CounterValues ( ObjectName , CounterName )
 VALUES  ( N'LogicalDisk' , N'Avg. Disk sec/Transfer' )
 INSERT  INTO @CounterValues ( ObjectName , CounterName )
 VALUES  ( N'LogicalDisk', N'% Free Space' )
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Disk' , N'% Idle Time')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Disk' , N'Free Space / Percent')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Disk' , N'Avg. Disk sec/Transfer' )
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Shared Volume' , N'% Idle Time')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Shared Volume' , N'Free Space / Percent')
+
+INSERT  INTO @CounterValues ( ObjectName , CounterName )
+VALUES  ( N'Cluster Shared Volume' , N'Avg. Disk sec/Transfer' )
+
 INSERT  INTO @CounterValues ( ObjectName , CounterName )
 VALUES  ( N'Network%' , N'Bytes Total/Sec' )
 
@@ -75,8 +88,7 @@ IF DATEDIFF(DAY, @StartDate, @EndDate) &lt;= 14
                 InstanceName ,
                 AverageValue ,
                 MaxValue ,
-                [DateTime],
-                [DateTime] AT TIME ZONE @TimeZone as [LocalDateTime]
+                [DateTime]
         FROM    Perf.vPerfHourly pvpr
                 INNER JOIN vManagedEntity vme ON pvpr.ManagedEntityRowId = vme.ManagedEntityRowId
                 INNER JOIN vPerformanceRuleInstance vpri ON pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId
@@ -86,7 +98,7 @@ IF DATEDIFF(DAY, @StartDate, @EndDate) &lt;= 14
                              FROM   @CounterValues
                            ) cn ON vpr.ObjectName like cn.ObjectName
                                    AND vpr.CounterName = cn.CounterName
-        WHERE   pvpr.DateTime BETWEEN @UTCStart AND @UTCEnd 
+        WHERE   pvpr.DateTime BETWEEN DATEADD(Minute, -@UTCOffset, @StartDate) AND DATEADD(Minute, -@UTCOffset, @EndDate)
                 AND Path = @ServerName
         ORDER BY [Path] ,
                 vpr.ObjectName ,
@@ -102,8 +114,7 @@ ELSE
                 InstanceName ,
                 AverageValue ,
                 MaxValue ,
-                [DateTime],
-                [DateTime] AT TIME ZONE @TimeZone as [LocalDateTime]
+                [DateTime]
         FROM    Perf.vPerfDaily pvpr
                 INNER JOIN vManagedEntity vme ON pvpr.ManagedEntityRowId = vme.ManagedEntityRowId
                 INNER JOIN vPerformanceRuleInstance vpri ON pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId
@@ -113,7 +124,7 @@ ELSE
                              FROM   @CounterValues
                            ) cn ON vpr.ObjectName like cn.ObjectName
                                    AND vpr.CounterName = cn.CounterName
-        WHERE   pvpr.DateTime BETWEEN @UTCStart AND @UTCEnd
+        WHERE   pvpr.DateTime BETWEEN DATEADD(Minute, -@UTCOffset, @StartDate) AND DATEADD(Minute, -@UTCOffset, @EndDate)
                 AND Path = @ServerName
         ORDER BY [Path] ,
                 vpr.ObjectName ,
@@ -122,12 +133,12 @@ ELSE
     END</CommandText>
       </Query>
       <Fields>
-        <Field Name="Path">
-          <DataField>Path</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="FullName">
           <DataField>FullName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Path">
+          <DataField>Path</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ObjectName">
@@ -138,25 +149,24 @@ ELSE
           <DataField>CounterName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="InstanceName">
-          <DataField>InstanceName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="AverageValue">
           <DataField>AverageValue</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="MaxValue">
-          <DataField>MaxValue</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
+        <Field Name="InstanceName">
+          <DataField>InstanceName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="DateTime">
           <DataField>DateTime</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
+        <Field Name="MaxValue">
+          <DataField>MaxValue</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
         <Field Name="LocalDateTime">
-          <DataField>LocalDateTime</DataField>
-          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
+          <Value>=DateAdd(DateInterval.Minute, Parameters!UTCOffset.Value, Fields!DateTime.Value)</Value>
         </Field>
       </Fields>
     </DataSet>
@@ -223,6 +233,48 @@ ELSE
         <Field Name="dbLastUpdate">
           <DataField>dbLastUpdate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DefaultSystemTimeZoneOffset">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ConfigName">
+            <Value>DefaultTimeZoneCurrentOffset</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spConfigSelect</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ConfigName">
+          <DataField>ConfigName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ConfigValue">
+          <DataField>ConfigValue</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbAddBy">
+          <DataField>dbAddBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModBy">
+          <DataField>dbModBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -2684,9 +2736,9 @@ ELSE
             <Filters>
               <Filter>
                 <FilterExpression>=Fields!CounterName.Value</FilterExpression>
-                <Operator>Equal</Operator>
+                <Operator>Like</Operator>
                 <FilterValues>
-                  <FilterValue>="% Free Space"</FilterValue>
+                  <FilterValue>="*Free Space*"</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -3190,13 +3242,19 @@ ELSE
       <Prompt>End Date</Prompt>
       <UsedInQuery>False</UsedInQuery>
     </ReportParameter>
-    <ReportParameter Name="TimeZone">
-      <DataType>String</DataType>
-      <Prompt>TimeZone</Prompt>
+    <ReportParameter Name="UTCOffset">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DefaultSystemTimeZoneOffset</DataSetName>
+          <ValueField>ConfigValue</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Time Zone</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>SystemTimeZone</DataSetName>
-          <ValueField>ID</ValueField>
+          <ValueField>CurrentUTCOffset</ValueField>
           <LabelField>DisplayName</LabelField>
         </DataSetReference>
       </ValidValues>
@@ -3205,7 +3263,7 @@ ELSE
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>3</NumberOfRows>
+      <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -3223,9 +3281,9 @@ ELSE
           <ParameterName>EndDate</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>TimeZone</ParameterName>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>UTCOffset</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
