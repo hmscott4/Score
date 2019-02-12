@@ -7,11 +7,6 @@
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>b5360b67-0d1f-462b-b1d1-12e45cc8843b</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="OperationsManager">
-      <DataSourceReference>OperationsManager</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>b32e5142-0c6d-4eaa-b679-5a03f9311d04</rd:DataSourceID>
-    </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="OrganizationDisplayName">
