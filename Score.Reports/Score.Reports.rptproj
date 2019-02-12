@@ -89,12 +89,9 @@
     <Report Include="Dash_ServerSummary.rdl" />
     <Report Include="Item_Alert.rdl" />
     <Report Include="List_AlertDetails.rdl" />
-    <Report Include="List_AlertStormObjects.rdl" />
-    <Report Include="List_CorrelatedEvents.rdl" />
     <Report Include="List_LinuxServersTopNPerf.rdl" />
     <Report Include="List_ObjectAlerts.rdl" />
     <Report Include="List_ObjectHealthState.rdl" />
-    <Report Include="List_PKICertificates.rdl" />
     <Report Include="List_ServerMaintenanceModeDetail.rdl" />
     <Report Include="List_ServerUptimeByGroup.rdl" />
     <Report Include="List_ServerUtilization.rdl" />
@@ -102,7 +99,6 @@
     <Report Include="List_WindowsLogicalDiskSpace.rdl" />
     <Report Include="List_WindowsServers.rdl" />
     <Report Include="List_WindowsServersTopNPerf.rdl" />
-    <Report Include="Report_MonthReview.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

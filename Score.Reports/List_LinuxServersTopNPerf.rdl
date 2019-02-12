@@ -3,17 +3,17 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="SCORE">
-      <DataSourceReference>/Data Sources/Catalog</DataSourceReference>
+      <DataSourceReference>SCORE</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>06eebe57-4240-4c7d-a269-06e7cd80c573</rd:DataSourceID>
     </DataSource>
     <DataSource Name="OperationsManagerDW">
-      <DataSourceReference>/Data Sources/OperationsManagerDW</DataSourceReference>
+      <DataSourceReference>OperationsManagerDW</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>3362e70d-b905-45f4-bc60-3a79ecc97778</rd:DataSourceID>
     </DataSource>
     <DataSource Name="OperationsManager">
-      <DataSourceReference>/Data Sources/OperationsManager</DataSourceReference>
+      <DataSourceReference>OperationsManager</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>697180d4-7cf6-4934-a83d-f7c0dd065683</rd:DataSourceID>
     </DataSource>
@@ -103,8 +103,7 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
     </DataSet>
     <DataSet Name="LinuxComputerTopNPerf">
       <SharedDataSet>
-        <SharedDataSetReference>/Data Sets/LinuxComputerTopPerformance</SharedDataSetReference>
-        <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
+        <SharedDataSetReference>LinuxComputerTopPerformance</SharedDataSetReference>
       </SharedDataSet>
       <Fields>
         <Field Name="NTILE">
