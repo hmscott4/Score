@@ -1741,12 +1741,13 @@
     <Build Include="scom\Tables\GroupHealthState.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="_Deployment\dbo.Config.data.sql" />
-    <None Include="_Deployment\scom.MaintenanceReasonCode.data.sql" />
     <None Include="_Compare\SQLAG2.SCORE_Project.scmp" />
-    <None Include="_Deployment\scom.ObjectClass.data.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="_Deployment\Script.Deployment.sql" />
+    <None Include="_Deployment\Script.RolePermissions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="_Deployment\Script.DefaultData.sql" />
   </ItemGroup>
 </Project>

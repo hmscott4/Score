@@ -1228,8 +1228,8 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
                       <FontWeight>Bold</FontWeight>
                       <TextAlign>General</TextAlign>
                       <VerticalAlign>Top</VerticalAlign>
-                      <Color>White</Color>
                     </Style>
+                    <DockOutsideChartArea>true</DockOutsideChartArea>
                     <ActionInfo>
                       <Actions>
                         <Action>

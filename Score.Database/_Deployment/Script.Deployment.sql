@@ -1,145 +1,58 @@
 ﻿/*
- Pre-Deployment Script Template							
+2019/02/12
+SCORE Create
+Hugh Scott
 --------------------------------------------------------------------------------------
- This file contains SQL statements that will be executed before the build script.	
- Use SQLCMD syntax to include a file in the pre-deployment script.			
- Example:      :r .\myfile.sql								
- Use SQLCMD syntax to reference a variable in the pre-deployment script.		
- Example:      :setvar TableName MyTable							
-               SELECT * FROM [$(TableName)]					
+ This script contains schema creation scripts for SCORE database.
+ 1. Run this script first
+ 2. This script will create the SCORE database and all objects
 --------------------------------------------------------------------------------------
 */
 USE [master]
 GO
-/****** Object:  Database [SCORE]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Database [SCORE]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE DATABASE [SCORE]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'SCORE', FILENAME = N'S:\MSSQL13.MSSQLSERVER\MSSQL\DATA\SCORE.mdf' , SIZE = 32768KB , MAXSIZE = 2097152KB , FILEGROWTH = 32768KB )
- LOG ON 
-( NAME = N'SCORE_log', FILENAME = N'T:\MSSQL13.MSSQLSERVER\MSSQL\Data\SCORE_log.ldf' , SIZE = 163840KB , MAXSIZE = 1048576KB , FILEGROWTH = 32768KB )
 GO
-ALTER DATABASE [SCORE] SET COMPATIBILITY_LEVEL = 120
-GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [SCORE].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
-ALTER DATABASE [SCORE] SET ANSI_NULL_DEFAULT OFF 
-GO
-ALTER DATABASE [SCORE] SET ANSI_NULLS OFF 
-GO
-ALTER DATABASE [SCORE] SET ANSI_PADDING OFF 
-GO
-ALTER DATABASE [SCORE] SET ANSI_WARNINGS OFF 
-GO
-ALTER DATABASE [SCORE] SET ARITHABORT OFF 
-GO
-ALTER DATABASE [SCORE] SET AUTO_CLOSE OFF 
-GO
-ALTER DATABASE [SCORE] SET AUTO_SHRINK OFF 
-GO
-ALTER DATABASE [SCORE] SET AUTO_UPDATE_STATISTICS ON 
-GO
-ALTER DATABASE [SCORE] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
-ALTER DATABASE [SCORE] SET CURSOR_DEFAULT  GLOBAL 
-GO
-ALTER DATABASE [SCORE] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
-ALTER DATABASE [SCORE] SET NUMERIC_ROUNDABORT OFF 
-GO
-ALTER DATABASE [SCORE] SET QUOTED_IDENTIFIER OFF 
-GO
-ALTER DATABASE [SCORE] SET RECURSIVE_TRIGGERS OFF 
-GO
-ALTER DATABASE [SCORE] SET  DISABLE_BROKER 
-GO
-ALTER DATABASE [SCORE] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-ALTER DATABASE [SCORE] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-ALTER DATABASE [SCORE] SET TRUSTWORTHY OFF 
-GO
-ALTER DATABASE [SCORE] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-ALTER DATABASE [SCORE] SET PARAMETERIZATION SIMPLE 
-GO
-ALTER DATABASE [SCORE] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-ALTER DATABASE [SCORE] SET HONOR_BROKER_PRIORITY OFF 
-GO
-ALTER DATABASE [SCORE] SET RECOVERY FULL 
-GO
-ALTER DATABASE [SCORE] SET  MULTI_USER 
-GO
-ALTER DATABASE [SCORE] SET PAGE_VERIFY CHECKSUM  
-GO
-ALTER DATABASE [SCORE] SET DB_CHAINING OFF 
-GO
-ALTER DATABASE [SCORE] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-ALTER DATABASE [SCORE] SET TARGET_RECOVERY_TIME = 0 SECONDS 
-GO
-ALTER DATABASE [SCORE] SET DELAYED_DURABILITY = DISABLED 
-GO
-EXEC sys.sp_db_vardecimal_storage_format N'SCORE', N'ON'
-GO
-ALTER DATABASE [SCORE] SET QUERY_STORE = OFF
-GO
-USE [SCORE]
-GO
-ALTER DATABASE SCOPED CONFIGURATION SET LEGACY_CARDINALITY_ESTIMATION = OFF;
-GO
-ALTER DATABASE SCOPED CONFIGURATION SET MAXDOP = 0;
-GO
-ALTER DATABASE SCOPED CONFIGURATION SET PARAMETER_SNIFFING = ON;
-GO
-ALTER DATABASE SCOPED CONFIGURATION SET QUERY_OPTIMIZER_HOTFIXES = OFF;
-GO
-USE [SCORE]
-GO
-/****** Object:  DatabaseRole [scomUpdate]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [scomUpdate]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [scomUpdate]
 GO
-/****** Object:  DatabaseRole [scomRead]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [scomRead]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [scomRead]
 GO
-/****** Object:  DatabaseRole [pmUpdate]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [pmUpdate]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [pmUpdate]
 GO
-/****** Object:  DatabaseRole [pmRead]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [pmRead]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [pmRead]
 GO
-/****** Object:  DatabaseRole [cmUpdate]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [cmUpdate]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [cmUpdate]
 GO
-/****** Object:  DatabaseRole [cmRead]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [cmRead]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [cmRead]
 GO
-/****** Object:  DatabaseRole [cmAdmin]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [cmAdmin]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [cmAdmin]
 GO
-/****** Object:  DatabaseRole [adUpdate]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [adUpdate]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [adUpdate]
 GO
-/****** Object:  DatabaseRole [adRead]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  DatabaseRole [adRead]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [adRead]
 GO
-/****** Object:  Schema [ad]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Schema [ad]    Script Date: 2/12/2019 10:38:45 AM ******/
 CREATE SCHEMA [ad]
 GO
-/****** Object:  Schema [cm]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Schema [cm]    Script Date: 2/12/2019 10:38:45 AM ******/
 CREATE SCHEMA [cm]
 GO
-/****** Object:  Schema [pm]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Schema [pm]    Script Date: 2/12/2019 10:38:45 AM ******/
 CREATE SCHEMA [pm]
 GO
-/****** Object:  Schema [scom]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Schema [scom]    Script Date: 2/12/2019 10:38:45 AM ******/
 CREATE SCHEMA [scom]
 GO
-/****** Object:  Table [cm].[AnalysisInstance]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[AnalysisInstance]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -165,7 +78,7 @@ CREATE TABLE [cm].[AnalysisInstance](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[Computer]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[Computer]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -203,13 +116,13 @@ CREATE TABLE [cm].[Computer](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_Computer_Unique]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Index [IX_cm_Computer_Unique]    Script Date: 2/12/2019 10:38:45 AM ******/
 CREATE UNIQUE CLUSTERED INDEX [IX_cm_Computer_Unique] ON [cm].[Computer]
 (
 	[dnsHostName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[AnalysisInstanceView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [cm].[AnalysisInstanceView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -235,7 +148,7 @@ SELECT [ai].[objectGUID]
   FROM [cm].[AnalysisInstance] [ai] INNER JOIN [cm].[Computer] c ON
 		[ai].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[DatabaseInstance]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[DatabaseInstance]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -261,7 +174,7 @@ CREATE TABLE [cm].[DatabaseInstance](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[DatabaseInstanceView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [cm].[DatabaseInstanceView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -288,7 +201,7 @@ SELECT [di].[objectGUID]
   FROM [cm].[DatabaseInstance] di INNER JOIN [cm].[Computer] c ON
 	[di].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[DatabaseInstanceProperty]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[DatabaseInstanceProperty]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -307,7 +220,7 @@ CREATE TABLE [cm].[DatabaseInstanceProperty](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[DatabaseInstancePropertyView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [cm].[DatabaseInstancePropertyView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -331,7 +244,7 @@ SELECT [dip].[objectGUID]
 	INNER JOIN [cm].[Computer] c ON
 	[di].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [scom].[SyncStatus]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [scom].[SyncStatus]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -351,7 +264,7 @@ CREATE TABLE [scom].[SyncStatus](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[SyncHistory]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [scom].[SyncHistory]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -371,7 +284,7 @@ CREATE TABLE [scom].[SyncHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [scom].[SyncStatusView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [scom].[SyncStatusView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -411,7 +324,7 @@ GROUP BY
 	[ss].[SyncType],
 	[ss].[StartDate]
 GO
-/****** Object:  Table [cm].[DatabaseFile]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[DatabaseFile]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -438,7 +351,7 @@ CREATE TABLE [cm].[DatabaseFile](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[Database]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[Database]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -472,7 +385,7 @@ CREATE TABLE [cm].[Database](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[DatabaseFileView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [cm].[DatabaseFileView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -509,7 +422,7 @@ SELECT [di].[ComputerGUID]
 	INNER JOIN [cm].[Computer] c ON
 		[di].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[WindowsUpdateInstallation]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[WindowsUpdateInstallation]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -529,7 +442,7 @@ CREATE TABLE [cm].[WindowsUpdateInstallation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[WindowsUpdate]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[WindowsUpdate]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -549,7 +462,7 @@ CREATE TABLE [cm].[WindowsUpdate](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[WindowsUpdateInstallationView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [cm].[WindowsUpdateInstallationView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -577,7 +490,7 @@ FROM [cm].[WindowsUpdateInstallation] wui INNER JOIN [cm].[WindowsUpdate] wu ON
 	INNER JOIN [cm].[Computer] c ON
 		[c].[objectGUID] = [wui].[ComputerGUID]
 GO
-/****** Object:  Table [cm].[ComputerShare]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[ComputerShare]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -599,7 +512,7 @@ CREATE TABLE [cm].[ComputerShare](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[ComputerShareView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [cm].[ComputerShareView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -622,7 +535,7 @@ SELECT [cs].[objectGUID]
   FROM [cm].[ComputerShare] cs INNER JOIN [cm].[Computer] c ON
 		[cs].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[ComputerSharePermission]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[ComputerSharePermission]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -645,7 +558,7 @@ CREATE TABLE [cm].[ComputerSharePermission](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[ComputerSharePermissionView]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  View [cm].[ComputerSharePermissionView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -673,7 +586,7 @@ SELECT [csp].[objectGUID]
 			[csp].[ComputerShareGUID] = [cs].[objectGUID] INNER JOIN [cm].[Computer] c ON
 			[cs].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[ComputerGroupMember]    Script Date: 2/1/2019 9:59:37 AM ******/
+/****** Object:  Table [cm].[ComputerGroupMember]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -692,7 +605,7 @@ CREATE TABLE [cm].[ComputerGroupMember](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[ComputerGroupMemberView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[ComputerGroupMemberView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -715,7 +628,7 @@ FROM
 	[cm].[ComputerGroupMember] cgm INNER JOIN [cm].[Computer] c
 		ON c.objectGUID = cgm.ComputerGUID
 GO
-/****** Object:  Table [cm].[ApplicationInstallation]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[ApplicationInstallation]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -734,7 +647,7 @@ CREATE TABLE [cm].[ApplicationInstallation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[Application]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[Application]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -757,7 +670,7 @@ CREATE TABLE [cm].[Application](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[ApplicationInstallationView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[ApplicationInstallationView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -781,7 +694,7 @@ SELECT [ai].[objectGUID]
 	INNER JOIN [cm].[Computer] c ON
 		[ai].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[OperatingSystem]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[OperatingSystem]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -816,7 +729,7 @@ CREATE TABLE [cm].[OperatingSystem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[OperatingSystemView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[OperatingSystemView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -854,7 +767,7 @@ SELECT [os].[objectGUID]
   FROM [cm].[OperatingSystem] os INNER JOIN [cm].[Computer] [c] ON
 		[os].[computerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[LogicalVolume]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[LogicalVolume]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -881,7 +794,7 @@ CREATE TABLE [cm].[LogicalVolume](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[LogicalVolumeView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[LogicalVolumeView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -912,7 +825,7 @@ SELECT [lv].[objectGUID]
   FROM [cm].[LogicalVolume] lv INNER JOIN [cm].[Computer] c ON
 	[lv].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[DiskDrive]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[DiskDrive]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -943,7 +856,7 @@ CREATE TABLE [cm].[DiskDrive](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[DiskDriveView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[DiskDriveView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -974,7 +887,7 @@ SELECT [dd].[objectGUID]
   FROM [cm].[DiskDrive] dd INNER JOIN [cm].[Computer] c ON
 	[dd].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[DatabaseUser]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[DatabaseUser]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1000,7 +913,7 @@ CREATE TABLE [cm].[DatabaseUser](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[DatabaseUserView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[DatabaseUserView]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1033,7 +946,7 @@ SELECT [du].[objectGUID]
 	INNER JOIN [cm].[Computer] c ON
 		[di].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[DatabaseProperty]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[DatabaseProperty]    Script Date: 2/12/2019 10:38:45 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1052,7 +965,7 @@ CREATE TABLE [cm].[DatabaseProperty](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[DatabasePropertyView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[DatabasePropertyView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1079,7 +992,7 @@ SELECT [c].[objectGUID] as [ComputerGUID]
 	INNER JOIN [cm].[Computer] c ON
 		[di].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[DatabaseInstanceLogin]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[DatabaseInstanceLogin]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1116,7 +1029,7 @@ CREATE TABLE [cm].[DatabaseInstanceLogin](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[DatabaseInstanceLoginView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[DatabaseInstanceLoginView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1160,7 +1073,7 @@ SELECT [dbl].[objectGUID]
 	INNER JOIN [cm].[Computer] c ON
 		[dbi].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[Service]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[Service]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1187,7 +1100,7 @@ CREATE TABLE [cm].[Service](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[ServiceView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[ServiceView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1214,7 +1127,7 @@ SELECT [s].[objectGUID]
   FROM [cm].[Service] s INNER JOIN [cm].[Computer] c ON
 	[s].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  View [cm].[DatabaseView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[DatabaseView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1257,7 +1170,7 @@ SELECT
 		INNER JOIN [cm].[Computer] c ON
 			[di].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[Event]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[Event]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1280,7 +1193,7 @@ CREATE TABLE [cm].[Event](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  View [cm].[EventView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[EventView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1304,7 +1217,7 @@ SELECT [e].[ID]
   FROM [cm].[Event] e INNER JOIN [cm].[Computer] c ON
 	[e].ComputerGUID = [c].[objectGUID]
 GO
-/****** Object:  Table [ad].[Computer]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[Computer]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1335,7 +1248,9 @@ CREATE TABLE [ad].[Computer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[GroupMember]    Script Date: 2/1/2019 9:59:38 AM ******/
+GRANT SELECT ON [ad].[Computer] TO [NT SERVICE\HealthService] AS [dbo]
+GO
+/****** Object:  Table [ad].[GroupMember]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1355,7 +1270,7 @@ CREATE TABLE [ad].[GroupMember](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 100) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[Group]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[Group]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1381,7 +1296,7 @@ CREATE TABLE [ad].[Group](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 100) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[User]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[User]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1434,7 +1349,7 @@ CREATE TABLE [ad].[User](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [ad].[GroupMemberView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [ad].[GroupMemberView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1475,7 +1390,7 @@ FROM
 		) member ON
 			gm.MemberGUID = member.objectGUID
 GO
-/****** Object:  Table [ad].[SyncStatus]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[SyncStatus]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1495,7 +1410,7 @@ CREATE TABLE [ad].[SyncStatus](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[SyncHistory]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[SyncHistory]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1515,7 +1430,7 @@ CREATE TABLE [ad].[SyncHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [ad].[SyncStatusView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [ad].[SyncStatusView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1548,7 +1463,7 @@ GROUP BY
 	[ss].[SyncType],
 	[ss].[StartDate]
 GO
-/****** Object:  Table [cm].[ReportingInstance]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[ReportingInstance]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1573,7 +1488,7 @@ CREATE TABLE [cm].[ReportingInstance](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[ReportingInstanceView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[ReportingInstanceView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1598,7 +1513,7 @@ SELECT [ri].[objectGUID]
   FROM [cm].[ReportingInstance] ri INNER JOIN [cm].[Computer] c ON
 		[ri].[ComputerGUID] = [c].[objectGUID]
 GO
-/****** Object:  Table [cm].[ClusterNode]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[ClusterNode]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1617,7 +1532,7 @@ CREATE TABLE [cm].[ClusterNode](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[Cluster]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[Cluster]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1636,7 +1551,7 @@ CREATE TABLE [cm].[Cluster](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [cm].[ClusterNodeView]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  View [cm].[ClusterNodeView]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1660,7 +1575,7 @@ SELECT [cn].[objectGUID]
 		INNER JOIN [cm].[Cluster] cl ON
 		[cn].[ClusterGUID] = [cl].[objectGUID]
 GO
-/****** Object:  Table [ad].[ComputerImport]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[ComputerImport]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1687,7 +1602,7 @@ CREATE TABLE [ad].[ComputerImport](
 	[whenChanged] [datetime2](3) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[DeletedObject]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[DeletedObject]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1707,7 +1622,7 @@ CREATE TABLE [ad].[DeletedObject](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[Domain]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[Domain]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1736,7 +1651,7 @@ CREATE TABLE [ad].[Domain](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[Forest]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[Forest]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1758,7 +1673,7 @@ CREATE TABLE [ad].[Forest](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[Site]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[Site]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1781,7 +1696,7 @@ CREATE TABLE [ad].[Site](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ad].[Subnet]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [ad].[Subnet]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1805,7 +1720,7 @@ CREATE TABLE [ad].[Subnet](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[AnalysisDatabase]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[AnalysisDatabase]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1831,7 +1746,7 @@ CREATE TABLE [cm].[AnalysisDatabase](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[AnalysisDatabaseCube]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[AnalysisDatabaseCube]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1858,7 +1773,7 @@ CREATE TABLE [cm].[AnalysisDatabaseCube](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[AnalysisInstanceProperty]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[AnalysisInstanceProperty]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1880,7 +1795,7 @@ CREATE TABLE [cm].[AnalysisInstanceProperty](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[ClusterGroup]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[ClusterGroup]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1901,7 +1816,7 @@ CREATE TABLE [cm].[ClusterGroup](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[ClusterResource]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[ClusterResource]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1923,7 +1838,7 @@ CREATE TABLE [cm].[ClusterResource](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[DatabasePermission]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[DatabasePermission]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1947,7 +1862,7 @@ CREATE TABLE [cm].[DatabasePermission](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[DatabaseRoleMember]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[DatabaseRoleMember]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1967,7 +1882,7 @@ CREATE TABLE [cm].[DatabaseRoleMember](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[DiskPartition]    Script Date: 2/1/2019 9:59:38 AM ******/
+/****** Object:  Table [cm].[DiskPartition]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1993,7 +1908,7 @@ CREATE TABLE [cm].[DiskPartition](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[DrivePartitionMap]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[DrivePartitionMap]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2012,7 +1927,7 @@ CREATE TABLE [cm].[DrivePartitionMap](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[Job]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[Job]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2043,7 +1958,7 @@ CREATE TABLE [cm].[Job](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[LinkedServer]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[LinkedServer]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2076,7 +1991,11 @@ CREATE TABLE [cm].[LinkedServer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[LinkedServerLogin]    Script Date: 2/1/2019 9:59:39 AM ******/
+GRANT REFERENCES ON [cm].[LinkedServer] TO [cmRead] AS [dbo]
+GO
+GRANT SELECT ON [cm].[LinkedServer] TO [cmRead] AS [dbo]
+GO
+/****** Object:  Table [cm].[LinkedServerLogin]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2098,7 +2017,7 @@ CREATE TABLE [cm].[LinkedServerLogin](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[NetworkAdapter]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[NetworkAdapter]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2124,7 +2043,7 @@ CREATE TABLE [cm].[NetworkAdapter](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[NetworkAdapterConfiguration]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[NetworkAdapterConfiguration]    Script Date: 2/12/2019 10:38:46 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2157,7 +2076,7 @@ CREATE TABLE [cm].[NetworkAdapterConfiguration](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[ReportServerItem]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[ReportServerItem]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2184,7 +2103,7 @@ CREATE TABLE [cm].[ReportServerItem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[ReportServerSubscription]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[ReportServerSubscription]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2213,7 +2132,7 @@ CREATE TABLE [cm].[ReportServerSubscription](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[ReportServerSubscriptionParameter]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[ReportServerSubscriptionParameter]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2232,7 +2151,7 @@ CREATE TABLE [cm].[ReportServerSubscriptionParameter](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[WebApplication]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[WebApplication]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2249,7 +2168,7 @@ CREATE TABLE [cm].[WebApplication](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [cm].[WebApplicationURL]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [cm].[WebApplicationURL]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2275,7 +2194,7 @@ CREATE TABLE [cm].[WebApplicationURL](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Computer]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [dbo].[Computer]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2295,7 +2214,7 @@ CREATE TABLE [dbo].[Computer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Config]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [dbo].[Config]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2314,7 +2233,7 @@ CREATE TABLE [dbo].[Config](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Credential]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [dbo].[Credential]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2334,7 +2253,7 @@ CREATE TABLE [dbo].[Credential](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProcessLog]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [dbo].[ProcessLog]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2352,7 +2271,7 @@ CREATE TABLE [dbo].[ProcessLog](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 100) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportContent]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [dbo].[ReportContent]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2374,7 +2293,7 @@ CREATE TABLE [dbo].[ReportContent](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ReportHeader]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [dbo].[ReportHeader]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2420,7 +2339,7 @@ CREATE TABLE [dbo].[ReportHeader](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SystemTimeZone]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [dbo].[SystemTimeZone]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2445,7 +2364,7 @@ CREATE TABLE [dbo].[SystemTimeZone](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [pm].[DatabaseSizeDaily]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [pm].[DatabaseSizeDaily]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2466,7 +2385,7 @@ CREATE TABLE [pm].[DatabaseSizeDaily](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [pm].[DatabaseSizeRaw]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [pm].[DatabaseSizeRaw]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2486,7 +2405,7 @@ CREATE TABLE [pm].[DatabaseSizeRaw](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [pm].[LogicalVolumeSizeDaily]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [pm].[LogicalVolumeSizeDaily]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2508,7 +2427,7 @@ CREATE TABLE [pm].[LogicalVolumeSizeDaily](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [pm].[LogicalVolumeSizeRaw]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [pm].[LogicalVolumeSizeRaw]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2526,7 +2445,7 @@ CREATE TABLE [pm].[LogicalVolumeSizeRaw](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [pm].[WebApplicationURLResponseDaily]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [pm].[WebApplicationURLResponseDaily]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2549,7 +2468,7 @@ CREATE TABLE [pm].[WebApplicationURLResponseDaily](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [pm].[WebApplicationURLResponseRaw]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [pm].[WebApplicationURLResponseRaw]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2568,7 +2487,7 @@ CREATE TABLE [pm].[WebApplicationURLResponseRaw](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[Agent]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[Agent]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2603,13 +2522,13 @@ CREATE TABLE [scom].[Agent](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_scom_Agent_Name]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Index [IX_scom_Agent_Name]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE CLUSTERED INDEX [IX_scom_Agent_Name] ON [scom].[Agent]
 (
 	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[AgentExclusions]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[AgentExclusions]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2627,7 +2546,7 @@ CREATE TABLE [scom].[AgentExclusions](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[Alert]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[Alert]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2697,7 +2616,7 @@ CREATE TABLE [scom].[Alert](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[AlertAgingBuckets]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[AlertAgingBuckets]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2713,29 +2632,7 @@ CREATE TABLE [scom].[AlertAgingBuckets](
 	[dbLastUpdate] [datetime2](3) NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[AlertHold]    Script Date: 2/1/2019 9:59:39 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [scom].[AlertHold](
-	[Id] [uniqueidentifier] NOT NULL,
-	[Name] [nvarchar](255) NOT NULL,
-	[ResolutionState] [tinyint] NOT NULL,
-	[Priority] [varchar](255) NOT NULL,
-	[Severity] [varchar](255) NOT NULL,
-	[TimeRaised] [datetime2](3) NOT NULL,
-	[TimeAdded] [datetime2](3) NOT NULL,
-	[LastModified] [datetime2](3) NOT NULL,
-	[LastModifiedBy] [varchar](255) NOT NULL,
-	[TimeResolved] [datetime2](3) NULL,
-	[Active] [bit] NOT NULL,
-	[dbAddDate] [datetime2](3) NOT NULL,
-	[dbLastUpdate] [datetime2](3) NOT NULL,
-	[IncidentGroupID] [int] NULL
-) ON [PRIMARY]
-GO
-/****** Object:  Table [scom].[AlertResolutionState]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[AlertResolutionState]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2755,7 +2652,7 @@ PRIMARY KEY NONCLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[GroupHealthState]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[GroupHealthState]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2790,13 +2687,13 @@ CREATE TABLE [scom].[GroupHealthState](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UX_scom_GroupHealthState_FullName]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Index [UX_scom_GroupHealthState_FullName]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE CLUSTERED INDEX [UX_scom_GroupHealthState_FullName] ON [scom].[GroupHealthState]
 (
 	[FullName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[GroupHealthStateAlertRelationship]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[GroupHealthStateAlertRelationship]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2814,7 +2711,7 @@ CREATE TABLE [scom].[GroupHealthStateAlertRelationship](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[MaintenanceReasonCode]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[MaintenanceReasonCode]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2828,7 +2725,7 @@ CREATE TABLE [scom].[MaintenanceReasonCode](
 	[dbModDate] [datetime2](3) NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[ObjectAvailabilityHistory]    Script Date: 2/1/2019 9:59:39 AM ******/
+/****** Object:  Table [scom].[ObjectAvailabilityHistory]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2853,7 +2750,7 @@ CREATE TABLE [scom].[ObjectAvailabilityHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[ObjectClass]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Table [scom].[ObjectClass]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2877,13 +2774,13 @@ CREATE TABLE [scom].[ObjectClass](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UX_scom_ObjectClass_Name]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [UX_scom_ObjectClass_Name]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE CLUSTERED INDEX [UX_scom_ObjectClass_Name] ON [scom].[ObjectClass]
 (
 	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[ObjectHealthState]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Table [scom].[ObjectHealthState]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2918,13 +2815,13 @@ CREATE TABLE [scom].[ObjectHealthState](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UX_scom_Object_FullName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [UX_scom_Object_FullName]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE CLUSTERED INDEX [UX_scom_Object_FullName] ON [scom].[ObjectHealthState]
 (
 	[FullName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[ObjectHealthStateAlertRelationship]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Table [scom].[ObjectHealthStateAlertRelationship]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2942,7 +2839,7 @@ CREATE TABLE [scom].[ObjectHealthStateAlertRelationship](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [scom].[WindowsComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Table [scom].[WindowsComputer]    Script Date: 2/12/2019 10:38:47 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2976,7 +2873,7 @@ CREATE TABLE [scom].[WindowsComputer](
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_Computer_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_Computer_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Computer_Unique] ON [ad].[Computer]
 (
 	[Domain] ASC,
@@ -2985,7 +2882,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Computer_Unique] ON [ad].[Computer]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_Domain_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_Domain_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Domain_Unique] ON [ad].[Domain]
 (
 	[DistinguishedName] ASC
@@ -2993,7 +2890,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Domain_Unique] ON [ad].[Domain]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_Forest_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_Forest_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Forest_Unique] ON [ad].[Forest]
 (
 	[Name] ASC
@@ -3001,7 +2898,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Forest_Unique] ON [ad].[Forest]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_Group_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_Group_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Group_Unique] ON [ad].[Group]
 (
 	[Domain] ASC,
@@ -3010,7 +2907,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Group_Unique] ON [ad].[Group]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_GroupMember_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_GroupMember_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_GroupMember_Unique] ON [ad].[GroupMember]
 (
 	[Domain] ASC,
@@ -3020,7 +2917,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_GroupMember_Unique] ON [ad].[GroupMember
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_Site_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_Site_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Site_Unique] ON [ad].[Site]
 (
 	[Domain] ASC,
@@ -3029,7 +2926,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Site_Unique] ON [ad].[Site]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_Subnet_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_Subnet_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Subnet_Unique] ON [ad].[Subnet]
 (
 	[Domain] ASC,
@@ -3038,7 +2935,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_Subnet_Unique] ON [ad].[Subnet]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_SyncStatus_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_SyncStatus_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_SyncStatus_Unique] ON [ad].[SyncStatus]
 (
 	[Domain] ASC,
@@ -3047,7 +2944,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_SyncStatus_Unique] ON [ad].[SyncStatus]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_ad_User_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ad_User_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_User_Unique] ON [ad].[User]
 (
 	[Domain] ASC,
@@ -3056,7 +2953,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_User_Unique] ON [ad].[User]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_AnalysisDatabase_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_AnalysisDatabase_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisDatabase_Unique] ON [cm].[AnalysisDatabase]
 (
 	[AnalysisInstanceGUID] ASC,
@@ -3065,7 +2962,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisDatabase_Unique] ON [cm].[Analys
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_AnalysisDatabaseCube_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_AnalysisDatabaseCube_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisDatabaseCube_Unique] ON [cm].[AnalysisDatabaseCube]
 (
 	[AnalysisInstanceGUID] ASC,
@@ -3075,7 +2972,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisDatabaseCube_Unique] ON [cm].[An
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_AnalysisInstance_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_AnalysisInstance_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisInstance_Unique] ON [cm].[AnalysisInstance]
 (
 	[ComputerGUID] ASC,
@@ -3084,7 +2981,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisInstance_Unique] ON [cm].[Analys
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_AnalysisInstanceProperty_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_AnalysisInstanceProperty_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisInstanceProperty_Unique] ON [cm].[AnalysisInstanceProperty]
 (
 	[AnalysisInstanceGUID] ASC,
@@ -3093,14 +2990,14 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_AnalysisInstanceProperty_Unique] ON [cm]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_Application_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_Application_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Application_Unique] ON [cm].[Application]
 (
 	[Name] ASC,
 	[Version] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_Application_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_Application_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Application_Unique] ON [cm].[ApplicationInstallation]
 (
 	[ComputerGUID] ASC,
@@ -3109,7 +3006,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Application_Unique] ON [cm].[Application
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_Cluster_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_Cluster_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Cluster_Unique] ON [cm].[Cluster]
 (
 	[ClusterName] ASC
@@ -3117,14 +3014,14 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Cluster_Unique] ON [cm].[Cluster]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_ClusterGroup_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_ClusterGroup_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ClusterGroup_Unique] ON [cm].[ClusterGroup]
 (
 	[ClusterGUID] ASC,
 	[GroupName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_ClusterNode_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_ClusterNode_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ClusterNode_Unique] ON [cm].[ClusterNode]
 (
 	[ClusterGUID] ASC,
@@ -3133,7 +3030,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ClusterNode_Unique] ON [cm].[ClusterNode
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_ComputerGroupMember_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_ComputerGroupMember_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ComputerGroupMember_Unique] ON [cm].[ComputerGroupMember]
 (
 	[ComputerGUID] ASC,
@@ -3143,7 +3040,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ComputerGroupMember_Unique] ON [cm].[Com
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_ComputerShare_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_ComputerShare_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ComputerShare_Unique] ON [cm].[ComputerShare]
 (
 	[ComputerGUID] ASC,
@@ -3152,7 +3049,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ComputerShare_Unique] ON [cm].[ComputerS
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_ComputerSharePermission_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_ComputerSharePermission_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ComputerSharePermission_Unique] ON [cm].[ComputerSharePermission]
 (
 	[ComputerShareGUID] ASC,
@@ -3162,14 +3059,14 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ComputerSharePermission_Unique] ON [cm].
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_Database_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_Database_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Database_Unique] ON [cm].[Database]
 (
 	[DatabaseInstanceGUID] ASC,
 	[DatabaseName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_DatabaseFile_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabaseFile_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseFile_Unique] ON [cm].[DatabaseFile]
 (
 	[DatabaseGUID] ASC,
@@ -3178,7 +3075,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseFile_Unique] ON [cm].[DatabaseFi
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DatabaseInstance_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabaseInstance_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseInstance_Unique] ON [cm].[DatabaseInstance]
 (
 	[ComputerGUID] ASC,
@@ -3187,7 +3084,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseInstance_Unique] ON [cm].[Databa
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DatabaseInstanceLogin_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabaseInstanceLogin_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseInstanceLogin_Unique] ON [cm].[DatabaseInstanceLogin]
 (
 	[DatabaseInstanceGUID] ASC,
@@ -3196,7 +3093,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseInstanceLogin_Unique] ON [cm].[D
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DatabaseInstanceProperty_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabaseInstanceProperty_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseInstanceProperty_Unique] ON [cm].[DatabaseInstanceProperty]
 (
 	[DatabaseInstanceGUID] ASC,
@@ -3205,7 +3102,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseInstanceProperty_Unique] ON [cm]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DatabasePermission_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabasePermission_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabasePermission_Unique] ON [cm].[DatabasePermission]
 (
 	[DatabaseInstanceGUID] ASC,
@@ -3220,7 +3117,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabasePermission_Unique] ON [cm].[Data
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DatabaseProperty_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabaseProperty_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseProperty_Unique] ON [cm].[DatabaseProperty]
 (
 	[DatabaseGUID] ASC,
@@ -3229,7 +3126,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseProperty_Unique] ON [cm].[Databa
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DatabaseRoleMember_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabaseRoleMember_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseRoleMember_Unique] ON [cm].[DatabaseRoleMember]
 (
 	[DatabaseInstanceGUID] ASC,
@@ -3240,7 +3137,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseRoleMember_Unique] ON [cm].[Data
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DatabaseUser_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DatabaseUser_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseUser_Unique] ON [cm].[DatabaseUser]
 (
 	[DatabaseInstanceGUID] ASC,
@@ -3250,7 +3147,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DatabaseUser_Unique] ON [cm].[DatabaseUs
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DiskDrive_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DiskDrive_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DiskDrive_Unique] ON [cm].[DiskDrive]
 (
 	[ComputerGUID] ASC,
@@ -3259,7 +3156,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DiskDrive_Unique] ON [cm].[DiskDrive]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DiskPartition_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DiskPartition_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DiskPartition_Unique] ON [cm].[DiskPartition]
 (
 	[ComputerGUID] ASC,
@@ -3268,7 +3165,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DiskPartition_Unique] ON [cm].[DiskParti
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_DrivePartitionMap_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_DrivePartitionMap_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DrivePartitionMap_Unique] ON [cm].[DrivePartitionMap]
 (
 	[ComputerGUID] ASC,
@@ -3278,7 +3175,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_DrivePartitionMap_Unique] ON [cm].[Drive
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Event_ComputerGUID_LogName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_Event_ComputerGUID_LogName]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Event_ComputerGUID_LogName] ON [cm].[Event]
 (
 	[ComputerGUID] ASC,
@@ -3286,13 +3183,13 @@ CREATE NONCLUSTERED INDEX [IX_Event_ComputerGUID_LogName] ON [cm].[Event]
 )
 INCLUDE ( 	[TimeGenerated]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Job_DatabaseInstanceGUID]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_Job_DatabaseInstanceGUID]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Job_DatabaseInstanceGUID] ON [cm].[Job]
 (
 	[DatabaseInstanceGUID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_LinkedServer_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_LinkedServer_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_LinkedServer_Unique] ON [cm].[LinkedServer]
 (
 	[DatabaseInstanceGUID] ASC,
@@ -3301,7 +3198,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_LinkedServer_Unique] ON [cm].[LinkedServ
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_LinkedServerLogin_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_LinkedServerLogin_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_LinkedServerLogin_Unique] ON [cm].[LinkedServerLogin]
 (
 	[DatabaseInstanceGUID] ASC,
@@ -3309,21 +3206,21 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_LinkedServerLogin_Unique] ON [cm].[Linke
 	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_LogicalVolume_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_LogicalVolume_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_LogicalVolume_Unique] ON [cm].[LogicalVolume]
 (
 	[ComputerGUID] ASC,
 	[objectGUID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_NetworkAdapter_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_NetworkAdapter_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_NetworkAdapter_Unique] ON [cm].[NetworkAdapter]
 (
 	[ComputerGUID] ASC,
 	[Index] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_NetworkAdapterConfiguration_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_NetworkAdapterConfiguration_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_NetworkAdapterConfiguration_Unique] ON [cm].[NetworkAdapterConfiguration]
 (
 	[ComputerGUID] ASC,
@@ -3332,7 +3229,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_NetworkAdapterConfiguration_Unique] ON [
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_ReportingInstance_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_ReportingInstance_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ReportingInstance_Unique] ON [cm].[ReportingInstance]
 (
 	[ComputerGUID] ASC,
@@ -3341,14 +3238,14 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ReportingInstance_Unique] ON [cm].[Repor
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_ReportServerItem_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_ReportServerItem_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_ReportServerItem_Unique] ON [cm].[ReportServerItem]
 (
 	[ReportingInstanceGUID] ASC,
 	[Path] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_ReportServerSubscriptionParameter_ReportServerSubscriptionGUID]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ReportServerSubscriptionParameter_ReportServerSubscriptionGUID]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE NONCLUSTERED INDEX [IX_ReportServerSubscriptionParameter_ReportServerSubscriptionGUID] ON [cm].[ReportServerSubscriptionParameter]
 (
 	[ReportServerSubscriptionGUID] ASC
@@ -3356,7 +3253,7 @@ CREATE NONCLUSTERED INDEX [IX_ReportServerSubscriptionParameter_ReportServerSubs
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_Service_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_Service_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Service_Unique] ON [cm].[Service]
 (
 	[ComputerGUID] ASC,
@@ -3365,7 +3262,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_Service_Unique] ON [cm].[Service]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_WebApplication_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_WebApplication_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_WebApplication_Unique] ON [cm].[WebApplication]
 (
 	[Name] ASC
@@ -3373,7 +3270,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_WebApplication_Unique] ON [cm].[WebAppli
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_WebApplicationURL_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_WebApplicationURL_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_WebApplicationURL_Unique] ON [cm].[WebApplicationURL]
 (
 	[WebApplicationGUID] ASC,
@@ -3383,13 +3280,13 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_WebApplicationURL_Unique] ON [cm].[WebAp
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_cm_WindowsUpdate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_WindowsUpdate]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_WindowsUpdate] ON [cm].[WindowsUpdate]
 (
 	[HotfixID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_cm_WindowsUpdateInstallation]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_cm_WindowsUpdateInstallation]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_WindowsUpdateInstallation] ON [cm].[WindowsUpdateInstallation]
 (
 	[ComputerGUID] ASC,
@@ -3398,7 +3295,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_cm_WindowsUpdateInstallation] ON [cm].[Wind
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Computer_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_Computer_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Computer_Unique] ON [dbo].[Computer]
 (
 	[Domain] ASC,
@@ -3407,7 +3304,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_Computer_Unique] ON [dbo].[Computer]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Config_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_Config_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Config_Unique] ON [dbo].[Config]
 (
 	[ConfigName] ASC
@@ -3415,13 +3312,13 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_Config_Unique] ON [dbo].[Config]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_Credential_Unique]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_Credential_Unique]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Credential_Unique] ON [dbo].[Credential]
 (
 	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IXu_ReportContent]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IXu_ReportContent]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE NONCLUSTERED INDEX [IXu_ReportContent] ON [dbo].[ReportContent]
 (
 	[ReportId] ASC,
@@ -3430,7 +3327,7 @@ CREATE NONCLUSTERED INDEX [IXu_ReportContent] ON [dbo].[ReportContent]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IXu_ReportHeader]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IXu_ReportHeader]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IXu_ReportHeader] ON [dbo].[ReportHeader]
 (
 	[ReportName] ASC
@@ -3438,7 +3335,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IXu_ReportHeader] ON [dbo].[ReportHeader]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UX_SystemTimeZone_ID]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [UX_SystemTimeZone_ID]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [UX_SystemTimeZone_ID] ON [dbo].[SystemTimeZone]
 (
 	[ID] ASC
@@ -3446,7 +3343,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [UX_SystemTimeZone_ID] ON [dbo].[SystemTimeZone
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_scom_Agent_Domain]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_scom_Agent_Domain]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE NONCLUSTERED INDEX [IX_scom_Agent_Domain] ON [scom].[Agent]
 (
 	[Domain] ASC
@@ -3454,13 +3351,13 @@ CREATE NONCLUSTERED INDEX [IX_scom_Agent_Domain] ON [scom].[Agent]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_scom_AgentExclusion_DNSHostName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_scom_AgentExclusion_DNSHostName]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE NONCLUSTERED INDEX [IX_scom_AgentExclusion_DNSHostName] ON [scom].[AgentExclusions]
 (
 	[DNSHostName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_ObjectAvailabilityHistory]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_ObjectAvailabilityHistory]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_ObjectAvailabilityHistory] ON [scom].[ObjectAvailabilityHistory]
 (
 	[ManagedEntityID] ASC,
@@ -3469,7 +3366,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ObjectAvailabilityHistory] ON [scom].[Objec
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_scom_WindowsComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  Index [IX_scom_WindowsComputer]    Script Date: 2/12/2019 10:38:47 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_scom_WindowsComputer] ON [scom].[WindowsComputer]
 (
 	[DNSHostName] ASC
@@ -3762,7 +3659,7 @@ REFERENCES [cm].[LogicalVolume] ([ComputerGUID], [objectGUID])
 GO
 ALTER TABLE [pm].[LogicalVolumeSizeRaw] CHECK CONSTRAINT [FK_LogicalVolumeSizeRaw_LogicalVolume]
 GO
-/****** Object:  StoredProcedure [ad].[spComputerDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spComputerDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3789,7 +3686,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spComputerInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spComputerInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3823,7 +3720,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spComputerInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spComputerInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3848,7 +3745,7 @@ AS
 	
 	UPDATE [ad].[Computer]
 	SET [Active] = 0--, dbLastUpdate = @dbLastUpdate
-	WHERE  [Domain] = @Domain AND [dbLastUpdate] < @BeforeDate
+	WHERE  [Domain] = @Domain AND [dbLastUpdate] < DateAdd(Minute, -15, @BeforeDate)
 	
 	/*/*/*/*/*/*-- Begin Return Select <- do not remove
 	SELECT [objectGUID], [SID], [Domain], [Name], [DNSHostName], [IPv4Address], [Trusted], [OperatingSystem], [OperatingSystemVersion], [OperatingSystemServicePack], [Description], [DistinguishedName], [Enabled], [Active], [LastLogon], [whenCreated], [whenChanged], [dbAddDate], [dbLastUpdate]
@@ -3858,7 +3755,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spComputerSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spComputerSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3885,7 +3782,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spComputerUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spComputerUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3962,7 +3859,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spComputerUpsert_Import]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spComputerUpsert_Import]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -4020,7 +3917,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spDomainDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spDomainDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4047,7 +3944,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spDomainInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spDomainInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4081,7 +3978,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spDomainSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spDomainSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4108,7 +4005,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spDomainUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spDomainUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4166,7 +4063,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spForestDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spForestDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4196,7 +4093,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spForestInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spForestInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4230,7 +4127,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spForestSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spForestSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4258,7 +4155,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spForestUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spForestUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4308,7 +4205,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4335,7 +4232,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4369,7 +4266,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4404,7 +4301,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupMemberDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupMemberDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4431,7 +4328,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupMemberInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupMemberInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4459,7 +4356,7 @@ AS
 	              
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupMemberInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupMemberInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4488,7 +4385,7 @@ AS
 	              
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupMemberInactivateByGroup]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupMemberInactivateByGroup]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4519,7 +4416,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupMemberInactivateByMember]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupMemberInactivateByMember]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4549,7 +4446,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupMemberSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupMemberSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4576,7 +4473,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupMemberUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupMemberUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4624,7 +4521,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4651,7 +4548,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spGroupUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spGroupUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4720,7 +4617,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSiteDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSiteDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4747,7 +4644,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSiteInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSiteInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4781,7 +4678,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSiteInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSiteInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4816,7 +4713,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSiteSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSiteSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4843,7 +4740,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSiteUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSiteUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4907,7 +4804,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSubnetDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSubnetDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4934,7 +4831,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSubnetInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSubnetInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4968,7 +4865,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSubnetInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSubnetInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5003,7 +4900,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSubnetSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSubnetSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5030,7 +4927,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSubnetSelectBySubnet]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSubnetSelectBySubnet]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -5058,7 +4955,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSubnetUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSubnetUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5127,7 +5024,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSyncHistoryDeleteByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSyncHistoryDeleteByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5155,7 +5052,7 @@ DELETE FROM [ad].[SyncHistory]
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSyncHistoryInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSyncHistoryInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5195,7 +5092,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSyncHistorySelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSyncHistorySelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5222,7 +5119,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSyncStatusSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSyncStatusSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5250,7 +5147,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSyncStatusUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSyncStatusUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5299,7 +5196,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spSyncStatusViewSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spSyncStatusViewSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5327,7 +5224,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spUserDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spUserDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5354,7 +5251,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spUserInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spUserInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5388,7 +5285,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spUserInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spUserInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5423,7 +5320,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spUserSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spUserSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5450,7 +5347,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [ad].[spUserUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [ad].[spUserUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5544,7 +5441,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeDeleteByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeDeleteByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5571,7 +5468,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeInactivateByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeInactivateByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5605,7 +5502,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeSelectByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeSelectByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5632,7 +5529,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseCubeUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5687,7 +5584,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseDeleteByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseDeleteByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5714,7 +5611,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseInactivateByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseInactivateByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5748,7 +5645,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseSelectByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseSelectByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5775,7 +5672,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisDatabaseUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5829,7 +5726,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstanceDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstanceDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5861,7 +5758,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstanceInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstanceInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5913,7 +5810,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstanceInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstanceInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5952,7 +5849,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertyDeleteByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertyDeleteByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5979,7 +5876,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertyInactivateByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertyInactivateByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6013,7 +5910,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertySelectByAnalysisInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertySelectByAnalysisInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6040,7 +5937,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertyUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstancePropertyUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6090,7 +5987,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstanceSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstanceSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6123,7 +6020,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstanceSelectByServiceState]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstanceSelectByServiceState]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6151,7 +6048,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spAnalysisInstanceUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spAnalysisInstanceUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6210,7 +6107,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6238,7 +6135,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6273,7 +6170,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationInstallationDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationInstallationDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6300,7 +6197,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationInstallationInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationInstallationInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6339,7 +6236,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationInstallationSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationInstallationSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6371,7 +6268,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationInstallationUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationInstallationUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6442,7 +6339,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6470,7 +6367,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spApplicationUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spApplicationUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6517,7 +6414,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterDeleteByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterDeleteByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6544,7 +6441,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterGroupDeleteByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterGroupDeleteByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6576,7 +6473,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterGroupInactivateByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterGroupInactivateByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6615,7 +6512,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterGroupSelectByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterGroupSelectByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6647,7 +6544,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterGroupUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterGroupUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6702,7 +6599,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterInactivateByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterInactivateByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6736,7 +6633,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterNodeDeleteByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterNodeDeleteByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6768,7 +6665,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterNodeInactivateByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterNodeInactivateByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6807,7 +6704,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterNodeSelectByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterNodeSelectByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6839,7 +6736,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterNodeUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterNodeUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6896,7 +6793,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterResourceDeleteByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterResourceDeleteByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6928,7 +6825,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterResourceInactivateByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterResourceInactivateByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6967,7 +6864,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterResourceSelectByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterResourceSelectByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6999,7 +6896,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterResourceUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterResourceUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7055,7 +6952,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterSelectByClusterName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterSelectByClusterName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7082,7 +6979,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spClusterUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spClusterUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7129,7 +7026,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7156,7 +7053,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerGroupMemberDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerGroupMemberDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7188,7 +7085,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerGroupMemberInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerGroupMemberInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7228,7 +7125,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerGroupMemberSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerGroupMemberSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7260,7 +7157,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerGroupMemberUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerGroupMemberUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7312,7 +7209,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7413,7 +7310,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7440,7 +7337,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerShareDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerShareDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7472,7 +7369,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerShareInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerShareInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7512,7 +7409,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerSharePermissionDeleteByShare]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerSharePermissionDeleteByShare]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7551,7 +7448,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerSharePermissionInactivateByShare]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerSharePermissionInactivateByShare]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7597,7 +7494,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerSharePermissionSelectByShare]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerSharePermissionSelectByShare]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7629,7 +7526,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerSharePermissionUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerSharePermissionUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7692,7 +7589,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerShareSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerShareSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7717,7 +7614,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerShareUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerShareUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7773,7 +7670,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7837,7 +7734,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spComputerUpsertForCluster]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spComputerUpsertForCluster]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7890,7 +7787,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseDeleteByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseDeleteByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7918,7 +7815,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseFileDeleteByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseFileDeleteByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7946,7 +7843,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseFileInactivateByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseFileInactivateByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7981,7 +7878,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseFileSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseFileSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8001,7 +7898,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseFileUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseFileUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8057,7 +7954,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8104,7 +8001,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8137,7 +8034,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8218,7 +8115,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8258,7 +8155,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginDeleteByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginDeleteByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8286,7 +8183,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8321,7 +8218,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginSelectByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginSelectByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8341,7 +8238,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceLoginUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8407,7 +8304,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstancePermissionInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstancePermissionInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8442,7 +8339,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertyDeleteByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertyDeleteByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8470,7 +8367,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertyInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertyInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8505,7 +8402,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertySelectByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertySelectByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8525,7 +8422,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertyUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstancePropertyUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8573,7 +8470,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8599,7 +8496,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceSelectByServiceState]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceSelectByServiceState]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8621,7 +8518,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseInstanceUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseInstanceUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8681,7 +8578,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePermissionDeleteByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePermissionDeleteByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8710,7 +8607,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePermissionInactivateByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePermissionInactivateByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8746,7 +8643,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePermissionInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePermissionInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8781,7 +8678,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePermissionSelectByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePermissionSelectByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8802,7 +8699,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePermissionUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePermissionUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8855,7 +8752,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePropertyDeleteByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePropertyDeleteByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8883,7 +8780,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePropertyInactivateByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePropertyInactivateByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8918,7 +8815,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePropertySelectByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePropertySelectByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8938,7 +8835,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabasePropertyUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabasePropertyUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8986,7 +8883,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberDeleteByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberDeleteByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9015,7 +8912,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberInactivateByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberInactivateByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9053,7 +8950,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9091,7 +8988,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberSelectByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberSelectByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9112,7 +9009,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseRoleMemberUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9161,7 +9058,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseSelectByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseSelectByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9182,7 +9079,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseSizeUpdate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseSizeUpdate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9213,7 +9110,7 @@ WHERE [objectGUID] = @DatabaseGUID
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9271,7 +9168,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseUserDeleteByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseUserDeleteByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9299,7 +9196,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseUserInactivateByDatabase]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseUserInactivateByDatabase]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9335,7 +9232,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseUserInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseUserInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9370,7 +9267,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseUserSelectByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseUserSelectByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9390,7 +9287,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDatabaseUserUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDatabaseUserUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9445,7 +9342,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskDriveDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskDriveDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9477,7 +9374,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskDriveInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskDriveInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9516,7 +9413,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskDriveSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskDriveSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9541,7 +9438,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskDriveUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskDriveUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9605,7 +9502,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskPartitionDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskPartitionDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9637,7 +9534,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskPartitionInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskPartitionInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9676,7 +9573,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskPartitionSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskPartitionSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9700,7 +9597,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDiskPartitionUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDiskPartitionUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9759,7 +9656,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDrivePartitionMapDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDrivePartitionMapDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9791,7 +9688,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDrivePartitionMapInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDrivePartitionMapInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9830,7 +9727,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDrivePartitionMapSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDrivePartitionMapSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9854,7 +9751,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spDrivePartitionMapUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spDrivePartitionMapUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9906,7 +9803,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spEventDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spEventDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9937,7 +9834,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spEventDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spEventDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9970,7 +9867,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spEventGetMaxDateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spEventGetMaxDateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10004,7 +9901,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spEventInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spEventInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10047,7 +9944,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spEventSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spEventSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10072,7 +9969,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spEventSelectByComputerAndLogName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spEventSelectByComputerAndLogName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10098,7 +9995,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spJobDeleteByInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spJobDeleteByInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10126,7 +10023,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spJobInactivateByInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spJobInactivateByInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10161,7 +10058,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spJobSelectByInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spJobSelectByInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10181,7 +10078,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spJobUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spJobUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10242,7 +10139,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerDeleteByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerDeleteByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10270,7 +10167,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10305,7 +10202,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerLoginDeleteByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerLoginDeleteByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10333,7 +10230,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerLoginInactivateByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerLoginInactivateByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10369,7 +10266,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerLoginSelectByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerLoginSelectByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10389,7 +10286,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerLoginUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerLoginUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10440,7 +10337,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerSelectByDatabaseInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerSelectByDatabaseInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10460,7 +10357,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLinkedServerUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLinkedServerUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10522,7 +10419,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLogicalVolumeDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLogicalVolumeDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10554,7 +10451,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLogicalVolumeInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLogicalVolumeInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10593,7 +10490,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLogicalVolumeSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLogicalVolumeSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10618,7 +10515,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLogicalVolumeSizeUpdate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLogicalVolumeSizeUpdate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10649,7 +10546,7 @@ WHERE [ComputerGUID] = @ComputerGUID AND [Name] = @LogicalVolumeName
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spLogicalVolumeUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spLogicalVolumeUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10709,7 +10606,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10742,7 +10639,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10782,7 +10679,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10807,7 +10704,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterConfigurationUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10874,7 +10771,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10907,7 +10804,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10947,7 +10844,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10972,7 +10869,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spNetworkAdapterUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spNetworkAdapterUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11032,7 +10929,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spOperatingSystemDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spOperatingSystemDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11064,7 +10961,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spOperatingSystemInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spOperatingSystemInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11103,7 +11000,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spOperatingSystemSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spOperatingSystemSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11127,7 +11024,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spOperatingSystemUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spOperatingSystemUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11195,7 +11092,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportingInstanceDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportingInstanceDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11228,7 +11125,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportingInstanceInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportingInstanceInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11281,7 +11178,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportingInstanceInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportingInstanceInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11321,7 +11218,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportingInstanceSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportingInstanceSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11347,7 +11244,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportingInstanceSelectByServiceState]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportingInstanceSelectByServiceState]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11369,7 +11266,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportingInstanceUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportingInstanceUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11428,7 +11325,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerItemDeleteByReportingInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerItemDeleteByReportingInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11456,7 +11353,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerItemInactivateByReportingInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerItemInactivateByReportingInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11491,7 +11388,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerItemSelectByReportingInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerItemSelectByReportingInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11512,7 +11409,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerItemUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerItemUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11568,7 +11465,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionDeleteByReportingInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionDeleteByReportingInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11596,7 +11493,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionInactivateByReportingInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionInactivateByReportingInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11631,7 +11528,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterDeleteBySubscription]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterDeleteBySubscription]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11659,7 +11556,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterInactivateBySubscription]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterInactivateBySubscription]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11694,7 +11591,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterSelectBySubscription]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterSelectBySubscription]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11715,7 +11612,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionParameterUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11763,7 +11660,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionSelectByReportingInstance]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionSelectByReportingInstance]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11784,7 +11681,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spReportServerSubscriptionUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11843,7 +11740,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spServiceDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spServiceDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11876,7 +11773,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spServiceInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spServiceInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11916,7 +11813,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spServiceSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spServiceSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11943,7 +11840,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spServiceUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spServiceUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12004,7 +11901,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationDeleteByApplication]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationDeleteByApplication]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12032,7 +11929,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationInactivateByApplication]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationInactivateByApplication]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12067,7 +11964,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationSelectByApplication]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationSelectByApplication]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12087,7 +11984,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12133,7 +12030,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationURLDeleteByName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationURLDeleteByName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12161,7 +12058,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationURLInactivateByName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationURLInactivateByName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12196,7 +12093,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationURLSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationURLSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12217,7 +12114,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationURLSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationURLSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12244,7 +12141,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationURLSelectByName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationURLSelectByName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12264,7 +12161,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationURLUpdateLastResult]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationURLUpdateLastResult]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12304,7 +12201,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWebApplicationURLUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWebApplicationURLUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12359,7 +12256,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12386,7 +12283,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12420,7 +12317,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationDeleteByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationDeleteByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12453,7 +12350,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationInactivateByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationInactivateByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12492,7 +12389,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationSelectByComputer]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationSelectByComputer]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12524,7 +12421,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateInstallationUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12597,7 +12494,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12624,7 +12521,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [cm].[spWindowsUpdateUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [cm].[spWindowsUpdateUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12672,7 +12569,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spComputerDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spComputerDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12700,7 +12597,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spComputerInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spComputerInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12734,7 +12631,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spComputerReactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spComputerReactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12769,7 +12666,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spComputerSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spComputerSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12797,7 +12694,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spComputerSelectByAgentName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spComputerSelectByAgentName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12821,7 +12718,7 @@ SELECT [dnsHostName]
  WHERE ([AgentName] = @AgentName OR @AgentName is NULL)
        AND [Active] >= @Active
 GO
-/****** Object:  StoredProcedure [dbo].[spComputerUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spComputerUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12870,7 +12767,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spConfigDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spConfigDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12897,7 +12794,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spConfigSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spConfigSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12924,7 +12821,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spConfigUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spConfigUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12970,7 +12867,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spCredentialDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spCredentialDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12997,7 +12894,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spCredentialInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spCredentialInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13030,7 +12927,7 @@ AS
                
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spCredentialSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spCredentialSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13057,7 +12954,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spCredentialUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spCredentialUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13106,7 +13003,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spProcessLogDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spProcessLogDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13134,7 +13031,7 @@ WHERE MessageDate < DATEADD(DAY, -@daysRetain, GetDate())
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spProcessLogInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spProcessLogInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13171,7 +13068,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spProcessLogSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spProcessLogSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13198,7 +13095,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [dbo].[spReportContentSelectByReportID]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spReportContentSelectByReportID]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13225,7 +13122,7 @@ SELECT [Id]
   WHERE [ReportId] = @ReportID
   ORDER BY [SortSequence]
 GO
-/****** Object:  StoredProcedure [dbo].[spReportContentSelectByReportName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spReportContentSelectByReportName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13258,7 +13155,7 @@ SELECT [Id]
   WHERE [ReportId] = @ReportID
   ORDER BY [SortSequence]
 GO
-/****** Object:  StoredProcedure [dbo].[spReportContentSelectByReportNameAndSortSequence]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spReportContentSelectByReportNameAndSortSequence]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13292,7 +13189,7 @@ SELECT [Id]
   WHERE [ReportId] = @ReportID
   AND [SortSequence] = @SortSequence
 GO
-/****** Object:  StoredProcedure [dbo].[spReportHeaderSelectByReportName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spReportHeaderSelectByReportName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13306,7 +13203,7 @@ SET NOCOUNT ON
 SET XACT_ABORT ON
 
 
-SELECT [Id]
+SELECT TOP 1 [Id]
       ,[ReportName]
       ,[ReportDisplayName]
       ,[ReportBackground]
@@ -13341,9 +13238,10 @@ SELECT [Id]
       ,[FooterFontColor]
       ,[FooterFontSize]
   FROM [dbo].[ReportHeader]
-  WHERE [ReportName] = @ReportName
+  WHERE [ReportName] = @ReportName OR [ReportName] = '<default>'
+  ORDER BY [ReportName] DESC
 GO
-/****** Object:  StoredProcedure [dbo].[spSystemTimeZoneSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spSystemTimeZoneSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -13381,7 +13279,7 @@ SELECT [ZoneID]
   WHERE [Display] >= @Display
   ORDER BY [CurrentUTCOffset]
 GO
-/****** Object:  StoredProcedure [dbo].[spSystemTimeZoneUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [dbo].[spSystemTimeZoneUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13456,7 +13354,7 @@ INSERT INTO [dbo].[SystemTimeZone]
 
 END
 GO
-/****** Object:  StoredProcedure [pm].[spDatabaseSizeDailyDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spDatabaseSizeDailyDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13487,7 +13385,7 @@ WHERE [Date] < DateAdd(Day,-@daysRetain,@CurrentDate)
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spDatabaseSizeDailyUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spDatabaseSizeDailyUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13570,7 +13468,7 @@ SET @CurrentTime = CURRENT_TIMESTAMP
            ,[source].[dbAddDate])
 	;
 GO
-/****** Object:  StoredProcedure [pm].[spDatabaseSizeRawDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spDatabaseSizeRawDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13595,7 +13493,7 @@ WHERE [DateTime] < DateAdd(Day,-@daysRetain,@CurrentDate)
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spDatabaseSizeRawInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spDatabaseSizeRawInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13635,7 +13533,7 @@ INSERT INTO [pm].[DatabaseSizeRaw]
            ,@dbAddDate)
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeDailyDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeDailyDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13660,7 +13558,7 @@ WHERE [Date] < DateAdd(Day,-@daysRetain,@CurrentDate)
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeDailyUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeDailyUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13720,7 +13618,7 @@ AS
 		VALUES (source.[Date], source.[ComputerGUID], source.[LogicalVolumeGUID], source.[AvgSpaceUsed], source.[MaxSpaceUsed], source.[MinSpaceUsed], source.[StDevSpaceUsed], source.[Count], source.[dbAddDate])
 	;
 GO
-/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeRawDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeRawDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13745,7 +13643,7 @@ WHERE [DateTime] < DateAdd(Day,-@daysRetain,@CurrentDate)
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeRawInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spLogicalVolumeSizeRawInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13798,7 +13696,7 @@ INSERT INTO [pm].[LogicalVolumeSizeRaw]
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseDailyDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseDailyDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13829,7 +13727,7 @@ WHERE [Date] < DateAdd(Day,-@daysRetain,@CurrentDate)
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseDailyUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseDailyUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13919,7 +13817,7 @@ AS
            ,[source].[dbAddDate])
 	;
 GO
-/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseRawDelete]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseRawDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13950,7 +13848,7 @@ WHERE [DateTime] < DateAdd(Day,-@daysRetain,@CurrentDate)
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseRawInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [pm].[spWebApplicationURLResponseRawInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13995,7 +13893,7 @@ BEGIN TRAN
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spAgentAvailabilityUpdate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAgentAvailabilityUpdate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14027,7 +13925,7 @@ WHERE DisplayName = @DisplayName
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spAgentExclusionsInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAgentExclusionsInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -14070,7 +13968,7 @@ BEGIN TRAN
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spAgentInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAgentInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -14096,11 +13994,11 @@ BEGIN TRAN
 
 UPDATE scom.Agent
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate AND Active = 1
+WHERE dbLastUpdate < DATEADD(MINUTE, -15, @BeforeDate) AND Active = 1
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spAgentUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAgentUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14252,7 +14150,7 @@ BEGIN TRAN
 			;
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spAlertDeleteInactive]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAlertDeleteInactive]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14273,7 +14171,7 @@ DELETE
 FROM scom.Alert
 WHERE Active = 0
 GO
-/****** Object:  StoredProcedure [scom].[spAlertInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAlertInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14293,7 +14191,7 @@ AS
 UPDATE scom.Alert
 SET [Active] = 0
 GO
-/****** Object:  StoredProcedure [scom].[spAlertInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAlertInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14316,9 +14214,9 @@ SET XACT_ABORT ON
 
 UPDATE scom.Alert
 SET [Active] = 0
-WHERE dbLastUpdate < @BeforeDate AND Active = 1
+WHERE dbLastUpdate < DATEADD(MINUTE, -15, @BeforeDate) AND Active = 1
 GO
-/****** Object:  StoredProcedure [scom].[spAlertResolutionStateUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAlertResolutionStateUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14410,7 +14308,7 @@ INSERT
 	;
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spAlertUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spAlertUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14799,7 +14697,7 @@ BEGIN TRAN
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spGroupHealthStateAlertRelationshipInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spGroupHealthStateAlertRelationshipInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14829,7 +14727,7 @@ FROM scom.[GroupHealthStateAlertRelationship] inner join scom.Alert b
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spGroupHealthStateAlertRelationshipInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spGroupHealthStateAlertRelationshipInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14856,12 +14754,12 @@ BEGIN TRAN
 
 UPDATE [scom].[GroupHealthStateAlertRelationship]
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate 
+WHERE dbLastUpdate < DATEADD(MINUTE, -15, @BeforeDate)
 	AND Active = 1
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spGroupHealthStateAlertRelationshipUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spGroupHealthStateAlertRelationshipUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14900,7 +14798,7 @@ AS
 
 	END
 GO
-/****** Object:  StoredProcedure [scom].[spGroupHealthStateInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spGroupHealthStateInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14926,12 +14824,12 @@ BEGIN TRAN
 
 UPDATE [scom].[GroupHealthState]
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate 
+WHERE dbLastUpdate < DATEADD(MINUTE,-15,@BeforeDate)
 	AND Active = 1
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spGroupHealthStateUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spGroupHealthStateUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15099,7 +14997,7 @@ BEGIN TRAN
 	;
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spObjectAvailabilityHistoryInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spObjectAvailabilityHistoryInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15167,7 +15065,7 @@ BEGIN
                        ,@HealthServiceUnavailableMilliseconds)
 END
 GO
-/****** Object:  StoredProcedure [scom].[spObjectHealthStateAlertRelationshipInactivate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spObjectHealthStateAlertRelationshipInactivate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15197,7 +15095,7 @@ FROM scom.[ObjectHealthStateAlertRelationship] inner join scom.Alert b
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spObjectHealthStateAlertRelationshipInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spObjectHealthStateAlertRelationshipInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15224,12 +15122,12 @@ BEGIN TRAN
 
 UPDATE scom.[ObjectHealthStateAlertRelationship]
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate 
+WHERE dbLastUpdate < DateAdd(Minute, -15, @BeforeDate )
 	AND Active = 1
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spObjectHealthStateAlertRelationshipUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spObjectHealthStateAlertRelationshipUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15268,10 +15166,10 @@ AS
 
 	END
 GO
-/****** Object:  StoredProcedure [scom].[spObjectHealthStateInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
-SET ANSI_NULLS OFF
+/****** Object:  StoredProcedure [scom].[spObjectHealthStateInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
+SET ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER OFF
+SET QUOTED_IDENTIFIER ON
 GO
 /****************************************************************
 * Name: scom.spObjectInactivateByDate
@@ -15279,6 +15177,9 @@ GO
 * Date: 2015-02-24
 *
 * Description:
+* Inactivate objects that were not updated in the most recent pass.
+* Used only during full sync.
+* Modified to subtract 15 minutes from last update.
 *
 ****************************************************************/
 CREATE PROC [scom].[spObjectHealthStateInactivateByDate] (
@@ -15295,13 +15196,14 @@ BEGIN TRAN
 
 UPDATE scom.[ObjectHealthState]
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate 
+WHERE dbLastUpdate < DATEADD(MINUTE, -15, @BeforeDate)
 	AND Active = 1
 	AND ObjectClass = @ObjectClass
 
 COMMIT
+
 GO
-/****** Object:  StoredProcedure [scom].[spObjectHealthStateUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spObjectHealthStateUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15471,7 +15373,7 @@ COMMIT
 
 
 GO
-/****** Object:  StoredProcedure [scom].[spSyncHistoryDeleteByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spSyncHistoryDeleteByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15499,7 +15401,7 @@ DELETE FROM [scom].[SyncHistory]
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spSyncHistoryInsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spSyncHistoryInsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -15539,7 +15441,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spSyncHistorySelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spSyncHistorySelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15566,7 +15468,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spSyncStatusSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spSyncStatusSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15594,7 +15496,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spSyncStatusUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spSyncStatusUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15643,7 +15545,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spSyncStatusViewSelect]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spSyncStatusViewSelect]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15671,7 +15573,7 @@ AS
 
 	COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spWindowsComputerInactivateByDate]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spWindowsComputerInactivateByDate]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15697,11 +15599,11 @@ BEGIN TRAN
 
 UPDATE scom.WindowsComputer
 SET Active = 0
-WHERE dbLastUpdate < @BeforeDate AND Active = 1
+WHERE dbLastUpdate < DATEADD(MINUTE, -15, @BeforeDate) AND Active = 1
 
 COMMIT
 GO
-/****** Object:  StoredProcedure [scom].[spWindowsComputerSelectByDNSHostName]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spWindowsComputerSelectByDNSHostName]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -15743,7 +15645,7 @@ SELECT [ID]
   FROM [scom].[WindowsComputer]
   WHERE [DNSHostName] = @DNSHostName
 GO
-/****** Object:  StoredProcedure [scom].[spWindowsComputerUpsert]    Script Date: 2/1/2019 9:59:40 AM ******/
+/****** Object:  StoredProcedure [scom].[spWindowsComputerUpsert]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
