@@ -13,6 +13,8 @@ GO
 /****** Object:  Database [SCORE]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE DATABASE [SCORE]
 GO
+USE [SCORE]
+GO
 /****** Object:  DatabaseRole [scomUpdate]    Script Date: 2/12/2019 10:38:44 AM ******/
 CREATE ROLE [scomUpdate]
 GO
