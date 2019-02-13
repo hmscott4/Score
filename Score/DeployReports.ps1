@@ -2,37 +2,43 @@
 
 .SYNOPSIS
 
-	This script is used to deploy reports to a SQL Server Reporting Services instance.  It will
-	deploy reports, data sources and data sets.  
+	This script will deploy reports and data sources from a folder to a Report Server.
 
 
 .DESCRIPTION
 
-	This script is used to deploy reports to a SQL Server Reporting Services instance.  It will
-	deploy reports, data sources and data sets.
+	This script will deploy reports and data sources from a folder to a Report Server.
 
 	Instructions:
-	1. Copy script to a folder (any empty folder will do, make one called "tmp"
-	2. Create a new, empty subfolder called "Reports"
-	3. Copy the Reports (.rdl), Data Sources (.rds) and Data sets (.rsd) files to the "Reports" folder.
-    4. Execute the script.
+	1. Create a new (empty folder)
+	2. Copy script file into new folder
+	3. Create a new subfolder called Reports
+	4. Copy Reports, Data Sources and Data Sets into folder "Reports"
+	5. Execute script
+	6. Update Data Source credentials to match requirements
 
 
 .INPUTS
 
-  The script will prompt the user for the Report Server URL (the base URL, without /ReportServer).
-
+	Script will prompt the user for the following:
+	1. Report Server name (url to base report server, not included "/Reportserver" or "/Reports"
+	2. Target Folder for reports
+	3. Overwrite Data Sources (Y/N)
+	4. Overwrite Data Sets (Y/N)
+	5. Overwrite Reports (Y/N)
+  	
 .OUTPUTS
-
-  Reports are deployed to the report server.
+	
+	Data Sources, Data Sets and Reports are written to report server.
 
 .NOTES
 
   Version:        1.0
-  Author:         Stefan Daneels
+  Author:         Steffen Daneels
   Creation Date:  2017/01/24
 
-  This script was "liberated" from "https://kohera.be/blog/sql-server/automated-deployment-ssrs-reports-powershell/".
+  This script was "liberated" from https://kohera.be/blog/sql-server/automated-deployment-ssrs-reports-powershell/
+  I made one minor fix to the Data Sources deployment process to fix a minor bug.
 
 #>
 try{
@@ -214,7 +220,13 @@ Name = $Rds.RptDataSource.Name
 Path = $dataSourceFolder_Final + '/' + $Rds.RptDataSource.Name
 }
 
-<# if ($IsOverwriteDataSource -eq 1) { [boolean]$IsOverwriteDataSource = 1 } else { [boolean]$IsOverwriteDataSource = 0 } #>
+#if ($IsOverwriteDataSource -eq 1) 
+#{ 
+#    [boolean]$IsOverwriteDataSource = 1 
+#} else 
+#{ 
+#    [boolean]$IsOverwriteDataSource = 0 
+#} 
 
 $warnings = $ssrsProxy.CreateDataSource($rdsf, $dataSourceFolder_Final ,$IsOverwriteDataSource, $Definition, $Properties)
 
