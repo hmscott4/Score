@@ -1400,7 +1400,6 @@ WHERE
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
-                      <FontWeight>Bold</FontWeight>
                       <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
@@ -1437,13 +1436,12 @@ WHERE
                     <Style>
                       <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
-                      <FontWeight>Bold</FontWeight>
                       <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>

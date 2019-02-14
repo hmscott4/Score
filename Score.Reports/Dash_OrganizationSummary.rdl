@@ -1631,7 +1631,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>

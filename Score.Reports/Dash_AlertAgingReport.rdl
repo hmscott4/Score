@@ -48,7 +48,7 @@
 	b.Label,
 	b.LowValue,
 	b.HighValue,
-	a.CustomField9 AS QueueName
+	a.Owner
 	FROM 
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
@@ -149,8 +149,8 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
           <DataField>HighValue</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="QueueName">
-          <DataField>QueueName</DataField>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -305,22 +305,24 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="QueueNames">
+    <DataSet Name="Owner">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT DISTINCT CustomField9 as QueueName
+        <CommandText>SELECT N'Unassigned' as Owner
+UNION ALL
+SELECT DISTINCT Owner as Owner
 FROM
     scom.Alert
 WHERE 
-	CustomField9 IS NOT NULL
- 	AND CustomField9 != ''
-
+	Owner IS NOT NULL
+ 	AND Owner != N''
+ 	AND Owner != N'Unassigned'
 ORDER BY 1</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
-        <Field Name="QueueName">
-          <DataField>QueueName</DataField>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -566,7 +568,7 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
@@ -579,9 +581,6 @@ ORDER BY 1</CommandText>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
-                                </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>=Split(Join(Parameters!QueueName.Value, ","), ",")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -816,13 +815,6 @@ ORDER BY 1</CommandText>
                   <FilterValue>="Info"</FilterValue>
                 </FilterValues>
               </Filter>
-              <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
-                <Operator>In</Operator>
-                <FilterValues>
-                  <FilterValue>=Parameters!QueueName.Value</FilterValue>
-                </FilterValues>
-              </Filter>
             </Filters>
             <Top>1.46389in</Top>
             <Height>1.8in</Height>
@@ -901,37 +893,6 @@ ORDER BY 1</CommandText>
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox4">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>="Queue Name : " &amp; Join(Parameters!QueueName.Value, ", ")</Value>
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.15833in</Top>
-            <Height>0.25in</Height>
-            <Width>10.5in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Chart Name="Chart3">
             <ChartCategoryHierarchy>
               <ChartMembers>
@@ -983,7 +944,7 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
@@ -997,8 +958,8 @@ ORDER BY 1</CommandText>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - WINDOWS ADMIN</Value>
+                                <Parameter Name="Owner">
+                                  <Value>Active Directory Team</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1192,7 +1153,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>J64 - WINDOWS ADMIN</Caption>
+                <Caption>Active Directory Team</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -1234,10 +1195,10 @@ ORDER BY 1</CommandText>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>J64 - WINDOWS ADMIN</FilterValue>
+                  <FilterValue>Active Directory Team</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -1245,7 +1206,7 @@ ORDER BY 1</CommandText>
             <Left>3.40274in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1305,7 +1266,7 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
@@ -1319,8 +1280,8 @@ ORDER BY 1</CommandText>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - DATABASE - ADMINISTRATION</Value>
+                                <Parameter Name="Owner">
+                                  <Value>Windows Team</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1514,7 +1475,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>J64 - DATABASE - ADMINISTRATION</Caption>
+                <Caption>Windows Team</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -1556,10 +1517,10 @@ ORDER BY 1</CommandText>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>="J64 - DATABASE - ADMINISTRATION"</FilterValue>
+                  <FilterValue>Windows Team</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -1567,7 +1528,7 @@ ORDER BY 1</CommandText>
             <Left>6.80549in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1627,7 +1588,7 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
@@ -1641,8 +1602,8 @@ ORDER BY 1</CommandText>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - ENTERPRISE MONITORING SUPPORT</Value>
+                                <Parameter Name="Owner">
+                                  <Value>DBA Team</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1836,7 +1797,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>J64 - ENTERPRISE MONITORING SUPPORT</Caption>
+                <Caption>DBA Team</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -1878,17 +1839,17 @@ ORDER BY 1</CommandText>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>="J64 - ENTERPRISE MONITORING SUPPORT"</FilterValue>
+                  <FilterValue>DBA Team</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
             <Top>3.28056in</Top>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1948,7 +1909,7 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
@@ -1962,8 +1923,8 @@ ORDER BY 1</CommandText>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - DIRECTORY SERVICES</Value>
+                                <Parameter Name="Owner">
+                                  <Value>Web Team</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -2157,7 +2118,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>J64 - DIRECTORY SERVICES</Caption>
+                <Caption>Web Team</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -2199,10 +2160,10 @@ ORDER BY 1</CommandText>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>J64 - DIRECTORY SERVICES</FilterValue>
+                  <FilterValue>Web Team</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -2210,7 +2171,7 @@ ORDER BY 1</CommandText>
             <Left>3.40274in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2270,7 +2231,7 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
@@ -2284,8 +2245,8 @@ ORDER BY 1</CommandText>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - VDI</Value>
+                                <Parameter Name="Owner">
+                                  <Value>Config Mgmt Team</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -2479,7 +2440,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>J64 - VDI</Caption>
+                <Caption>Config Mgmt Team</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -2521,10 +2482,10 @@ ORDER BY 1</CommandText>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>J64 - VDI</FilterValue>
+                  <FilterValue>Config Mgmt Team</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -2532,7 +2493,7 @@ ORDER BY 1</CommandText>
             <Left>6.80549in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2592,22 +2553,22 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - ENTRPRISE IMAGING SUPORT</Value>
+                                <Parameter Name="Owner">
+                                  <Value>Unassigned</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -2801,7 +2762,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>J64 - ENTRPRISE IMAGING SUPORT</Caption>
+                <Caption>Unassigned</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -2843,17 +2804,18 @@ ORDER BY 1</CommandText>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>J64 - ENTRPRISE IMAGING SUPORT</FilterValue>
+                  <FilterValue>Config Mgmt Team</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>5.11389in</Top>
+            <Top>5.16945in</Top>
+            <Left>6.80549in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2913,22 +2875,22 @@ ORDER BY 1</CommandText>
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - UNIX ADMIN</Value>
+                                <Parameter Name="Owner">
+                                  <Value>Monitoring Team</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -3122,7 +3084,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>J64 - UNIX ADMIN</Caption>
+                <Caption>Monitoring Team</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -3164,340 +3126,18 @@ ORDER BY 1</CommandText>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>J64 - UNIX ADMIN</FilterValue>
+                  <FilterValue>Monitoring Team</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>5.11389in</Top>
+            <Top>5.15in</Top>
             <Left>3.40274in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
-            <ZIndex>11</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>White</BackgroundColor>
-              <BackgroundGradientType>None</BackgroundGradientType>
-            </Style>
-          </Chart>
-          <Chart Name="Chart10">
-            <ChartCategoryHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_CategoryGroup9">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Label.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!SortOrder.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Label.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartCategoryHierarchy>
-            <ChartSeriesHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_SeriesGroup9">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Severity.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!Severity.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Severity.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartSeriesHierarchy>
-            <ChartData>
-              <ChartSeriesCollection>
-                <ChartSeries Name="Name">
-                  <ChartDataPoints>
-                    <ChartDataPoint>
-                      <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
-                      </ChartDataPointValues>
-                      <ChartDataLabel>
-                        <Style />
-                      </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
-                      <ActionInfo>
-                        <Actions>
-                          <Action>
-                            <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
-                              <Parameters>
-                                <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
-                                </Parameter>
-                                <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
-                                </Parameter>
-                                <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
-                                </Parameter>
-                                <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
-                                </Parameter>
-                                <Parameter Name="QueueName">
-                                  <Value>J64 - MOBILITY ENGINEERING SUPPORT</Value>
-                                </Parameter>
-                              </Parameters>
-                            </Drillthrough>
-                          </Action>
-                        </Actions>
-                      </ActionInfo>
-                      <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
-                      </Style>
-                      <ChartMarker>
-                        <Style />
-                      </ChartMarker>
-                      <DataElementOutput>Output</DataElementOutput>
-                    </ChartDataPoint>
-                  </ChartDataPoints>
-                  <Subtype>Stacked</Subtype>
-                  <Style />
-                  <ChartEmptyPoints>
-                    <Style />
-                    <ChartMarker>
-                      <Style />
-                    </ChartMarker>
-                    <ChartDataLabel>
-                      <Style />
-                    </ChartDataLabel>
-                  </ChartEmptyPoints>
-                  <ValueAxisName>Primary</ValueAxisName>
-                  <CategoryAxisName>Primary</CategoryAxisName>
-                  <ChartSmartLabel>
-                    <CalloutLineColor>Black</CalloutLineColor>
-                    <MinMovingDistance>0pt</MinMovingDistance>
-                  </ChartSmartLabel>
-                </ChartSeries>
-              </ChartSeriesCollection>
-            </ChartData>
-            <ChartAreas>
-              <ChartArea Name="Default">
-                <ChartCategoryAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption />
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartCategoryAxes>
-                <ChartValueAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                      <Format>#,0;(#,0)</Format>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Alerts</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartValueAxes>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                </Style>
-              </ChartArea>
-            </ChartAreas>
-            <ChartTitles>
-              <ChartTitle Name="Default">
-                <Caption>J64 - MOBILITY ENGINEERING SUPPORT</Caption>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                  <FontWeight>Bold</FontWeight>
-                  <TextAlign>General</TextAlign>
-                  <VerticalAlign>Top</VerticalAlign>
-                </Style>
-              </ChartTitle>
-            </ChartTitles>
-            <Palette>BrightPastel</Palette>
-            <ChartBorderSkin>
-              <Style>
-                <BackgroundColor>Gray</BackgroundColor>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <Color>White</Color>
-              </Style>
-            </ChartBorderSkin>
-            <ChartNoDataMessage Name="NoDataMessage">
-              <Caption>No Data Available</Caption>
-              <Style>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <TextAlign>General</TextAlign>
-                <VerticalAlign>Top</VerticalAlign>
-              </Style>
-            </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
-            <Filters>
-              <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
-                </FilterValues>
-              </Filter>
-              <Filter>
-                <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
-                </FilterValues>
-              </Filter>
-              <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
-                <Operator>Equal</Operator>
-                <FilterValues>
-                  <FilterValue>J64 - MOBILITY ENGINEERING SUPPORT</FilterValue>
-                </FilterValues>
-              </Filter>
-            </Filters>
-            <Top>5.11389in</Top>
-            <Left>6.80549in</Left>
-            <Height>1.8in</Height>
-            <Width>3.3333in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3693,24 +3333,6 @@ ORDER BY 1</CommandText>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="QueueName">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>QueueNames</DataSetName>
-          <ValueField>QueueName</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>QueueName</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>QueueNames</DataSetName>
-          <ValueField>QueueName</ValueField>
-          <LabelField>QueueName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -3721,11 +3343,6 @@ ORDER BY 1</CommandText>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>UTCOffset</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>QueueName</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

@@ -80,7 +80,7 @@
     <Report Include="Chart_WindowsDiskSpaceTrend.rdl" />
     <Report Include="Dash_AlertAgingReport.rdl" />
     <Report Include="Dash_AlertSummary.rdl" />
-    <Report Include="Dash_AlertSummaryByQueue.rdl" />
+    <Report Include="Dash_AlertSummaryByOwner.rdl" />
     <Report Include="Dash_OrganizationSummary.rdl" />
     <Report Include="Dash_OrganizationSummaryByArea.rdl" />
     <Report Include="Dash_OrganizationSummaryByHealth.rdl" />

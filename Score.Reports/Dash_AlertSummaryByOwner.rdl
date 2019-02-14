@@ -48,7 +48,7 @@
 	b.Label,
 	b.LowValue,
 	b.HighValue,
-	a.CustomField9 AS QueueName
+	a.Owner AS Owner
 FROM 
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
@@ -150,8 +150,8 @@ WHERE
           <DataField>HighValue</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="QueueName">
-          <DataField>QueueName</DataField>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -310,8 +310,8 @@ WHERE
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@QueueName">
-            <Value>=Parameters!QueueName.Value</Value>
+          <QueryParameter Name="@Owner">
+            <Value>=Parameters!Owner.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT TOP 5 ROW_NUMBER() OVER (ORDER BY Count(*) DESC) as [RANK], 
@@ -322,7 +322,7 @@ FROM
     scom.Alert
 WHERE 
     TimeRaised &gt; DateAdd(Hour, -24, GetUTCDate())
-    AND CustomField9 IN (@QueueName)
+    AND IsNull(Owner,'Unassiged') IN (@Owner)
     AND Active = 1
     AND Severity &gt; 0
 GROUP BY 
@@ -355,8 +355,8 @@ ORDER BY
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@QueueName">
-            <Value>=Parameters!QueueName.Value</Value>
+          <QueryParameter Name="@Owner">
+            <Value>=Parameters!Owner.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT TOP 5 ROW_NUMBER() OVER (ORDER BY Sum(RepeatCount) DESC) as [RANK], Name, Severity, Count(*) as [Count], Sum(RepeatCount) as [RepeatCount]
@@ -365,21 +365,26 @@ FROM
 WHERE 
     LastModified &gt; DateAdd(Hour, -24, GetUTCDate())
     AND [Severity] &gt; 0
-    AND (CustomField1 IN (@QueueName) OR CustomField10 IN (@QueueName))
+    AND IsNull(Owner, 'Unassigned') IN (@Owner)
     AND Active = 1
 GROUP BY 
     Name, 
     Severity
 ORDER BY Sum(RepeatCount) DESC</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
+        <Field Name="RANK">
+          <DataField>RANK</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
         <Field Name="Name">
           <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="RANK">
-          <DataField>RANK</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
+        <Field Name="Severity">
+          <DataField>Severity</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
         </Field>
         <Field Name="Count">
           <DataField>Count</DataField>
@@ -389,19 +394,15 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
           <DataField>RepeatCount</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Severity">
-          <DataField>Severity</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="TopAlertsByRemedyQueue">
+    <DataSet Name="TopAlertsByOwner">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT TOP 10 RANK() OVER (ORDER BY Count(*) DESC) as [RANK], AssignedTo as CustomField1, Count(*) as [Count]
+        <CommandText>SELECT TOP 10 RANK() OVER (ORDER BY Count(*) DESC) as [RANK], Owner, Count(*) as [Count]
 FROM (
 SELECT
-	CustomField9 as AssignedTo
+	Owner
 FROM 
     scom.Alert
 WHERE 
@@ -409,19 +410,19 @@ WHERE
     AND Active = 1
     AND Severity &gt; 0) t
 GROUP BY 
-    AssignedTo
+    Owner
 ORDER BY 
     Count(*) DESC</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
-        <Field Name="CustomField1">
-          <DataField>CustomField1</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="RANK">
           <DataField>RANK</DataField>
           <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Count">
           <DataField>Count</DataField>
@@ -429,22 +430,28 @@ ORDER BY
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="QueueNames">
+    <DataSet Name="Owners">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT DISTINCT
-    CustomField9 AS QueueName
+        <CommandText>SELECT 'Unassigned' as OWNER
+
+UNION ALL
+
+SELECT DISTINCT
+    Owner AS Owner
 FROM
     scom.Alert
 WHERE
-	CustomField9 IS NOT NULL
- 	AND CustomField9 != ''
+	Owner IS NOT NULL
+ 	AND Owner != ''
+ 	AND Owner != 'Unassigned'
+
 ORDER BY 1</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
-        <Field Name="QueueName">
-          <DataField>QueueName</DataField>
+        <Field Name="Owner">
+          <DataField>OWNER</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -453,8 +460,8 @@ ORDER BY 1</CommandText>
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@QueueName">
-            <Value>=Parameters!QueueName.Value</Value>
+          <QueryParameter Name="@Owner">
+            <Value>=Parameters!Owner.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT 
@@ -468,7 +475,7 @@ WHERE
    ResolutionState &lt; 254
    AND Active = 1
    AND Severity &gt; 0
-   AND IsNull(CustomField9, 'Unassigned') IN (@QueueName)
+   AND IsNull(Owner, 'Unassigned') IN (@Owner)
 GROUP BY 
    Name, 
    Severity
@@ -735,7 +742,7 @@ ORDER BY
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="StartDate">
                                   <Value>=Fields!DateRaisedLocal.Value</Value>
@@ -747,7 +754,7 @@ ORDER BY
                                   <Value>=Fields!SeverityID.Value</Value>
                                 </Parameter>
                                 <Parameter Name="QueueName">
-                                  <Value>=Split(Join(Parameters!QueueName.Value, ","), ",")</Value>
+                                  <Value>=Fields!Owner.Value</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -985,10 +992,10 @@ ORDER BY
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>=Parameters!QueueName.Value</FilterValue>
+                  <FilterValue>=Parameters!Owner.Value</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -1055,7 +1062,7 @@ ORDER BY
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
@@ -1070,7 +1077,7 @@ ORDER BY
                                   <Value>=True</Value>
                                 </Parameter>
                                 <Parameter Name="QueueName">
-                                  <Value>=Split(Join(Parameters!QueueName.Value, ","), ",")</Value>
+                                  <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1306,10 +1313,10 @@ ORDER BY
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!QueueName.Value</FilterExpression>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
                 <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>=Parameters!QueueName.Value</FilterValue>
+                  <FilterValue>=Parameters!Owner.Value</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -1441,7 +1448,7 @@ ORDER BY
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!Severity.Value</Value>
@@ -1456,7 +1463,7 @@ ORDER BY
                                   <Value>=Fields!Name.Value</Value>
                                 </Parameter>
                                 <Parameter Name="QueueName">
-                                  <Value>=Split(Join(Parameters!QueueName.Value, ","), ",")</Value>
+                                  <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1872,7 +1879,7 @@ ORDER BY
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Executive/AlertDetails</ReportName>
+                                  <ReportName>List_AlertDetails</ReportName>
                                   <Parameters>
                                     <Parameter Name="AlertName">
                                       <Value>=Fields!Name.Value</Value>
@@ -2092,7 +2099,7 @@ ORDER BY
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Queue Name : " &amp; Join(Parameters!QueueName.Value, ", ")</Value>
+                    <Value>="Owner : " &amp; Join(Parameters!Owner.Value, ", ")</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                     </Style>
@@ -2166,7 +2173,7 @@ ORDER BY
                         <Actions>
                           <Action>
                             <Drillthrough>
-                              <ReportName>/Executive/AlertDetails</ReportName>
+                              <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
                                   <Value>=Fields!Severity.Value</Value>
@@ -2181,7 +2188,7 @@ ORDER BY
                                   <Value>=Fields!Name.Value</Value>
                                 </Parameter>
                                 <Parameter Name="QueueName">
-                                  <Value>=Microsoft.VisualBasic.Strings.Split(Microsoft.VisualBasic.Strings.Join(Parameters!QueueName.Value, ","), ",")</Value>
+                                  <Value>=Microsoft.VisualBasic.Strings.Split(Microsoft.VisualBasic.Strings.Join(Parameters!Owner.Value, ","), ",")</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
@@ -2599,7 +2606,7 @@ ORDER BY
                             <Actions>
                               <Action>
                                 <Drillthrough>
-                                  <ReportName>/Executive/AlertDetails</ReportName>
+                                  <ReportName>List_AlertDetails</ReportName>
                                   <Parameters>
                                     <Parameter Name="AlertName">
                                       <Value>=Fields!Name.Value</Value>
@@ -2617,7 +2624,7 @@ ORDER BY
                                       <Value>=True</Value>
                                     </Parameter>
                                     <Parameter Name="QueueName">
-                                      <Value>=Microsoft.VisualBasic.Strings.Split(Microsoft.VisualBasic.Strings.Join(Parameters!QueueName.Value, ","), ",")</Value>
+                                      <Value>=Microsoft.VisualBasic.Strings.Split(Microsoft.VisualBasic.Strings.Join(Parameters!Owner.Value, ","), ",")</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -3003,20 +3010,20 @@ ORDER BY
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="QueueName">
+    <ReportParameter Name="Owner">
       <DataType>String</DataType>
       <DefaultValue>
         <DataSetReference>
-          <DataSetName>QueueNames</DataSetName>
-          <ValueField>QueueName</ValueField>
+          <DataSetName>Owners</DataSetName>
+          <ValueField>Owner</ValueField>
         </DataSetReference>
       </DefaultValue>
-      <Prompt>QueueName</Prompt>
+      <Prompt>Owner</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>QueueNames</DataSetName>
-          <ValueField>QueueName</ValueField>
-          <LabelField>QueueName</LabelField>
+          <DataSetName>Owners</DataSetName>
+          <ValueField>Owner</ValueField>
+          <LabelField>Owner</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -3025,7 +3032,7 @@ ORDER BY
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>1</NumberOfRows>
+      <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -3035,7 +3042,7 @@ ORDER BY
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>QueueName</ParameterName>
+          <ParameterName>Owner</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

@@ -389,7 +389,7 @@ ORDER BY ReasonCode</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.94139in</Width>
+                  <Width>2.48305in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.0625in</Width>
@@ -1425,7 +1425,7 @@ ORDER BY ReasonCode</CommandText>
             <DataSetName>MaintenanceModeDetail</DataSetName>
             <Top>1.61333in</Top>
             <Height>0.75in</Height>
-            <Width>9.95834in</Width>
+            <Width>10.5in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -1475,13 +1475,12 @@ ORDER BY ReasonCode</CommandText>
                     <Style>
                       <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
-                      <FontWeight>Bold</FontWeight>
                       <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>

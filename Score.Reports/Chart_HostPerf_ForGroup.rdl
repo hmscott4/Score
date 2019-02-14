@@ -142,6 +142,21 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @GroupName)</Command
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="ManagedGroups">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT DisplayName
+FROM scom.GroupHealthState
+WHERE Active = 1
+ORDER BY DisplayName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="DisplayName">
+          <DataField>DisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -293,6 +308,13 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @GroupName)</Command
     <ReportParameter Name="GroupName">
       <DataType>String</DataType>
       <Prompt>Group Name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ManagedGroups</DataSetName>
+          <ValueField>DisplayName</ValueField>
+          <LabelField>DisplayName</LabelField>
+        </DataSetReference>
+      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="UTCOffset">
       <DataType>Integer</DataType>

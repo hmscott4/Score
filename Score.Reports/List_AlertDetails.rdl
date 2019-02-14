@@ -56,7 +56,8 @@
 	END as [Priority], 
 	r.Name as ResolutionStateName, 
 	DATEDIFF(Hour, [TimeRaised], GETUTCDATE()) AgeHours,
-	a.RepeatCount
+	a.RepeatCount,
+                   ISNULL(Owner, 'Unassigned') AS Owner
 FROM 
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
@@ -143,6 +144,10 @@ WHERE
           <DataField>RepeatCount</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <Filters>
         <Filter>
@@ -164,6 +169,13 @@ WHERE
           <Operator>Like</Operator>
           <FilterValues>
             <FilterValue>=Parameters!ObjectPath.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+        <Filter>
+          <FilterExpression>=Fields!Owner.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!Owner.Value</FilterValue>
           </FilterValues>
         </Filter>
       </Filters>
@@ -491,6 +503,29 @@ ORDER BY ResolutionState</CommandText>
         </Field>
         <Field Name="FooterFontSize">
           <DataField>FooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Owner">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT N'Unassigned' as Owner
+
+UNION ALL
+
+SELECT DISTINCT Owner
+FROM scom.Alert
+WHERE
+    Owner IS NOT NULL
+    AND Owner != N''
+    AND Owner != N'Unassigned'
+
+ORDER BY Owner</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -1988,11 +2023,29 @@ ORDER BY ResolutionState</CommandText>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="Owner">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Owner</DataSetName>
+          <ValueField>Owner</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Owner</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Owner</DataSetName>
+          <ValueField>Owner</ValueField>
+          <LabelField>Owner</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>5</NumberOfRows>
+      <NumberOfRows>6</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2038,6 +2091,11 @@ ORDER BY ResolutionState</CommandText>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>4</RowIndex>
           <ParameterName>UTCOffset</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>5</RowIndex>
+          <ParameterName>Owner</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

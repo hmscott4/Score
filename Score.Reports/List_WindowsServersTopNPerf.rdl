@@ -120,17 +120,11 @@
     </DataSet>
     <DataSet Name="ManagedGroupNames">
       <Query>
-        <DataSourceName>OperationsManagerDW</DataSourceName>
-        <CommandText>SELECT 'All Windows Computers' as GroupName
-UNION ALL
-SELECT 'SQL Server Computers'
-UNION ALL
-SELECT DISTINCT DisplayName 
-FROM ManagedEntity 
-WHERE 
-	FullName like N'%.Group'
-	AND DisplayName like N'DLA%'
-ORDER BY GroupName</CommandText>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT DisplayName as GroupName
+FROM scom.GroupHealthState
+WHERE Active = 1
+ORDER BY DisplayName</CommandText>
       </Query>
       <Fields>
         <Field Name="GroupName">
@@ -2994,7 +2988,6 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!TitleFontSize.Value, "ReportHeaderSettings")</FontSize>
-                      <FontWeight>Bold</FontWeight>
                       <Color>=First(Fields!TitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
@@ -3031,13 +3024,12 @@ WHERE        (IsDeleted = 0) AND (SourceObjectDisplayName = @ManagedGroupNames)<
                     <Style>
                       <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
-                      <FontWeight>Bold</FontWeight>
                       <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
