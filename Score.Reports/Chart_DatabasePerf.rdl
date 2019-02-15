@@ -83,7 +83,7 @@ IF DATEDIFF(DAY, @StartDate, @EndDate) &lt;= 14
                 INNER JOIN vPerformanceRule vpr ON vpr.RuleRowId = vpri.RuleRowId
 				INNER JOIN (SELECT ObjectName, CounterName FROM @CounterValues) cn on vpr.ObjectName like CN.ObjectName AND vpr.CounterName = cn.CounterName
         WHERE   pvpr.DateTime BETWEEN DATEADD(Minute, -@UTCOffset, @StartDate) AND DATEADD(Minute, -@UTCOffset, @EndDate)
-                AND [Path] LIKE @ServerName + N'%'
+                AND [FullName] LIKE N'%' + @ServerName + N'%'
         ORDER BY [Path] ,
                 vpr.ObjectName ,
                 vpr.CounterName ,
@@ -107,7 +107,7 @@ ELSE
                 INNER JOIN vPerformanceRule vpr ON vpr.RuleRowId = vpri.RuleRowId
 				INNER JOIN (SELECT ObjectName, CounterName FROM @CounterValues) cn on vpr.ObjectName like CN.ObjectName AND vpr.CounterName = cn.CounterName				
         WHERE   pvpr.DateTime BETWEEN DATEADD(Minute, -@UTCOffset, @StartDate) AND DATEADD(Minute, -@UTCOffset, @EndDate)
-                AND [Path] LIKE @ServerName + N'%'
+                AND [FullName] LIKE N'%' + @ServerName + N'%'
         ORDER BY [Path] ,
                 vpr.ObjectName ,
                 vpr.CounterName ,

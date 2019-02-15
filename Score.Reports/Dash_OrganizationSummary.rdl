@@ -404,7 +404,7 @@ CASE a.Priority
 END as [Priority], 
 a.ResolutionState,
 r.Name as ResolutionStateName, 
-(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60 ) as AgeHours,
+(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60.0 ) as AgeHours,
 b.SortOrder,
 b.Label,
 b.LowValue,
@@ -413,7 +413,10 @@ FROM
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
 	INNER JOIN scom.AlertAgingBuckets b on
-		(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) / 60) BETWEEN b.LowValue and b.HighValue
+		(DATEDIFF(HOUR, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
+WHERE
+    a.Active = 1
+    AND Severity &gt; 0
 
 ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
       </Query>
@@ -488,7 +491,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
         </Field>
         <Field Name="AgeHours">
           <DataField>AgeHours</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="SortOrder">
           <DataField>SortOrder</DataField>

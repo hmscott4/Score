@@ -53,7 +53,7 @@
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
 	INNER JOIN scom.AlertAgingBuckets b on
-		(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
+		(DATEDIFF(MINUTE, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
 WHERE 
     a.Active = 1
     AND a.Severity &gt; 0

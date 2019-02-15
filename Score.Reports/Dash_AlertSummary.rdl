@@ -43,16 +43,17 @@ CASE a.Priority
 END as [Priority], 
 a.ResolutionState,
 r.Name as ResolutionStateName, 
-(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60 ) as AgeHours,
+(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60.0 ) as AgeHours,
 b.SortOrder,
 b.Label,
 b.LowValue,
-b.HighValue
+b.HighValue,
+a.Active
 FROM 
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
 	INNER JOIN scom.AlertAgingBuckets b on
-		(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) / 60) BETWEEN b.LowValue and b.HighValue
+		(DATEDIFF(MINUTE, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
 
 ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
       </Query>
@@ -123,7 +124,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
         </Field>
         <Field Name="AgeHours">
           <DataField>AgeHours</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="ResolutionState">
           <DataField>ResolutionState</DataField>
@@ -144,6 +145,10 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
         <Field Name="HighValue">
           <DataField>HighValue</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Active">
+          <DataField>Active</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -1107,17 +1112,24 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
             <DataSetName>AlertsByDay</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
                 <Operator>NotEqual</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>Info</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Fields!Active.Value</FilterExpression>
+                <Operator>Equal</Operator>
+                <FilterValues>
+                  <FilterValue DataType="Boolean">true</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>

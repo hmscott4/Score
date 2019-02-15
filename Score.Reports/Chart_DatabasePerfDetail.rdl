@@ -57,7 +57,8 @@ VALUES  ( N'SQL Database' , N'DB Used Space (MB)' )
 
 IF DATEDIFF(DAY, @StartDate, @EndDate) &lt;= 14 
     BEGIN
-        SELECT  [Path] ,
+        SELECT  [Path] , 
+				[Name] ,
                 FullName ,
                 vpr.ObjectName ,
                 vpr.CounterName ,
@@ -71,8 +72,9 @@ IF DATEDIFF(DAY, @StartDate, @EndDate) &lt;= 14
                 INNER JOIN vPerformanceRule vpr ON vpr.RuleRowId = vpri.RuleRowId
 				INNER JOIN (SELECT ObjectName, CounterName FROM @CounterValues) cn on vpr.ObjectName like CN.ObjectName AND vpr.CounterName = cn.CounterName
         WHERE   pvpr.DateTime BETWEEN DATEADD(Minute, -@UTCOffset, @StartDate) AND DATEADD(Minute, -@UTCOffset, @EndDate)
-                AND [Path] LIKE @ServerName + N'%'
-        ORDER BY [Path] ,
+                AND [FullName] LIKE  N'%' + @ServerName + N'%'
+        ORDER BY [Path] , 
+				[Name] ,
                 vpr.ObjectName ,
                 vpr.CounterName ,
                 [DateTime]
@@ -81,7 +83,8 @@ IF DATEDIFF(DAY, @StartDate, @EndDate) &lt;= 14
 
 ELSE 
     BEGIN
-        SELECT  [Path] ,
+        SELECT  [Path] , 
+				[Name] ,
                 FullName ,
                 vpr.ObjectName ,
                 vpr.CounterName ,
@@ -95,8 +98,9 @@ ELSE
                 INNER JOIN vPerformanceRule vpr ON vpr.RuleRowId = vpri.RuleRowId
 				INNER JOIN (SELECT ObjectName, CounterName FROM @CounterValues) cn on vpr.ObjectName like CN.ObjectName AND vpr.CounterName = cn.CounterName				
         WHERE   pvpr.DateTime BETWEEN DATEADD(Minute, -@UTCOffset, @StartDate) AND DATEADD(Minute, -@UTCOffset, @EndDate)
-                AND [Path] LIKE @ServerName + N'%'
-        ORDER BY [Path] ,
+                AND [Path] LIKE N'%' + @ServerName + N'%'
+        ORDER BY [Path] , 
+				[Name] ,
                 vpr.ObjectName ,
                 vpr.CounterName ,
                 [DateTime]
@@ -109,6 +113,10 @@ ELSE
         </Field>
         <Field Name="Path">
           <DataField>Path</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ObjectName">
@@ -643,7 +651,7 @@ ELSE
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>=Split(Fields!FullName.Value,";")(2)</Value>
+                                <Value>=Fields!Name.Value</Value>
                                 <Style>
                                   <FontWeight>Bold</FontWeight>
                                   <Color>SteelBlue</Color>
@@ -668,6 +676,7 @@ ELSE
                           <PaddingBottom>2pt</PaddingBottom>
                         </Style>
                       </Textbox>
+                      <rd:Selected>true</rd:Selected>
                     </CellContents>
                   </TablixHeader>
                   <TablixMembers>
