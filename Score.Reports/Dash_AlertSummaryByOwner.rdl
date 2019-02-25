@@ -753,7 +753,7 @@ ORDER BY
                                 <Parameter Name="Severity">
                                   <Value>=Fields!SeverityID.Value</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
+                                <Parameter Name="Owner">
                                   <Value>=Fields!Owner.Value</Value>
                                 </Parameter>
                               </Parameters>
@@ -1076,7 +1076,7 @@ ORDER BY
                                 <Parameter Name="OnlyOpenAlerts">
                                   <Value>=True</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
+                                <Parameter Name="Owner">
                                   <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
                                 </Parameter>
                               </Parameters>
@@ -1444,6 +1444,7 @@ ORDER BY
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -1462,8 +1463,11 @@ ORDER BY
                                 <Parameter Name="AlertName">
                                   <Value>=Fields!Name.Value</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
+                                <Parameter Name="Owner">
                                   <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
+                                </Parameter>
+                                <Parameter Name="OnlyOpenAlerts">
+                                  <Value>False</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1893,6 +1897,12 @@ ORDER BY
                                     <Parameter Name="Severity">
                                       <Value>=Fields!Severity.Value</Value>
                                     </Parameter>
+                                    <Parameter Name="OnlyOpenAlerts">
+                                      <Value>False</Value>
+                                    </Parameter>
+                                    <Parameter Name="Owner">
+                                      <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
+                                    </Parameter>
                                   </Parameters>
                                 </Drillthrough>
                               </Action>
@@ -1909,6 +1919,7 @@ ORDER BY
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2169,6 +2180,7 @@ ORDER BY
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -2187,7 +2199,7 @@ ORDER BY
                                 <Parameter Name="AlertName">
                                   <Value>=Fields!Name.Value</Value>
                                 </Parameter>
-                                <Parameter Name="QueueName">
+                                <Parameter Name="Owner">
                                   <Value>=Microsoft.VisualBasic.Strings.Split(Microsoft.VisualBasic.Strings.Join(Parameters!Owner.Value, ","), ",")</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">

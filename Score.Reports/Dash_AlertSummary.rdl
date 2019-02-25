@@ -305,7 +305,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
     <DataSet Name="TopAlertsByCount">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT TOP 5 RANK() OVER (ORDER BY Count(*) DESC) as [RANK], Name, Severity, Count(*) as [Count]
+        <CommandText>SELECT TOP 5 ROW_NUMBER() OVER (ORDER BY Count(*) DESC) as [RANK], Name, Severity, Count(*) as [Count]
 FROM scom.Alert
 WHERE TimeRaised &gt; DateAdd(Hour, -24, GetUTCDate())
 GROUP BY Name, Severity
@@ -1519,6 +1519,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -2096,6 +2097,7 @@ ORDER BY Sum(RepeatCount) DESC</CommandText>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>

@@ -408,9 +408,10 @@ r.Name as ResolutionStateName,
 b.SortOrder,
 b.Label,
 b.LowValue,
-b.HighValue
+b.HighValue,
+a.Active
 FROM 
-	scom.Alert a inner join scom.AlertResolutionState r
+	scom.Alert a INNER JOIN scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
 	INNER JOIN scom.AlertAgingBuckets b on
 		(DATEDIFF(HOUR, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
@@ -509,6 +510,10 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
           <DataField>HighValue</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="Active">
+          <DataField>Active</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
   </DataSets>
@@ -606,7 +611,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Count(Fields!Label.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style>
