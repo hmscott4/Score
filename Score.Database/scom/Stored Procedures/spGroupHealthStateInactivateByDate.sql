@@ -7,7 +7,7 @@
 *
 ****************************************************************/
 CREATE PROC [scom].[spGroupHealthStateInactivateByDate] (
-	@BeforeDate datetime2(3)
+	@BeforeDate datetimeoffset(3)
 )
 
 AS

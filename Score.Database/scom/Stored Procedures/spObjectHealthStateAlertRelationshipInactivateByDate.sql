@@ -7,7 +7,7 @@
 *
 ****************************************************************/
 CREATE PROC [scom].[spObjectHealthStateAlertRelationshipInactivateByDate] (
-	@BeforeDate datetime2(3)
+	@BeforeDate datetimeoffset(3)
 )
 
 AS
