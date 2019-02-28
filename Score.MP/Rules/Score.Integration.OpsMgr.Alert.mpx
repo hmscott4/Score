@@ -34,12 +34,14 @@
       </DataSourceModuleType>
       <WriteActionModuleType ID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA" Accessibility="Internal" Batching="false">
         <Configuration>
-          <xsd:element minOccurs="1" name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element minOccurs="1" name="Param1" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="managementGroup" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="objectClasses" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="ScriptLocation" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <OverrideableParameters>
-          <OverrideableParameter ID="Param1" Selector="$Config/Param1$" ParameterType="string" />
+          <OverrideableParameter ID="objectClasses" Selector="$Config/objectClasses$" ParameterType="string" />
+          <OverrideableParameter ID="ScriptLocation" Selector="$Config/ScriptLocation$" ParameterType="string" />
           <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
         </OverrideableParameters>
         <ModuleImplementation Isolation="Any">
@@ -54,7 +56,7 @@
                   #  Author:
                   #  v1.0
                   #=================================================================================
-                  param($ComputerName,$MGName,$Param1)
+                  param($managementGroup,$objectClasses,$ScriptLocation)
 
 
                   # Manual Testing section - put stuff here for manually testing script - typically parameters:
@@ -106,16 +108,16 @@
                 </ScriptBody>
                 <Parameters>
                   <Parameter>
-                    <Name>ComputerName</Name>
-                    <Value>$Config/ComputerName$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>MGName</Name>
+                    <Name>managementGroup</Name>
                     <Value>$Target/ManagementGroup/Name$</Value>
                   </Parameter>
                   <Parameter>
-                    <Name>Param1</Name>
-                    <Value>$Config/Param1$</Value>
+                    <Name>objectClasses</Name>
+                    <Value>$Config/objectClasses$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ScriptLocation</Name>
+                    <Value>$Config/ScriptLocation$</Value>
                   </Parameter>
                 </Parameters>
                 <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
@@ -135,16 +137,17 @@
       <Rule ID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule" Enabled="true" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Custom</Category>
         <DataSources>
-          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.DS">
+          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.DS" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
             <IntervalSeconds>86400</IntervalSeconds>
             <SyncTime></SyncTime>
           </DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="WA" TypeID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA">
-            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-            <Param1>YourStringParamData</Param1>
-            <TimeoutSeconds>120</TimeoutSeconds>
+            <managementGroup>$Target/ManagementGroup/Name$</managementGroup>
+            <objectClasses>config,alert</objectClasses>
+            <ScriptLocation>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</ScriptLocation>
+            <TimeoutSeconds>900</TimeoutSeconds>
           </WriteAction>
         </WriteActions>
       </Rule>

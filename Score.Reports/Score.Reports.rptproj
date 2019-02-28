@@ -87,10 +87,14 @@
     <Report Include="Dash_OrganizationSummary_WindowsLogicalDisk.rdl" />
     <Report Include="Dash_ServerSummary.rdl" />
     <Report Include="Item_Alert.rdl" />
+    <Report Include="List_ActiveDirectoryExtracts.rdl" />
+    <Report Include="List_ActiveDirectoryExtractsHistory.rdl" />
     <Report Include="List_AlertDetails.rdl" />
     <Report Include="List_LinuxServersTopNPerf.rdl" />
     <Report Include="List_ObjectAlerts.rdl" />
     <Report Include="List_ObjectHealthState.rdl" />
+    <Report Include="List_OpsMgrExtracts.rdl" />
+    <Report Include="List_OpsMgrExtractsHistory.rdl" />
     <Report Include="List_ServerMaintenanceModeDetail.rdl" />
     <Report Include="List_ServerUptimeByGroup.rdl" />
     <Report Include="List_ServerUtilization.rdl" />

@@ -303,8 +303,15 @@ $DescProp = New-Object($datatype)
 $DescProp.Name = 'Description'
 $DescProp.Value = ''
 $HiddenProp = New-Object($datatype)
-$HiddenProp.Name = 'Hidden'
-$HiddenProp.Value = 'false'
+If($reportName -eq "Dash_OrganizationSummary"){
+	
+	$HiddenProp.Name = 'Hidden'
+	$HiddenProp.Value = 'false'
+} Else {
+	
+	$HiddenProp.Name = 'Hidden'
+	$HiddenProp.Value = 'true'
+}
 $Properties = @($DescProp, $HiddenProp)
 
 #Call Proxy to upload report

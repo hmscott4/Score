@@ -3,12 +3,16 @@
       <ClassTypes>
         <ClassType ID="Microsoft.SCORE.IntegrationServer.Class" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
-          <Property ID="ScriptPath" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="ScriptLocation" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
         <!-- We choose Microsoft.Windows.LocalApplication as our generic base class -->
         <!-- This specific fragment example has a class property of "Version" just as an example. You can change as needed or add new ones -->
       </ClassTypes>
     </EntityTypes>
+  <SecureReferences>
+    <SecureReference ID="SCORE.IntegrationServer.AD.RunasProfile" Accessibility="Public" />
+    <SecureReference ID="SCORE.IntegrationServer.OpsMgr.RunasProfile" Accessibility="Public" />
+  </SecureReferences>
   </TypeDefinitions><Monitoring>
     <Discoveries>
       <Discovery ID="Microsoft.SCORE.IntegrationServer.Class.Discovery" Target="Windows!Microsoft.Windows.Server.OperatingSystem" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
@@ -17,7 +21,7 @@
         <DiscoveryTypes>
           <DiscoveryClass TypeID="Microsoft.SCORE.IntegrationServer.Class">
             <Property PropertyID="Version" />
-            <Property PropertyID="ScriptPath" />
+            <Property PropertyID="ScriptLocation" />
           </DiscoveryClass>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
@@ -41,8 +45,8 @@
               <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <AttributeName>SCORERegScriptPath</AttributeName>
-              <Path>SOFTWARE\Microsoft\Microsoft Operations Manager\MP\SCORE\MgmtGroups\$Target/ManagementGroup/Name$\ScriptPath</Path>
+              <AttributeName>SCORERegScriptLocation</AttributeName>
+              <Path>SOFTWARE\Microsoft\Microsoft Operations Manager\MP\SCORE\MgmtGroups\$Target/ManagementGroup/Name$\ScriptLocation</Path>
               <PathType>1</PathType>
               <!-- 0=regKey 1=regValue -->
               <AttributeType>1</AttributeType>
@@ -67,8 +71,8 @@
                 <Value>$Data/Values/SCORERegVersion$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="Microsoft.SCORE.IntegrationServer.Class"]/ScriptPath$</Name>
-                <Value>$Data/Values/SCORERegScriptPath$</Value>
+                <Name>$MPElement[Name="Microsoft.SCORE.IntegrationServer.Class"]/ScriptLocation$</Name>
+                <Value>$Data/Values/SCORERegScriptLocation$</Value>
               </Setting>
             </Settings>
           </InstanceSettings>
@@ -103,7 +107,7 @@
           <Name>Microsoft SCORE Class Discovery</Name>
           <Description>Discovers SCORE Integration Server Components</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class" SubElementID="ScriptPath">
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class" SubElementID="ScriptLocation">
           <Name>Script Path</Name>
           <Description>Path to SCORE Scripts</Description>
         </DisplayString>
