@@ -13,37 +13,35 @@ Hugh Scott
 * 2019/02/01
 */
 
-SET IDENTITY_INSERT [dbo].[Config] ON 
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'ProcessLogRetainDays', N'90', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (1, N'ProcessLogRetainDays', N'90', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'SyncHistoryRetainDays', N'90', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (2, N'SyncHistoryRetainDays', N'90', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'EventLogRetainDays', N'7', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (3, N'EventLogRetainDays', N'7', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'DatabaseSizeDailyRetainDays', N'1825', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (4, N'DatabaseSizeDailyRetainDays', N'1825', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'DatabaseSizeRawRetainDays', N'30', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (5, N'DatabaseSizeRawRetainDays', N'30', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'LogicalVolumeSizeDailyRetainDays', N'1825', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (6, N'LogicalVolumeSizeDailyRetainDays', N'1825', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'LogicalVolumeSizeRawRetainDays', N'30', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (7, N'LogicalVolumeSizeRawRetainDays', N'30', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'WebApplicationResponseDailyRetainDays', N'365', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (8, N'WebApplicationResponseDailyRetainDays', N'365', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'WebApplicationResponseRawRetainDays', N'30', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (9, N'WebApplicationResponseRawRetainDays', N'30', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'ConfigurationHistoryRetainDays', N'21', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (10, N'ConfigurationHistoryRetainDays', N'21', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'StoreConfigurationHistory', N'1', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (11, N'StoreConfigurationHistory', N'1', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'DefaultTimeZoneDisplayName', N'(UTC-05:00) Eastern Time (US & Canada)', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (1002, N'DefaultTimeZoneDisplayName', N'(UTC-05:00) Eastern Time (US & Canada)', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'OrganizationDisplayName', N'ABCD Corporation', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (1003, N'OrganizationDisplayName', N'ABCD Corporation', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'DefaultTimeZoneCurrentOffset', N'-300', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
-INSERT [dbo].[Config] ([ID], [ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (1004, N'DefaultTimeZoneCurrentOffset', N'-300', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
-GO
-SET IDENTITY_INSERT [dbo].[Config] OFF
+INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'DefaultTimeZone', N'Eastern Time Zone', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
 
 /* Initialize scom.MaintenanceReasonCode

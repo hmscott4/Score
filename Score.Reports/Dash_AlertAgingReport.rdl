@@ -13,8 +13,8 @@
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@UTCOffset">
-            <Value>=Parameters!UTCOffset.Value</Value>
+          <QueryParameter Name="@TimeZone">
+            <Value>=Parameters!TimeZone.Value</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
@@ -22,13 +22,13 @@
 	a.MonitoringObjectName, 
 	Category, 
 	[TimeRaised], 
-	cast(floor(cast(cast(a.[TimeRaised] as datetime) as float)) as [datetime]) [DateRaised], 
+	-- cast(floor(cast(cast(a.[TimeRaised] as datetime) as float)) as [datetime]) [DateRaised], 
 	[TimeResolved], 
-	cast(floor(cast(cast(a.[TimeResolved]as datetime) as float)) as [datetime]) [DateResolved],
-	DATEADD(Minute, @UTCOffset, [TimeRaised]) AS [TimeRaisedLocal], 
-	cast(floor(cast(cast(DATEADD(Minute, @UTCOffset, [TimeRaised]) as datetime) as float)) as [datetime]) [DateRaisedLocal], 
-	DATEADD(Minute, @UTCOffset, [TimeResolved]) AS [TimeResolvedLocal], 
-	cast(floor(cast(DATEADD(Minute, @UTCOffset, cast([TimeResolved] as [datetime])) as float)) as [datetime]) [DateResolvedLocal],
+	-- cast(floor(cast(cast(a.[TimeResolved]as datetime) as float)) as [datetime]) [DateResolved],
+	[TimeRaised] AT TIME ZONE @TimeZone AS [TimeRaisedLocal], 
+	-- cast(floor(cast(cast(DATEADD(Minute, @UTCOffset, [TimeRaised]) as datetime) as float)) as [datetime]) [DateRaisedLocal], 
+	[TimeResolved] AT TIME ZONE @TimeZone AS [TimeResolvedLocal], 
+	-- cast(floor(cast(DATEADD(Minute, @UTCOffset, cast([TimeResolved] as [datetime])) as float)) as [datetime]) [DateResolvedLocal],
 	a.Severity as [SeverityID],
 	CASE a.Severity
 	 WHEN 0 THEN 'Info'
@@ -43,10 +43,10 @@
 	END as [Priority], 
 	a.ResolutionState,
 	r.Name as ResolutionStateName, 
-	(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60.0 ) as AgeHours,
+--	(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60.0 ) as AgeHours,
 	b.SortOrder,
 	b.Label,
-	b.LowValue,
+ 	b.LowValue,
 	b.HighValue,
 	a.Owner
 	FROM 
@@ -57,8 +57,7 @@
 WHERE 
     a.Active = 1
     AND a.Severity &gt; 0
-    AND a.ResolutionState &lt; 255
-ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
+    AND a.ResolutionState &lt; 255</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -74,17 +73,13 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
           <DataField>Category</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="DateRaised">
-          <DataField>DateRaised</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
         <Field Name="TimeRaised">
           <DataField>TimeRaised</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
         </Field>
         <Field Name="TimeResolved">
           <DataField>TimeResolved</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
         </Field>
         <Field Name="Severity">
           <DataField>Severity</DataField>
@@ -92,19 +87,11 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
         </Field>
         <Field Name="TimeRaisedLocal">
           <DataField>TimeRaisedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
         </Field>
         <Field Name="SeverityID">
           <DataField>SeverityID</DataField>
           <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="DateResolved">
-          <DataField>DateResolved</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="DateRaisedLocal">
-          <DataField>DateRaisedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Priority">
           <DataField>Priority</DataField>
@@ -112,11 +99,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
         </Field>
         <Field Name="TimeResolvedLocal">
           <DataField>TimeResolvedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="DateResolvedLocal">
-          <DataField>DateResolvedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
+          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
         </Field>
         <Field Name="ResolutionStateName">
           <DataField>ResolutionStateName</DataField>
@@ -125,10 +108,6 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
         <Field Name="PriorityID">
           <DataField>PriorityID</DataField>
           <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="AgeHours">
-          <DataField>AgeHours</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="ResolutionState">
           <DataField>ResolutionState</DataField>
@@ -146,13 +125,13 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
           <DataField>LowValue</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="HighValue">
-          <DataField>HighValue</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
         <Field Name="Owner">
           <DataField>Owner</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="HighValue">
+          <DataField>HighValue</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -3638,19 +3617,19 @@ ORDER BY 1</CommandText>
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="UTCOffset">
-      <DataType>Integer</DataType>
+    <ReportParameter Name="TimeZone">
+      <DataType>String</DataType>
       <DefaultValue>
         <DataSetReference>
-          <DataSetName>DefaultTimeZoneOffset</DataSetName>
-          <ValueField>ConfigValue</ValueField>
+          <DataSetName>SystemTimeZone</DataSetName>
+          <ValueField>StandardName</ValueField>
         </DataSetReference>
       </DefaultValue>
       <Prompt>Time Zone</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>SystemTimeZone</DataSetName>
-          <ValueField>CurrentUTCOffset</ValueField>
+          <ValueField>StandardName</ValueField>
           <LabelField>DisplayName</LabelField>
         </DataSetReference>
       </ValidValues>
@@ -3659,12 +3638,12 @@ ORDER BY 1</CommandText>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>1</NumberOfRows>
+      <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>UTCOffset</ParameterName>
+          <ParameterName>TimeZone</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

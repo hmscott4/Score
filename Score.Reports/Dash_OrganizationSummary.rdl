@@ -371,147 +371,43 @@ AND Severity &gt; 0</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="AlertsByDay">
+    <DataSet Name="DistributedApplications">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@UTCOffset">
-            <Value>=Parameters!UTCOffset.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT a.Name, 
-a.MonitoringObjectName, 
-Category, 
-[TimeRaised], 
-cast(floor(cast(cast(a.[TimeRaised] as datetime) as float)) as [datetime]) [DateRaised], 
-[TimeResolved], 
-cast(floor(cast(cast(a.[TimeResolved]as datetime) as float)) as [datetime]) [DateResolved],
-DATEADD(Minute, @UTCOffset, [TimeRaised]) AS [TimeRaisedLocal], 
-cast(floor(cast(cast(DATEADD(Minute, @UTCOffset, [TimeRaised]) as datetime) as float)) as [datetime]) [DateRaisedLocal], 
-DATEADD(Minute, @UTCOffset, [TimeResolved]) AS [TimeResolvedLocal], 
-cast(floor(cast(DATEADD(Minute, @UTCOffset, cast([TimeResolved] as [datetime])) as float)) as [datetime]) [DateResolvedLocal],
-a.Severity as [SeverityID],
-CASE a.Severity
- WHEN 0 THEN 'Info'
- WHEN 1 THEN 'Warning'
- WHEN 2 THEN 'Critical'
-END as [Severity], 
-a.Priority as [PriorityID],
-CASE a.Priority
-  WHEN 0 THEN 'Low'
-  WHEN 1 THEN 'Medium'
-  WHEN 2 THEN 'High'
-END as [Priority], 
-a.ResolutionState,
-r.Name as ResolutionStateName, 
-(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60.0 ) as AgeHours,
-b.SortOrder,
-b.Label,
-b.LowValue,
-b.HighValue,
-a.Active
-FROM 
-	scom.Alert a INNER JOIN scom.AlertResolutionState r
-		on a.ResolutionState = r.ResolutionState
-	INNER JOIN scom.AlertAgingBuckets b on
-		(DATEDIFF(HOUR, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
-WHERE
-    a.Active = 1
-    AND Severity &gt; 0
+        <CommandText>SELECT
+	oc.genericname, 
+	case 
+		when InMaintenanceMode = 1 then 'MaintenanceMode'
+		when IsAvailable=0 then 'NotAvailable' 
+		else HealthState
+		
+	end as [HealthState],
 
-ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
+	IsAvailable, 
+	InMaintenanceMode 
+FROM 
+	scom.[ObjectHealthState] o inner join scom.[ObjectClass] oc 
+		on o.ObjectClass = oc.Name
+WHERE
+	o.Active = 1
+	AND oc.Active = 1
+	AND oc.DistributedApplication = 1</CommandText>
       </Query>
       <Fields>
-        <Field Name="Name">
-          <DataField>Name</DataField>
+        <Field Name="genericname">
+          <DataField>genericname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="MonitoringObjectName">
-          <DataField>MonitoringObjectName</DataField>
+        <Field Name="HealthState">
+          <DataField>HealthState</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Category">
-          <DataField>Category</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="IsAvailable">
+          <DataField>IsAvailable</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
         </Field>
-        <Field Name="TimeRaised">
-          <DataField>TimeRaised</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="DateRaised">
-          <DataField>DateRaised</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="TimeResolved">
-          <DataField>TimeResolved</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="DateResolved">
-          <DataField>DateResolved</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="TimeRaisedLocal">
-          <DataField>TimeRaisedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="DateRaisedLocal">
-          <DataField>DateRaisedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="TimeResolvedLocal">
-          <DataField>TimeResolvedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="DateResolvedLocal">
-          <DataField>DateResolvedLocal</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="SeverityID">
-          <DataField>SeverityID</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="Severity">
-          <DataField>Severity</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="PriorityID">
-          <DataField>PriorityID</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="Priority">
-          <DataField>Priority</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ResolutionState">
-          <DataField>ResolutionState</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="ResolutionStateName">
-          <DataField>ResolutionStateName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="AgeHours">
-          <DataField>AgeHours</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="SortOrder">
-          <DataField>SortOrder</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Label">
-          <DataField>Label</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="LowValue">
-          <DataField>LowValue</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="HighValue">
-          <DataField>HighValue</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Active">
-          <DataField>Active</DataField>
+        <Field Name="InMaintenanceMode">
+          <DataField>InMaintenanceMode</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
         </Field>
       </Fields>
@@ -570,332 +466,6 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
               <BackgroundColor>=First(Fields!TitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
             </Style>
           </Rectangle>
-          <Chart Name="Chart2">
-            <ChartCategoryHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_CategoryGroup1">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Label.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!SortOrder.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Label.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartCategoryHierarchy>
-            <ChartSeriesHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_SeriesGroup">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Severity.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!Severity.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Severity.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartSeriesHierarchy>
-            <ChartData>
-              <ChartSeriesCollection>
-                <ChartSeries Name="Name">
-                  <ChartDataPoints>
-                    <ChartDataPoint>
-                      <ChartDataPointValues>
-                        <Y>=Count(Fields!Label.Value)</Y>
-                      </ChartDataPointValues>
-                      <ChartDataLabel>
-                        <Style>
-                          <FontFamily>Arial</FontFamily>
-                        </Style>
-                      </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
-                      <ActionInfo>
-                        <Actions>
-                          <Action>
-                            <Drillthrough>
-                              <ReportName>List_AlertDetails</ReportName>
-                              <Parameters>
-                                <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
-                                </Parameter>
-                                <Parameter Name="StartDate">
-                                  <Value>=DateAdd(DateInterval.Hour, -Fields!HighValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="EndDate">
-                                  <Value>=DateAdd(DateInterval.Hour, -Fields!LowValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
-                                </Parameter>
-                              </Parameters>
-                            </Drillthrough>
-                          </Action>
-                        </Actions>
-                      </ActionInfo>
-                      <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", "Gold")</Color>
-                      </Style>
-                      <ChartMarker>
-                        <Style />
-                      </ChartMarker>
-                      <DataElementOutput>Output</DataElementOutput>
-                    </ChartDataPoint>
-                  </ChartDataPoints>
-                  <Subtype>Stacked</Subtype>
-                  <Style />
-                  <ChartEmptyPoints>
-                    <Style />
-                    <ChartMarker>
-                      <Style />
-                    </ChartMarker>
-                    <ChartDataLabel>
-                      <Style>
-                        <FontFamily>Arial</FontFamily>
-                      </Style>
-                    </ChartDataLabel>
-                  </ChartEmptyPoints>
-                  <ValueAxisName>Primary</ValueAxisName>
-                  <CategoryAxisName>Primary</CategoryAxisName>
-                  <ChartSmartLabel>
-                    <CalloutLineColor>Black</CalloutLineColor>
-                    <MinMovingDistance>0pt</MinMovingDistance>
-                  </ChartSmartLabel>
-                </ChartSeries>
-              </ChartSeriesCollection>
-            </ChartData>
-            <ChartAreas>
-              <ChartArea Name="Default">
-                <ChartCategoryAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontFamily>Arial</FontFamily>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Alert Age (Hours)</Caption>
-                      <Style>
-                        <FontFamily>Arial</FontFamily>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontFamily>Arial</FontFamily>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontFamily>Arial</FontFamily>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartCategoryAxes>
-                <ChartValueAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontFamily>Arial</FontFamily>
-                      <FontSize>8pt</FontSize>
-                      <Format>#,0;(#,0)</Format>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Alerts</Caption>
-                      <Style>
-                        <FontFamily>Arial</FontFamily>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontFamily>Arial</FontFamily>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontFamily>Arial</FontFamily>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartValueAxes>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                </Style>
-              </ChartArea>
-            </ChartAreas>
-            <ChartTitles>
-              <ChartTitle Name="Default">
-                <Caption>Open Alert Aging</Caption>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                  <FontFamily>Arial</FontFamily>
-                  <FontWeight>Bold</FontWeight>
-                  <TextAlign>General</TextAlign>
-                  <VerticalAlign>Top</VerticalAlign>
-                </Style>
-              </ChartTitle>
-            </ChartTitles>
-            <Palette>BrightPastel</Palette>
-            <ChartBorderSkin>
-              <Style>
-                <BackgroundColor>Gray</BackgroundColor>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <Color>White</Color>
-              </Style>
-            </ChartBorderSkin>
-            <ChartNoDataMessage Name="NoDataMessage">
-              <Caption>No Data Available</Caption>
-              <Style>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <FontFamily>Arial</FontFamily>
-                <TextAlign>General</TextAlign>
-                <VerticalAlign>Top</VerticalAlign>
-              </Style>
-            </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
-            <Filters>
-              <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
-                </FilterValues>
-              </Filter>
-              <Filter>
-                <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
-                </FilterValues>
-              </Filter>
-            </Filters>
-            <Top>1.8754in</Top>
-            <Left>5.59198in</Left>
-            <Height>3.07266in</Height>
-            <Width>4.30642in</Width>
-            <ZIndex>1</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>White</BackgroundColor>
-              <BackgroundGradientType>None</BackgroundGradientType>
-            </Style>
-          </Chart>
           <Rectangle Name="Rectangle2">
             <ReportItems>
               <Chart Name="Availability">
@@ -1571,7 +1141,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>0.05802in</Left>
             <Height>3.07266in</Height>
             <Width>5.401in</Width>
-            <ZIndex>2</ZIndex>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1585,7 +1155,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Organization Health Summary"</Value>
+                    <Value>Organization Health Summary</Value>
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
@@ -1610,7 +1180,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>0.05803in</Left>
             <Height>0.45325in</Height>
             <Width>5.40099in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1630,7 +1200,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Alert Aging"</Value>
+                    <Value>Application Health</Value>
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
@@ -1657,7 +1227,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>5.59198in</Left>
             <Height>0.45325in</Height>
             <Width>4.30642in</Width>
-            <ZIndex>4</ZIndex>
+            <ZIndex>3</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1691,7 +1261,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>0.05802in</Left>
             <Height>0.25in</Height>
             <Width>5.401in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1735,7 +1305,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>0.05802in</Left>
             <Height>0.25in</Height>
             <Width>5.401in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1778,7 +1348,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>0.05802in</Left>
             <Height>0.25in</Height>
             <Width>5.401in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1822,7 +1392,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>0.05802in</Left>
             <Height>0.25in</Height>
             <Width>5.401in</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1873,7 +1443,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>0.05803in</Left>
             <Height>0.25in</Height>
             <Width>5.401in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1906,7 +1476,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>5.59198in</Left>
             <Height>0.25in</Height>
             <Width>4.30642in</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1955,7 +1525,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>5.59198in</Left>
             <Height>0.25in</Height>
             <Width>4.30642in</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1998,7 +1568,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>5.59198in</Left>
             <Height>0.25in</Height>
             <Width>4.30642in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>11</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2042,7 +1612,7 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
             <Left>5.59198in</Left>
             <Height>0.25in</Height>
             <Width>4.30642in</Width>
-            <ZIndex>13</ZIndex>
+            <ZIndex>12</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2053,6 +1623,274 @@ ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Tablix Name="Tablix1">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>3.30642in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Application Name</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Health</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="genericname">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!genericname.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <TextDecoration>Underline</TextDecoration>
+                                    <Color>Blue</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>genericname</rd:DefaultName>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>List_ObjectHealthState</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="ObjectGenericName">
+                                      <Value>=Fields!genericname.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(Nothing) MOD 2 = 0, "LightSteelBlue","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Rectangle Name="Rectangle3">
+                          <ReportItems>
+                            <Rectangle Name="Rectangle5">
+                              <KeepTogether>true</KeepTogether>
+                              <Top>0.04167in</Top>
+                              <Left>0.40243in</Left>
+                              <Height>0.14583in</Height>
+                              <Width>0.14583in</Width>
+                              <Style>
+                                <Border>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>=Iif(Fields!HealthState.Value="MaintenanceMode", "Blue", Iif(Fields!HealthState.Value="NotAvailable", "Black", Iif(Fields!HealthState.Value="Success","Green",Iif(Fields!HealthState.Value="Warning","Gold",Iif(Fields!HealthState.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                              </Style>
+                            </Rectangle>
+                          </ReportItems>
+                          <KeepTogether>true</KeepTogether>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                          </Style>
+                        </Rectangle>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox16">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Arial</FontFamily>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox16</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox17">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox17</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Details" />
+                </TablixMember>
+                <TablixMember>
+                  <KeepWithGroup>Before</KeepWithGroup>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DistributedApplications</DataSetName>
+            <Top>1.8754in</Top>
+            <Left>5.59198in</Left>
+            <Height>0.75in</Height>
+            <Width>4.30642in</Width>
+            <ZIndex>13</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Tablix>
         </ReportItems>
         <Height>6.79247in</Height>
         <Style>
