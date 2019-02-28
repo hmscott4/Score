@@ -193,7 +193,7 @@ $RdsPath = $SourceDirectory+"\"+$rdsf+".rds"
 
 Write-host "Reading data from $RdsPath"
 
-$Rds = Get-Content -Path $RdsPath
+[xml]$Rds = Get-Content -Path $RdsPath
 $ConnProps = $Rds.RptDataSource.ConnectionProperties
 
 $type = $ssrsProxy.GetType().Namespace

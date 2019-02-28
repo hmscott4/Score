@@ -1,0 +1,127 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="Microsoft.SCORE.IntegrationServer.Class" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="ScriptPath" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
+        <!-- We choose Microsoft.Windows.LocalApplication as our generic base class -->
+        <!-- This specific fragment example has a class property of "Version" just as an example. You can change as needed or add new ones -->
+      </ClassTypes>
+    </EntityTypes>
+  </TypeDefinitions><Monitoring>
+    <Discoveries>
+      <Discovery ID="Microsoft.SCORE.IntegrationServer.Class.Discovery" Target="Windows!Microsoft.Windows.Server.OperatingSystem" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <!-- We choose Microsoft.Windows.Server.OperatingSystem as the preferred target class to ensure this will run on all Windows Servers, but wont create duplicates on clusters -->
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Microsoft.SCORE.IntegrationServer.Class">
+            <Property PropertyID="Version" />
+            <Property PropertyID="ScriptPath" />
+          </DiscoveryClass>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <!-- You may need to add or remove Host references in this line depending on your target -->
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>SCORERegKeyExists</AttributeName>
+              <Path>SOFTWARE\Microsoft\Microsoft Operations Manager\MP\SCORE\MgmtGroups\$Target/ManagementGroup/Name$</Path>
+              <PathType>0</PathType>
+              <!-- 0=regKey 1=regValue -->
+              <AttributeType>0</AttributeType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SCORERegVersion</AttributeName>
+              <Path>SOFTWARE\Microsoft\Microsoft Operations Manager\MP\SCORE\MgmtGroups\$Target/ManagementGroup/Name$\Version</Path>
+              <PathType>1</PathType>
+              <!-- 0=regKey 1=regValue -->
+              <AttributeType>1</AttributeType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SCORERegScriptPath</AttributeName>
+              <Path>SOFTWARE\Microsoft\Microsoft Operations Manager\MP\SCORE\MgmtGroups\$Target/ManagementGroup/Name$\ScriptPath</Path>
+              <PathType>1</PathType>
+              <!-- 0=regKey 1=regValue -->
+              <AttributeType>1</AttributeType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <Frequency>21600</Frequency>
+          <!-- seconds -->
+          <ClassId>$MPElement[Name="Microsoft.SCORE.IntegrationServer.Class"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="Microsoft.SCORE.IntegrationServer.Class"]/Version$</Name>
+                <Value>$Data/Values/SCORERegVersion$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="Microsoft.SCORE.IntegrationServer.Class"]/ScriptPath$</Name>
+                <Value>$Data/Values/SCORERegScriptPath$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="Boolean">Values/SCORERegKeyExists</XPathQuery>
+                <!-- Common options for XPathQuery Type are "Boolean" "String" "Integer" "Double" -->
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <!-- Common options for SimpleExpression Operator are "Equal" "NotEqual" "Greater" "Less" "GreaterEqual" "LessEqual" "Like" "NotLike" -->
+              <ValueExpression>
+                <Value Type="Boolean">true</Value>
+                <!-- Common options for XPathQuery Type are "Boolean" "String" "Integer" "Double" -->
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+  </Monitoring><LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Score.MP">
+          <Name>System Center Operations Manager Reporting Environment</Name>
+          <Description>System Center Operations Manager Reporting Environment.  A Management Pack to facilitate SCOM reporting.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class">
+          <Name>Microsoft SCORE Class</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class.Discovery">
+          <Name>Microsoft SCORE Class Discovery</Name>
+          <Description>Discovers SCORE Integration Server Components</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class" SubElementID="ScriptPath">
+          <Name>Script Path</Name>
+          <Description>Path to SCORE Scripts</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class" SubElementID="Version">
+          <Name>Version</Name>
+          <Description>Version</Description>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="Score.MP" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>The Management Pack allows SCOM administrators to integrate information from Active Directory and SCOM into a simplified reporting database.  See Management Pack Guide for complete deployment details and requirements.</maml:para>
+              <maml:para>To configure this management pack, admins need to designate one (or more) Integration Nodes (an agent-managed Windows Server) and copy the script files to that server.  The server must be configured with an Operations Manager console as well as Active Directory PowerShell cmdlets.</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks></ManagementPackFragment>
