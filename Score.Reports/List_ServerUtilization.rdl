@@ -166,6 +166,15 @@ WHERE
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=InStr(Fields!fqdn.Value,";")</FilterExpression>
+          <Operator>Equal</Operator>
+          <FilterValues>
+            <FilterValue DataType="Integer">0</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
     <DataSet Name="SystemTimeZone">
       <Query>
@@ -1413,7 +1422,8 @@ GROUP BY
                           </ActionInfo>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
                             </Border>
                             <PaddingLeft>8pt</PaddingLeft>
                           </Style>
