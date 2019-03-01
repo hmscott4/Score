@@ -97,7 +97,8 @@
                   $momapi.LogScriptEvent($ScriptName,$EventID,0,"`n These are the parameters passed from script: `n adDomain: ($adDomain). `n adObjectType: ($adObjectType) `n adSearchRoot: ($adSearchRoot).")
                   #=================================================================================
                   # End MAIN script section
-                  .\$ScriptLocation\MonitorDomain.ps1 -adDomain $adDomain -adObjectType $adObjectType
+                  Set-Location $ScriptLocation
+                  .\MonitorDomain.ps1 -adDomain $adDomain -adObjectType $adObjectType
 
 
                   # End of script section
@@ -185,7 +186,19 @@
         <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA" SubElementID="TimeoutSeconds">
           <Name>Timeout Seconds</Name>
           <Description>Timeout Seconds</Description>
-        </DisplayString>  
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA" SubElementID="adDomain">
+          <Name>adDomain</Name>
+          <Description>AD Domain (fqdn format, e.g. mydomain.local.net)</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA" SubElementID="adObjectType">
+          <Name>adObjectType</Name>
+          <Description>Comma-separated list of objects: forest, domain, site, subnet, computer</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA" SubElementID="adSearchRoot">
+          <Name>adSearchRoot</Name>
+          <Description>OU to query: leave blank to start at root OU</Description>
+        </DisplayString>
       </DisplayStrings>
     </LanguagePack>
   </LanguagePacks></ManagementPackFragment>

@@ -115,6 +115,14 @@
           <Name>Version</Name>
           <Description>Version</Description>
         </DisplayString>
+        <DisplayString ElementID="SCORE.IntegrationServer.AD.RunasProfile">
+          <Name>SCORE Active Directory Run As Profile</Name>
+          <Description>SCORE Active Directory Run As Profile. An Active Directory Account.</Description>
+        </DisplayString>
+        <DisplayString ElementID="SCORE.IntegrationServer.OpsMgr.RunasProfile">
+          <Name>SCORE OpsMgr Run As Profile</Name>
+          <Description>An AD Account. Must be a member of the Advanced Operators Group.</Description>
+        </DisplayString>
       </DisplayStrings>
       <KnowledgeArticles>
         <KnowledgeArticle ElementID="Score.MP" Visible="true">

@@ -61,9 +61,8 @@
 
                   # Manual Testing section - put stuff here for manually testing script - typically parameters:
                   #=================================================================================
-                  # $ComputerName = "computername.domain.com"
-                  # $MGName = "foo"
-                  # $Param1 = "bar"
+                  # $managementGroup = "ABCD_OM"
+                  # $objectClasses = "config,alert"
                   #=================================================================================
 
 
@@ -72,7 +71,7 @@
                   # Assign script name variable for use in event logging.
                   # ScriptName should be the same as the ID of the module that the script is contained in
                   $ScriptName = "Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA.ps1"
-                  $EventID = "1234"
+                  $EventID = "3341"
                   #=================================================================================
 
 
@@ -92,9 +91,11 @@
                   # Begin MAIN script section
                   #=================================================================================
                   # Log an event for the Params
-                  $momapi.LogScriptEvent($ScriptName,$EventID,0,"`n These are the parameters passed from script: `n ComputerName: ($ComputerName). `n ManagementGroup Name: ($MGName) `n Param1: ($Param1).")
+                  $momapi.LogScriptEvent($ScriptName,$EventID,0,"`n These are the parameters passed from script: `n managementGroup: ($managementGroup) `n objectClasses: (objectClasses).")
                   #=================================================================================
                   # End MAIN script section
+                  Set-Location $ScriptLocation
+                  .\MonitorSCOM.ps1 -managementGroup $managementGroup -objectClasses $objectClasses
 
 
                   # End of script section
@@ -173,6 +174,14 @@
         <DisplayString ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA">
           <Name>OpsMgr Alert Integration Rule</Name>
           <Description>OpsMgr Alert Integration Rule</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA" SubElementID="objectClasses">
+          <Name>objectClasses</Name>
+          <Description>See MP Guide for more information: examples include config, alert, agent, WindowsComputer, generic, group and TimeZone</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA" SubElementID="ScriptLocation">
+          <Name>Script Location</Name>
+          <Description>Location to Script files</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
