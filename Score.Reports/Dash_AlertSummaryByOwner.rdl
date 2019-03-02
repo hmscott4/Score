@@ -2634,7 +2634,7 @@ ORDER BY
                                     <Parameter Name="OnlyOpenAlerts">
                                       <Value>=True</Value>
                                     </Parameter>
-                                    <Parameter Name="QueueName">
+                                    <Parameter Name="Owner">
                                       <Value>=Microsoft.VisualBasic.Strings.Split(Microsoft.VisualBasic.Strings.Join(Parameters!Owner.Value, ","), ",")</Value>
                                     </Parameter>
                                   </Parameters>
@@ -2653,6 +2653,7 @@ ORDER BY
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

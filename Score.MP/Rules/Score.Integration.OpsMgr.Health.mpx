@@ -135,7 +135,7 @@
     </ModuleTypes>
   </TypeDefinitions><Monitoring>
     <Rules>
-      <Rule ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule" Enabled="true" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Custom</Category>
         <DataSources>
           <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
