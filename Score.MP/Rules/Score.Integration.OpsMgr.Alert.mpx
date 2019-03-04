@@ -70,7 +70,7 @@
                   #=================================================================================
                   # Assign script name variable for use in event logging.
                   # ScriptName should be the same as the ID of the module that the script is contained in
-                  $ScriptName = "Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA.ps1"
+                  $ScriptName = "Score.Integration.OpsMgr.Alert.ps1"
                   $EventID = "3341"
                   #=================================================================================
 
@@ -95,7 +95,8 @@
                   #=================================================================================
                   # End MAIN script section
                   Set-Location $ScriptLocation
-                  .\MonitorSCOM.ps1 -managementGroup $managementGroup -objectClasses $objectClasses
+                  $objects=$objectClasses.Split(",")
+                  .\MonitorSCOM.ps1 -managementGroup $managementGroup -objectClasses $objects
 
 
                   # End of script section
@@ -138,20 +139,20 @@
       <Rule ID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Custom</Category>
         <DataSources>
-          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.DS" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
-            <IntervalSeconds>86400</IntervalSeconds>
+          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.DS">
+            <IntervalSeconds>900</IntervalSeconds>
             <SyncTime></SyncTime>
           </DataSource>
         </DataSources>
         <WriteActions>
-          <WriteAction ID="WA" TypeID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA">
+          <WriteAction ID="WA" TypeID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
             <managementGroup>$Target/ManagementGroup/Name$</managementGroup>
             <objectClasses>config,alert</objectClasses>
             <ScriptLocation>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</ScriptLocation>
             <TimeoutSeconds>900</TimeoutSeconds>
           </WriteAction>
         </WriteActions>
-      </Rule>
+      </Rule>     
     </Rules>
   </Monitoring><LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="true">
@@ -182,6 +183,10 @@
         <DisplayString ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.WA" SubElementID="ScriptLocation">
           <Name>Script Location</Name>
           <Description>Location to Script files</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.DS">
+          <Name>SCORE OpsMgr Alert Integration Rule</Name>
+          <Description>SCORE OpsMgr Alert Integration Rule</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>

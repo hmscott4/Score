@@ -101,7 +101,7 @@
           <Description>System Center Operations Manager Reporting Environment.  A Management Pack to facilitate SCOM reporting.</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class">
-          <Name>Microsoft SCORE Class</Name>
+          <Name>Microsoft SCORE Integration Server Class</Name>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class.Discovery">
           <Name>Microsoft SCORE Class Discovery</Name>

@@ -58,7 +58,7 @@
                   #  Author:
                   #  v1.0
                   #=================================================================================
-                  param($adDomain,$adObjectType,$adSearchRoot,$ScriptName)
+                  param($adDomain,$adObjectType,$adSearchRoot,$ScriptLocation)
 
 
                   # Manual Testing section - put stuff here for manually testing script - typically parameters:
@@ -98,7 +98,8 @@
                   #=================================================================================
                   # End MAIN script section
                   Set-Location $ScriptLocation
-                  .\MonitorDomain.ps1 -adDomain $adDomain -adObjectType $adObjectType
+                  $adObjects=$adObjectType.Split(",")
+                  .\MonitorDomain.ps1 -adDomain $adDomain -adObjectType $adObjects
 
 
                   # End of script section
@@ -145,13 +146,13 @@
       <Rule ID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Custom</Category>
         <DataSources>
-          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.DS" RunAs="SCORE.IntegrationServer.AD.RunasProfile">
+          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.DS">
             <IntervalSeconds>86400</IntervalSeconds>
             <SyncTime></SyncTime>
           </DataSource>
         </DataSources>
         <WriteActions>
-          <WriteAction ID="WA" TypeID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA">
+          <WriteAction ID="WA" TypeID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.AD.RunasProfile">
             <adDomain>YOUR DOMAIN HERE</adDomain>
             <adObjectType>forest,domain,site,subnet</adObjectType>
             <adSearchRoot></adSearchRoot>

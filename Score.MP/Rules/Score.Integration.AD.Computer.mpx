@@ -1,7 +1,7 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
-      <DataSourceModuleType ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" Accessibility="Public" Batching="false">
+      <DataSourceModuleType ID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.DS" Accessibility="Public" Batching="false">
         <Configuration>
           <IncludeSchemaTypes>
             <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -33,23 +33,25 @@
         </ModuleImplementation>
         <OutputType>System!System.TriggerData</OutputType>
       </DataSourceModuleType>
-      <WriteActionModuleType ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" Accessibility="Internal" Batching="false">
+      <WriteActionModuleType ID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA" Accessibility="Internal" Batching="false">
         <Configuration>
-          <xsd:element minOccurs="1" name="managementGroup" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element minOccurs="1" name="objectClasses" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="adDomain" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="adObjectType" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="adSearchRoot" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element minOccurs="1" name="ScriptLocation" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <OverrideableParameters>
-          <OverrideableParameter ID="objectClasses" Selector="$Config/objectClasses$" ParameterType="string" />
-          <OverrideableParameter ID="ScriptLocation" Selector="$Config/ScriptLocation$" ParameterType="string" />
+          <OverrideableParameter ID="adDomain" Selector="$Config/adDomain$" ParameterType="string" />
+          <OverrideableParameter ID="adObjectType" Selector="$Config/adObjectType$" ParameterType="string" />
+          <OverrideableParameter ID="adSearchRoot" Selector="$Config/adSearchRoot$" ParameterType="string" />
           <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
         </OverrideableParameters>
         <ModuleImplementation Isolation="Any">
           <Composite>
             <MemberModules>
               <WriteAction ID="WA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
-                <ScriptName>Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA.ps1</ScriptName>
+                <ScriptName>Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA.ps1</ScriptName>
                 <ScriptBody>
                   #=================================================================================
                   #  Describe Script Here
@@ -57,13 +59,14 @@
                   #  Author:
                   #  v1.0
                   #=================================================================================
-                  param($managementGroup,$objectClasses,$ScriptLocation)
+                  param($adDomain,$adObjectType,$adSearchRoot,$ScriptLocation)
 
 
                   # Manual Testing section - put stuff here for manually testing script - typically parameters:
                   #=================================================================================
-                  # $managementGroup = "ABCD_OM"
-                  # $objectClasses = "config,alert"
+                  # $ComputerName = "computername.domain.com"
+                  # $MGName = "foo"
+                  # $Param1 = "bar"
                   #=================================================================================
 
 
@@ -71,8 +74,8 @@
                   #=================================================================================
                   # Assign script name variable for use in event logging.
                   # ScriptName should be the same as the ID of the module that the script is contained in
-                  $ScriptName = "Score.Integration.OpsMgr.Alert.ps1"
-                  $EventID = "3341"
+                  $ScriptName = "Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA.ps1"
+                  $EventID = "3340"
                   #=================================================================================
 
 
@@ -92,12 +95,12 @@
                   # Begin MAIN script section
                   #=================================================================================
                   # Log an event for the Params
-                  $momapi.LogScriptEvent($ScriptName,$EventID,0,"`n These are the parameters passed from script: `n managementGroup: ($managementGroup) `n objectClasses: (objectClasses).")
+                  $momapi.LogScriptEvent($ScriptName,$EventID,0,"`n These are the parameters passed from script: `n adDomain: ($adDomain). `n adObjectType: ($adObjectType) `n adSearchRoot: ($adSearchRoot).")
                   #=================================================================================
                   # End MAIN script section
                   Set-Location $ScriptLocation
-                  $objects=$objectClasses.Split(",")
-                  .\MonitorSCOM.ps1 -managementGroup $managementGroup -objectClasses $objects
+                  $adObjects=$adObjectType.Split(",")
+                  .\MonitorDomain.ps1 -adDomain $adDomain -adObjectType $adObjects
 
 
                   # End of script section
@@ -111,16 +114,20 @@
                 </ScriptBody>
                 <Parameters>
                   <Parameter>
-                    <Name>managementGroup</Name>
-                    <Value>$Target/ManagementGroup/Name$</Value>
+                    <Name>adDomain</Name>
+                    <Value>$Config/adDomain$</Value>
                   </Parameter>
                   <Parameter>
-                    <Name>objectClasses</Name>
-                    <Value>$Config/objectClasses$</Value>
+                    <Name>adObjectType</Name>
+                    <Value>$Config/adObjectType$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>adSearchRoot</Name>
+                    <Value>$Config/adSearchRoot$</Value>
                   </Parameter>
                   <Parameter>
                     <Name>ScriptLocation</Name>
-                    <Value>$Config/ScriptLocation$</Value>
+                    <Value>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</Value>
                   </Parameter>
                 </Parameters>
                 <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
@@ -138,18 +145,19 @@
   </TypeDefinitions>
   <Monitoring>
     <Rules>
-      <Rule ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Custom</Category>
         <DataSources>
-          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS">
-            <IntervalSeconds>900</IntervalSeconds>
+          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.DS">
+            <IntervalSeconds>5400</IntervalSeconds>
             <SyncTime></SyncTime>
           </DataSource>
         </DataSources>
         <WriteActions>
-          <WriteAction ID="WA" TypeID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
-            <managementGroup>$Target/ManagementGroup/Name$</managementGroup>
-            <objectClasses>generic,group</objectClasses>
+          <WriteAction ID="WA" TypeID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.AD.RunasProfile">
+            <adDomain>YOUR DOMAIN HERE</adDomain>
+            <adObjectType>computer</adObjectType>
+            <adSearchRoot></adSearchRoot>
             <ScriptLocation>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</ScriptLocation>
             <TimeoutSeconds>900</TimeoutSeconds>
           </WriteAction>
@@ -160,36 +168,40 @@
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule">
-          <Name>Microsoft SCORE SCOM Health Integration Rule</Name>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule">
+          <Name>Microsoft SCORE AD Computer Integration</Name>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
           <Name>Interval Seconds</Name>
           <Description>Interval Seconds</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" SubElementID="TimeoutSeconds">
-          <Name>Timeout Seconds</Name>
-          <Description>Timeout Seconds</Description>
-        </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" SubElementID="SyncTime">
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.DS" SubElementID="SyncTime">
           <Name>Sync Time</Name>
           <Description>Sync Time</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA">
-          <Name>OpsMgr Health State Integration Rule</Name>
-          <Description>OpsMgr Health State Integration Rule</Description>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.DS">
+          <Name>AD Computer Integration Script Data Source</Name>
+          <Description>AD Computer Integration Script  Data Source</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" SubElementID="objectClasses">
-          <Name>objectClasses</Name>
-          <Description>See MP Guide for more information: examples include config, alert, agent, WindowsComputer, generic, group and TimeZone</Description>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA">
+          <Name>AD Computer Integration Script Write Action</Name>
+          <Description>AD Computer Integration Script Write Action</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" SubElementID="ScriptLocation">
-          <Name>Script Location</Name>
-          <Description>Location to Script files</Description>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA" SubElementID="TimeoutSeconds">
+          <Name>Timeout Seconds</Name>
+          <Description>Timeout Seconds</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS">
-          <Name>SCORE OpsMgr Health Integration Rule</Name>
-          <Description>SCORE OpsMgr Health Integration Rule</Description>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA" SubElementID="adDomain">
+          <Name>adDomain</Name>
+          <Description>AD Domain (fqdn format, e.g. mydomain.local.net)</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA" SubElementID="adObjectType">
+          <Name>adObjectType</Name>
+          <Description>Comma-separated list of objects: forest, domain, site, subnet, computer</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.WA" SubElementID="adSearchRoot">
+          <Name>adSearchRoot</Name>
+          <Description>OU to query: leave blank to start at root OU</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>

@@ -54,13 +54,25 @@
     <Compile Include="Classes and Discoveries\Score.IntegrationServer.Discovery.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LanguagePacks_.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rules\Score.Integration.AD.Computer.mpx">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Rules\Score.Integration.AD.Domain.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rules\Score.Integration.OpsMgr.Agent.mpx">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rules\Score.Integration.OpsMgr.Alert.mpx">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rules\Score.Integration.OpsMgr.Health.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rules\Score.Integration.OpsMgr.TimeZone.mpx">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

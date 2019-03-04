@@ -1,7 +1,7 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
-      <DataSourceModuleType ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" Accessibility="Public" Batching="false">
+      <DataSourceModuleType ID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.DS" Accessibility="Public" Batching="false">
         <Configuration>
           <IncludeSchemaTypes>
             <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -33,7 +33,7 @@
         </ModuleImplementation>
         <OutputType>System!System.TriggerData</OutputType>
       </DataSourceModuleType>
-      <WriteActionModuleType ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" Accessibility="Internal" Batching="false">
+      <WriteActionModuleType ID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.WA" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element minOccurs="1" name="managementGroup" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element minOccurs="1" name="objectClasses" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -49,7 +49,7 @@
           <Composite>
             <MemberModules>
               <WriteAction ID="WA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
-                <ScriptName>Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA.ps1</ScriptName>
+                <ScriptName>Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.WA.ps1</ScriptName>
                 <ScriptBody>
                   #=================================================================================
                   #  Describe Script Here
@@ -138,18 +138,18 @@
   </TypeDefinitions>
   <Monitoring>
     <Rules>
-      <Rule ID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Custom</Category>
         <DataSources>
-          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS">
-            <IntervalSeconds>900</IntervalSeconds>
+          <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.DS">
+            <IntervalSeconds>5400</IntervalSeconds>
             <SyncTime></SyncTime>
           </DataSource>
         </DataSources>
         <WriteActions>
-          <WriteAction ID="WA" TypeID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
+          <WriteAction ID="WA" TypeID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
             <managementGroup>$Target/ManagementGroup/Name$</managementGroup>
-            <objectClasses>generic,group</objectClasses>
+            <objectClasses>agent,WindowsComputer</objectClasses>
             <ScriptLocation>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</ScriptLocation>
             <TimeoutSeconds>900</TimeoutSeconds>
           </WriteAction>
@@ -160,36 +160,36 @@
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule">
-          <Name>Microsoft SCORE SCOM Health Integration Rule</Name>
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule">
+          <Name>Microsoft SCORE SCOM Integration Rule</Name>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
           <Name>Interval Seconds</Name>
           <Description>Interval Seconds</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" SubElementID="TimeoutSeconds">
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.WA" SubElementID="TimeoutSeconds">
           <Name>Timeout Seconds</Name>
           <Description>Timeout Seconds</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" SubElementID="SyncTime">
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.DS" SubElementID="SyncTime">
           <Name>Sync Time</Name>
           <Description>Sync Time</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA">
-          <Name>OpsMgr Health State Integration Rule</Name>
-          <Description>OpsMgr Health State Integration Rule</Description>
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.WA">
+          <Name>OpsMgr Agent Integration Rule</Name>
+          <Description>OpsMgr Agent Integration Rule</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" SubElementID="objectClasses">
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.WA" SubElementID="objectClasses">
           <Name>objectClasses</Name>
           <Description>See MP Guide for more information: examples include config, alert, agent, WindowsComputer, generic, group and TimeZone</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" SubElementID="ScriptLocation">
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.WA" SubElementID="ScriptLocation">
           <Name>Script Location</Name>
           <Description>Location to Script files</Description>
         </DisplayString>
-        <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS">
-          <Name>SCORE OpsMgr Health Integration Rule</Name>
-          <Description>SCORE OpsMgr Health Integration Rule</Description>
+        <DisplayString ElementID="Microsoft.SCORE.SCOM.Agent.Integration.TimedPowerShell.Rule.DS">
+          <Name>SCORE OpsMgr Agent Integration Rule</Name>
+          <Description>SCORE OpsMgr Agent Integration Rule</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
