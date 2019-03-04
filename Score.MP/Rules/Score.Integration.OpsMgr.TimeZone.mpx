@@ -162,6 +162,7 @@
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.SCORE.SCOM.TimeZone.Integration.TimedPowerShell.Rule">
           <Name>Microsoft SCORE TimeZone Integration</Name>
+          <Description>Updates SCORE database with current TimeZones from Integration Server.</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.SCOM.TimeZone.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
           <Name>Interval Seconds</Name>
@@ -192,6 +193,16 @@
           <Description>SCORE OpsMgr TimeZone Integration Rule</Description>
         </DisplayString>
       </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="Microsoft.SCORE.SCOM.TimeZone.Integration.TimedPowerShell.Rule" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This rule connects to the designated SCORE Integration server and retrieves the list of current TimeZones.</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
     </LanguagePack>
   </LanguagePacks>
 </ManagementPackFragment>

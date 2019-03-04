@@ -54,9 +54,6 @@
     <Compile Include="Classes and Discoveries\Score.IntegrationServer.Discovery.mpx">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LanguagePacks_.mpx">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Rules\Score.Integration.AD.Computer.mpx">
       <SubType>Code</SubType>
     </Compile>

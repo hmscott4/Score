@@ -158,7 +158,8 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule">
-          <Name>Microsoft SCORE SCOM.Alert.Integration TimedPowerShell Rule</Name>
+          <Name>Microsoft SCORE SCOM Alert Integration Rule</Name>
+          <Description>Updates SCORE database with current list of SCOM Alerts.</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
           <Name>Interval Seconds</Name>
@@ -189,5 +190,15 @@
           <Description>SCORE OpsMgr Alert Integration Rule</Description>
         </DisplayString>
       </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="Microsoft.SCORE.SCOM.Alert.Integration.TimedPowerShell.Rule" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This rule is used to connect to the SCOM Management Server and retrieve the current list of alerts.</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
     </LanguagePack>
   </LanguagePacks></ManagementPackFragment>

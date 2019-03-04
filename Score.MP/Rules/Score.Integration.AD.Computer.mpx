@@ -170,6 +170,7 @@
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule">
           <Name>Microsoft SCORE AD Computer Integration</Name>
+          <Description>Updates SCORE database with current list of Active Directory Computer objects where the Operating System contains "Server".</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
           <Name>Interval Seconds</Name>
@@ -204,6 +205,16 @@
           <Description>OU to query: leave blank to start at root OU</Description>
         </DisplayString>
       </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="Microsoft.SCORE.AD.Computer.Integration.TimedPowerShell.Rule" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This rule connects to a designated Active Directory Domain and retrieves all Windows Computer objects that have "Server" in the Operating System.  This information is used by SCORE to compare SCOM Agents.</maml:para>          
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>        
+      </KnowledgeArticles>
     </LanguagePack>
   </LanguagePacks>
 </ManagementPackFragment>

@@ -166,7 +166,8 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule">
-          <Name>Microsoft SCORE AD.Domain.Integration TimedPowerShell Rule</Name>
+          <Name>Microsoft SCORED omain Integration Rule</Name>
+          <Description>Updates SCORE database with current list of Active Directory sites and subnets for user-specified domain.</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
           <Name>Interval Seconds</Name>
@@ -201,5 +202,15 @@
           <Description>OU to query: leave blank to start at root OU</Description>
         </DisplayString>
       </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This rule connects to a designated Active Directory Domain and retrieves information about the Domain, Forest, Sites and Subnets.</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
     </LanguagePack>
   </LanguagePacks></ManagementPackFragment>

@@ -134,6 +134,14 @@
             </maml:section>
           </MamlContent>
         </KnowledgeArticle>
+        <KnowledgeArticle ElementID="Microsoft.SCORE.IntegrationServer.Class.Discovery" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This discovery reads from the registry file to determine if a computer hosts the SCORE integration scripts.</maml:para>             
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
       </KnowledgeArticles>
     </LanguagePack>
   </LanguagePacks></ManagementPackFragment>

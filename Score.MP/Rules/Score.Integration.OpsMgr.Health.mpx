@@ -162,6 +162,7 @@
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule">
           <Name>Microsoft SCORE SCOM Health Integration Rule</Name>
+          <Description>Updates SCORE database with current list of SCOM Health States for objects and groups. Note that not all objects are automatically processed.  See Management Pack Guide for details.</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
           <Name>Interval Seconds</Name>
@@ -192,6 +193,16 @@
           <Description>SCORE OpsMgr Health Integration Rule</Description>
         </DisplayString>
       </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This rule connects to the SCOM Management group and retrieves health state information for specific objects.  The list of objects is stored in the app.monitor.config file.  See the Management Pack guide for additional information..</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
     </LanguagePack>
   </LanguagePacks>
 </ManagementPackFragment>
