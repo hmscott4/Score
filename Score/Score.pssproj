@@ -38,7 +38,7 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeployReports.ps1" />
+    <Compile Include="Deploy-Reports.ps1" />
     <Compile Include="Modules\CheckCluster.ps1" />
     <Compile Include="Modules\CheckComputer.ps1" />
     <Compile Include="Modules\CheckComputerShare.ps1" />

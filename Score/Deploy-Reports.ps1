@@ -40,8 +40,19 @@
   Author:         Steffen Daneels
   Creation Date:  2017/01/24
 
+  Change Log:
+  2019/02/01 HMS 
   This script was "liberated" from https://kohera.be/blog/sql-server/automated-deployment-ssrs-reports-powershell/
   I made one minor fix to the Data Sources deployment process to fix a minor bug.
+
+  2019/03/01 HMS
+  Substantial changes to script:
+   - Added Try/Catch to Dataset
+   - Updated user prompts to take in default values
+   - Updated comments
+   - Cleaned up variable names/standardized naming conventions
+   - Cleaned up logig for re-associating reports to Data Sources (and Share Data Sets to Data Sources)
+   - Added early exit if ReportServer connection does not work
 
 #>
 try{
@@ -76,7 +87,6 @@ $sourceDirectory = "$CurrentWorkingFolder\Reports"
 ###################################################################################
 # OBTAIN RUNTIME VALUES
 ###################################################################################
-# Set server IP address based on Environment provided from Config file
 $webServiceUrl = Read-Host -Prompt 'Reporting Host URL (Http://hostname or Http://xxx.xxx.xx.xx)' # you can also give like "Http://xxx.xxx.xx.xx"
 
 $defaultInstance = 'ReportServer'
@@ -87,15 +97,15 @@ $defaultFolder = 'SCORE'
 $prompt = Read-Host "Reports Folder [$($defaultFolder)]"
 $reportFolder = ($defaultFolder,$prompt)[[bool]$prompt]
 
-$defaultDataSourceFolder = "Data Sources"
-$prompt = Read-Host "Data Sources Folder [$($defaultDataSourceFolder)]"
-$dataSourceFolder = ($defaultDataSourceFolder,$prompt)[[bool]$prompt]
+$dfDataSourceFolder = "Data Sources"
+$prompt = Read-Host "Data Sources Folder [$($dfDataSourceFolder)]"
+$dataSourceFolder = ($dfDataSourceFolder,$prompt)[[bool]$prompt]
 
-$defaultDataSetFolder = "Datasets"
-$prompt = Read-Host "Dataset Folder [$($defaultDataSetFolder)]"
-$dataSetFolder = ($defaultDataSetFolder,$prompt)[[bool]$prompt]
+$dfDataSetFolder = "Datasets"
+$prompt = Read-Host "Dataset Folder [$($dfDataSetFolder)]"
+$dataSetFolder = ($dfDataSetFolder,$prompt)[[bool]$prompt]
 
-#Overwrite properties
+# Overwrite properties
 $IsOverwriteDataSource = switch (Read-Host -Prompt 'Overwrite DataSources (Y,N)? [N]')
 {
     "Y" {[Boolean] 1}
@@ -112,16 +122,25 @@ $IsOverwriteReport = switch (Read-Host -Prompt 'Overwrite Reports (Y,N)? [Y]')
     default {[Boolean] 1}
 }
 
-$reportPath ="/" # Rool Level
-$rsReportFolder = $reportPath + $reportFolder
-$rsDataSourceFolder = $reportPath + $defaultDataSourceFolder
-$rsDataSetFolder = $reportPath + $defaultDataSetFolder
+####################################################################################
+# GET DATA SOURCE INSTANCE NAMES
+####################################################################################
+If($IsOverwriteDataSource = 1)
+{
+    [string]$dbInstanceOpsMgr = Read-Host "Operations Manager DB Instance"
+    [string]$dbInstanceOpsMgrDW = Read-Host "Operations Manager DW Instance"
+    [string]$dbInstanceSCORE = Read-Host "SCORE DB Instance"
+}
+
+
+$rootPath ="/" # Rool Level
+$rsReportFolder = $rootPath + $reportFolder
+$rsDataSourceFolder = $rootPath + $dataSourceFolder
+$rsDataSetFolder = $rootPath + $dataSetFolder
 
 ###################################################################################
 # CONNECT TO SSRS
 ###################################################################################
-
-#Connecting to SSRS
 Write-Host "Reportserver: $webServiceUrl" -ForegroundColor Magenta
 Write-Host "Creating Proxy, connecting to : $webServiceUrl/$RPServerName/ReportService2010.asmx?WSDL" -ForegroundColor Magenta
 Write-Host ""
@@ -129,152 +148,171 @@ $ssrsProxy = New-WebServiceProxy -Uri $webServiceUrl'/'$RPServerName'/ReportServ
 
 If($ssrsProxy -eq $null)
 {
-    Write-Error "Unable to connect to $webServiceURL; check URL, port, transport and permissions"
+    Write-Error "Unable to connect to $webServiceURL; check URL, port, transport and/or permissions"
     Exit
 }
-
 
 ###################################################################################
 # CREATE REPORTS FOLDER
 ###################################################################################
-Write-host ""
-try
-{
-    $result = $ssrsProxy.CreateFolder($reportFolder, $reportPath, $null)
-    Write-Host "Created new folder: $rsReportFolder"
-}
-catch [System.Web.Services.Protocols.SoapException]
-{
-    if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
-    {
-        write-verbose "Folder: $reportFolder already exists."
-    }
-    else
-    {
-        $msg = "Error creating folder: $reportFolder. Msg: '{0}'" -f $_.Exception.Detail.InnerText
-        Write-Error $msg
-    }
+$tmpFolder = $ssrsProxy.ListChildren($rootPath,$false) | Where-Object {$_.Name -eq $reportFolder}
+if($tmpFolder -eq $null) {
+	Write-host "Creating Reports Folder" -ForegroundColor Green
+	try
+	{
+		$result = $ssrsProxy.CreateFolder($reportFolder, $rootPath, $null)
+		Write-Host "Created new folder: $rsReportFolder"
+	}
+	catch [System.Web.Services.Protocols.SoapException]
+	{
+		if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
+		{
+			write-verbose "Folder: $reportFolder already exists."
+		}
+		else
+		{
+			$msg = "Error creating folder: $reportFolder. Msg: '{0}'" -f $_.Exception.Detail.InnerText
+			Write-Error $msg
+		}
 
+	}
 }
+$tmpFolder = $null
+
 ###################################################################################
 # CREATE DATA SOURCE FOLDER
 ###################################################################################
-Write-host ""
-try
-{
-    $result = $ssrsProxy.CreateFolder($dataSourceFolder, $reportPath, $null)
-    Write-Host "Created new folder: $rsDataSourceFolder"
+$tmpFolder = $ssrsProxy.ListChildren($rootPath,$false) | Where-Object {$_.Name -eq $dataSourceFolder}
+
+if($tmpFolder -eq $null) {
+	Write-host ""
+	try
+	{
+		$result = $ssrsProxy.CreateFolder($dataSourceFolder, $rootPath, $null)
+		Write-Host "Created new folder: $rsDataSourceFolder"
+	}
+	catch [System.Web.Services.Protocols.SoapException]
+	{
+		if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
+		{
+			Write-Verbose "Folder: $dataSourceFolder already exists."
+		}
+		else
+		{
+			$msg = "Error creating folder: $dataSourceFolder. Msg: '{0}'" -f $_.Exception.Detail.InnerText
+			Write-Error $msg
+		}
+	}
 }
-catch [System.Web.Services.Protocols.SoapException]
-{
-    if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
-    {
-        Write-Verbose "Folder: $dataSourceFolder already exists."
-    }
-    else
-    {
-        $msg = "Error creating folder: $dataSourceFolder. Msg: '{0}'" -f $_.Exception.Detail.InnerText
-        Write-Error $msg
-    }
-}
+$tmpFolder = $null
 
 ###################################################################################
 # CREATE DATASET FOLDER
 ###################################################################################
-Write-host ""
-try
-{
-    $result = $ssrsProxy.CreateFolder($dataSetFolder, $reportPath, $null)
-    Write-Host "Created new folder: $rsDataSetFolder"
-}
-catch [System.Web.Services.Protocols.SoapException]
-    {
-    if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
-    {
-        Write-Verbose "Folder: $dataSetFolder already exists."
-    }
-    else
-    {
-        $msg = "Error creating folder: $dataSetFolder. Msg: '{0}'" -f $_.Exception.Detail.InnerText
-        Write-Error $msg
-    }
+$tmpFolder = $ssrsProxy.ListChildren($rootPath,$false) | Where-Object {$_.Name -eq $dataSetFolder}
 
+if($tmpFolder -eq $null) {
+	Write-Host ""
+	try
+	{
+		$result = $ssrsProxy.CreateFolder($dataSetFolder, $rootPath, $null)
+		Write-Host "Created new folder: $rsDataSetFolder"
+	}
+	catch [System.Web.Services.Protocols.SoapException]
+		{
+		if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
+		{
+			Write-Verbose "Folder: $dataSetFolder already exists."
+		}
+		else
+		{
+			$msg = "Error creating folder: $dataSetFolder. Msg: '{0}'" -f $_.Exception.Detail.InnerText
+			Write-Error $msg
+		}
+
+	}
 }
-Write-Host ""
+$tmpFolder = $null
 
 ###################################################################################
 # CREATE DATA SOURCES
 ###################################################################################
-Write-host "Uploading Shared Data Sources to $dataSourceFolder" -ForegroundColor Green
-
 foreach($rdsFile in Get-ChildItem $sourceDirectory -Filter *.rds)
 {
-    Write-Verbose "Uploading $rdsFile"
-
-    #create data source
-    try
+    Write-host "Uploading Shared Data Sources to $dataSourceFolder" -ForegroundColor Green
+    # Write-Verbose "Uploading $rdsFile"
+    # Check for existence of data source
+    $tmpDataSource = $ssrsProxy.ListChildren($rsDataSourceFolder, $false) | Where-Object {$_.Name -eq $rdsFile.BaseName}
+    If($tmpDataSource -eq $null -or $IsOverwriteDataSource -eq 1) 
     {
-
-        $rdsf = [System.IO.Path]::GetFileNameWithoutExtension($rdsFile);
-
-        $rdsPath = $sourceDirectory+"\"+$rdsf+".rds"
-
-        Write-Verbose "Reading data from $rdsPath"
-
-        [xml]$Rds = Get-Content -Path $rdsPath
-        $ConnProps = $Rds.RptDataSource.ConnectionProperties
-
-        $type = $ssrsProxy.GetType().Namespace
-        $datatype = ($type + '.DataSourceDefinition')
-        $datatype_Prop = ($type + '.Property')
-
-        $DescProp = New-Object($datatype_Prop)
-        $DescProp.Name = 'Description'
-        $DescProp.Value = ''
-        $HiddenProp = New-Object($datatype_Prop)
-        $HiddenProp.Name = 'Hidden'
-        $HiddenProp.Value = 'true'
-        $Properties = @($DescProp, $HiddenProp)
-
-        $Definition = New-Object ($datatype)
-        $Definition.ConnectString = $ConnProps.ConnectString
-        $Definition.Extension = $ConnProps.Extension
-        if ([Convert]::ToBoolean($ConnProps.IntegratedSecurity)) {
-            $Definition.CredentialRetrieval = 'Integrated'
-        }
-
-        $DataSource = New-Object -TypeName PSObject -Property @{
-            Name = $Rds.RptDataSource.Name
-            Path = $rsDataSourceFolder + '/' + $Rds.RptDataSource.Name
-        }
-
-
-        $warnings = $ssrsProxy.CreateDataSource($rdsf, $rsDataSourceFolder ,$IsOverwriteDataSource, $Definition, $Properties)
-
-        # Write-Host $warnings
-
-    }
-    catch [System.IO.IOException]
-    {
-        $msg = "Error while reading rds file : '{0}', Message: '{1}'" -f $rdsFile, $_.Exception.Message
-        Write-Error msgcler
-    }
-    catch [System.Web.Services.Protocols.SoapException]
-    {
-        if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
-        {
-            Write-Verbose "Data Source: $rdsf already exists."
-        }
-        else
+        try
         {
 
-            $msg = "Error uploading report: $rdsf. Msg: '{0}'" -f $_.Exception.Detail.InnerText
-            Write-Error $msg
-        }
+            $rdsf = [System.IO.Path]::GetFileNameWithoutExtension($rdsFile);
 
+            $rdsPath = $sourceDirectory+"\"+$rdsf+".rds"
+
+            Write-Verbose "Reading data from $rdsPath"
+
+            [xml]$Rds = Get-Content -Path $rdsPath
+            $ConnProps = $Rds.RptDataSource.ConnectionProperties
+
+            $type = $ssrsProxy.GetType().Namespace
+            $datatype = ($type + '.DataSourceDefinition')
+            $datatype_Prop = ($type + '.Property')
+
+            $descProp = New-Object($datatype_Prop)
+            $descProp.Name = 'Description'
+            $descProp.Value = ''
+            $hiddenProp = New-Object($datatype_Prop)
+            $hiddenProp.Name = 'Hidden'
+            $hiddenProp.Value = 'true'
+            $rsProperties = @($descProp, $hiddenProp)
+
+            $Definition = New-Object ($datatype)
+            switch ($rdsFile.BaseName) {
+                "OperationsManager" {$Definition.ConnectString = $ConnProps.ConnectString.Replace("__OPSMGR__",$dbInstanceOpsMgr)}
+                "OperationsManagerDW" {$Definition.ConnectString = $ConnProps.ConnectString.Replace("__OPSMGRDW__",$dbInstanceOpsMgrDW)}
+                "SCORE" {$Definition.ConnectString = $ConnProps.Replace("__SCORE__",$dbInstanceSCORE)}
+            }
+            
+            $Definition.Extension = $ConnProps.Extension
+            if ([Convert]::ToBoolean($ConnProps.IntegratedSecurity)) {
+                $Definition.CredentialRetrieval = 'Integrated'
+            }
+
+            $rsDataSource = New-Object -TypeName PSObject -Property @{
+                Name = $Rds.RptDataSource.Name
+                Path = $rsDataSourceFolder + '/' + $Rds.RptDataSource.Name
+            }
+
+
+            $warnings = $ssrsProxy.CreateDataSource($rdsf, $rsDataSourceFolder ,$IsOverwriteDataSource, $Definition, $rsProperties)
+
+            # Write-Host $warnings
+
+        }
+        catch [System.IO.IOException]
+        {
+            $msg = "Error while reading rds file : '{0}', Message: '{1}'" -f $rdsFile, $_.Exception.Message
+            Write-Error msgcler
+        }
+        catch [System.Web.Services.Protocols.SoapException]
+        {
+            if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
+            {
+                Write-Verbose "Data Source: $rdsf already exists."
+            }
+            else
+            {
+
+                $msg = "Error uploading report: $rdsf. Msg: '{0}'" -f $_.Exception.Detail.InnerText
+                Write-Error $msg
+            }
+
+        }
     }
 }
-Write-Host ""
 
 
 ###################################################################################
@@ -283,65 +321,69 @@ Write-Host ""
 Write-host "Uploading Shared Datasets to $dataSetFolder" -ForegroundColor Green
 foreach($rsdfile in Get-ChildItem $sourceDirectory -Filter *.rsd)
 {
-    Write-host ""
 
-    try {
-        $rsdf = [System.IO.Path]::GetFileNameWithoutExtension($rsdfile)
-        $RsdPath = $sourceDirectory+'\'+$rsdf+'.rsd'
-
-        # Write-Verbose "New-SSRSDataSet -RsdPath $RsdPath -Folder $dataSetFolder"
-
-        $RawDefinition = Get-Content -Encoding Byte -Path $RsdPath
-        $warnings = $null
-
-        $Results = $ssrsProxy.CreateCatalogItem("DataSet", $rsdf, $rsDataSetFolder, $IsOverwriteDataSet, $RawDefinition, $null, [ref]$warnings)
-
-        write-host "Shared Dataset $rsdf created successfully." -ForegroundColor Green
-    }
-    catch [System.IO.IOException]
+    $tmpDataSet = $ssrsProxy.ListChildren($rsDataSetFolder, $false) | Where-Object {$_.Name -eq $rsdFile.BaseName}
+    If($tmpDataSet -eq $null -or $IsOverwriteDataSet -eq 1) 
     {
-        $msg = "Error while reading rsd file : '{0}', Message: '{1}'" -f $rsdfile, $_.Exception.Message
-        Write-Error msgcler
-    }
-    catch [System.Web.Services.Protocols.SoapException]
-    {
-        if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
-        {
-            Write-Verbose "Dataset: $rsdf already exists."
+        Write-host ""
+
+        try {
+            $rsdf = [System.IO.Path]::GetFileNameWithoutExtension($rsdfile)
+            $RsdPath = $sourceDirectory+'\'+$rsdf+'.rsd'
+
+            # Write-Verbose "New-SSRSDataSet -RsdPath $RsdPath -Folder $dataSetFolder"
+
+            $RawDefinition = Get-Content -Encoding Byte -Path $RsdPath
+            $warnings = $null
+
+            $Results = $ssrsProxy.CreateCatalogItem("DataSet", $rsdf, $rsDataSetFolder, $IsOverwriteDataSet, $RawDefinition, $null, [ref]$warnings)
+
+            write-host "Shared Dataset $rsdf created successfully." -ForegroundColor Green
         }
-        else
+        catch [System.IO.IOException]
         {
+            $msg = "Error while reading rsd file : '{0}', Message: '{1}'" -f $rsdfile, $_.Exception.Message
+            Write-Error msgcler
+        }
+        catch [System.Web.Services.Protocols.SoapException]
+        {
+            if ($_.Exception.Detail.InnerText -match "[^rsItemAlreadyExists400]")
+            {
+                Write-Verbose "Dataset: $rsdf already exists."
+            }
+            else
+            {
 
-            $msg = "Error uploading report: $rsdf. Msg: '{0}'" -f $_.Exception.Detail.InnerText
-            Write-Error $msg
+                $msg = "Error uploading report: $rsdf. Msg: '{0}'" -f $_.Exception.Detail.InnerText
+                Write-Error $msg
+            }
+
+        }
+
+
+        ###################################################################################
+        # UPDATE DATA SOURCE FOR DATA SET
+        ###################################################################################
+        $datasetFullName = "/" + $dataSetFolder + "/" + $rsdf
+        Write-Verbose "Updating data sources for dataset $rsdf"
+
+        $rep = $ssrsProxy.GetItemDataSources($datasetFullName)
+        $rep | ForEach-Object {
+            $proxyNamespace = $_.GetType().Namespace
+
+            $thisDataSource = New-Object ("$proxyNamespace.DataSource")
+
+            $thisDataSource.Item = New-Object ("$proxyNamespace.DataSourceReference")
+            $rsDataSourcePath = $_.Item.Reference
+            $thisDataSource.Item.Reference = $rsDataSourcePath
+
+            $_.item = $thisDataSource.Item
+            $ssrsProxy.SetItemDataSources($datasetFullName, $_)
+            Write-Verbose "Changing datasource `"$($_.Name)`" to $($_.Item.Reference)"
         }
 
     }
-
-
-    ###################################################################################
-    # UPDATE DATA SOURCE FOR DATA SET
-    ###################################################################################
-    $datasetFullName = "/" + $dataSetFolder + "/" + $rsdf
-    Write-Verbose "Updating data sources for dataset $rsdf"
-
-    $rep = $ssrsProxy.GetItemDataSources($datasetFullName)
-    $rep | ForEach-Object {
-        $proxyNamespace = $_.GetType().Namespace
-
-        $thisDataSource = New-Object ("$proxyNamespace.DataSource")
-
-        $thisDataSource.Item = New-Object ("$proxyNamespace.DataSourceReference")
-        $rsDataSourcePath = $_.Item.Reference
-        $thisDataSource.Item.Reference = $rsDataSourcePath
-
-        $_.item = $thisDataSource.Item
-        $ssrsProxy.SetItemDataSources($datasetFullName, $_)
-        Write-Verbose "Changing datasource `"$($_.Name)`" to $($_.Item.Reference)"
-    }
-
 }
-
 ###################################################################################
 # CREATE REPORTS
 ###################################################################################
@@ -364,26 +406,26 @@ foreach($rdlfile in Get-ChildItem $sourceDirectory -Filter *.rdl)
         $type = $ssrsProxy.GetType().Namespace
         $datatype = ($type + '.Property')
 
-        $DescProp = New-Object($datatype)
-        $DescProp.Name = 'Description'
-        $DescProp.Value = ''
-        $HiddenProp = New-Object($datatype)
+        $descProp = New-Object($datatype)
+        $descProp.Name = 'Description'
+        $descProp.Value = ''
+        $hiddenProp = New-Object($datatype)
         If($reportName -eq "Dash_OrganizationSummary"){
 	
-	        $HiddenProp.Name = 'Hidden'
-	        $HiddenProp.Value = 'false'
+	        $hiddenProp.Name = 'Hidden'
+	        $hiddenProp.Value = 'false'
         } Else {
 	
-	        $HiddenProp.Name = 'Hidden'
-	        $HiddenProp.Value = 'true'
+	        $hiddenProp.Name = 'Hidden'
+	        $hiddenProp.Value = 'true'
         }
-        $Properties = @($DescProp, $HiddenProp)
+        $rsProperties = @($descProp, $hiddenProp)
 
         #Call Proxy to upload report
 
         $warnings = $null
 
-        $Results = $ssrsProxy.CreateCatalogItem("Report", $reportName,$rsReportFolder, $IsOverwriteReport,$byteArray,$Properties,[ref]$warnings)
+        $Results = $ssrsProxy.CreateCatalogItem("Report", $reportName,$rsReportFolder, $IsOverwriteReport,$byteArray,$rsProperties,[ref]$warnings)
 
         if($warnings.length -le 1)
         { 
