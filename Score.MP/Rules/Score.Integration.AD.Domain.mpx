@@ -114,7 +114,7 @@
                 <Parameters>
                   <Parameter>
                     <Name>adDomain</Name>
-                    <Value>$Config/adDomain$</Value>
+                    <Value>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Domain.Class']/Domain$</Value>
                   </Parameter>
                   <Parameter>
                     <Name>adObjectType</Name>
@@ -126,7 +126,7 @@
                   </Parameter>
                   <Parameter>
                     <Name>ScriptLocation</Name>
-                    <Value>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</Value>
+                    <Value>$Target/Host/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</Value>
                   </Parameter>
                 </Parameters>
                 <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
@@ -143,7 +143,7 @@
     </ModuleTypes>
   </TypeDefinitions><Monitoring>
     <Rules>
-      <Rule ID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule" Enabled="false" Target="Microsoft.SCORE.IntegrationServer.Domain.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>Custom</Category>
         <DataSources>
           <DataSource ID="Scheduler" TypeID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.DS">
@@ -153,10 +153,10 @@
         </DataSources>
         <WriteActions>
           <WriteAction ID="WA" TypeID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.AD.RunasProfile">
-            <adDomain>YOUR DOMAIN HERE</adDomain>
+            <adDomain>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Domain.Class']/Domain$</adDomain>
             <adObjectType>forest,domain,site,subnet</adObjectType>
             <adSearchRoot></adSearchRoot>
-            <ScriptLocation>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</ScriptLocation>
+            <ScriptLocation>$Target/Host/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</ScriptLocation>
             <TimeoutSeconds>900</TimeoutSeconds>
           </WriteAction>
         </WriteActions>

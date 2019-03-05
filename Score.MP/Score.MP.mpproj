@@ -51,6 +51,9 @@
     </ManagementPackReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes and Discoveries\Score.IntegrationServer.Domain.Discovery.mpx">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Classes and Discoveries\Score.IntegrationServer.Discovery.mpx">
       <SubType>Code</SubType>
     </Compile>
@@ -72,11 +75,26 @@
     <Compile Include="Rules\Score.Integration.OpsMgr.TimeZone.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\Score.Integration.Folder.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\Score.Integration.Server.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Views\Score.Integration.Server.mptg</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes and Discoveries" />
     <Folder Include="Monitors" />
+    <Folder Include="Tasks" />
+    <Folder Include="Views" />
     <Folder Include="Rules" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Score.Integration.Server.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
 </Project>

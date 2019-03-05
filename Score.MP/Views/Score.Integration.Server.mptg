@@ -1,0 +1,30 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instanceaac2f41d1cd940b795894c063f089c83" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomView" Version="1.0.0.0">
+      <CustomViewConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ViewFolder>Score.Integration.Folder</ViewFolder>
+        <ViewType>SC!Microsoft.SystemCenter.StateViewType</ViewType>
+        <Visible>true</Visible>
+        <Accessibility>Internal</Accessibility>
+        <Id>Microsoft.SCORE.Integration.Domain.View</Id>
+        <DisplayName>Microsoft SCORE Integration Domain View</DisplayName>
+        <Description>Microsoft SCORE Integration Domain View</Description>
+        <Category>Operations</Category>
+      </CustomViewConfig>
+    </Instance>
+    <Instance ID="Instance3792708a2f224266992b48d3a58de3dc" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomView" Version="1.0.0.0">
+      <CustomViewConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ViewFolder>Score.Integration.Folder</ViewFolder>
+        <ViewType>SC!Microsoft.SystemCenter.StateViewType</ViewType>
+        <ViewConfiguration />
+        <Visible>true</Visible>
+        <Accessibility>Internal</Accessibility>
+        <Id>Microsoft.SCORE.Integration.Server.View</Id>
+        <DisplayName>Microsoft SCORE Integration Server View</DisplayName>
+        <Description>Microsoft SCORE Integration Server View</Description>
+        <Target>Microsoft.SCORE.IntegrationServer.Class</Target>
+        <Category>Operations</Category>
+      </CustomViewConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>

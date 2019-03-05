@@ -5,9 +5,19 @@
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <Property ID="ScriptLocation" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
+        <ClassType ID="Microsoft.SCORE.IntegrationServer.Domain.Class" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.ApplicationComponent" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="Domain" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="IsForest" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
         <!-- We choose Microsoft.Windows.LocalApplication as our generic base class -->
         <!-- This specific fragment example has a class property of "Version" just as an example. You can change as needed or add new ones -->
       </ClassTypes>
+      <RelationshipTypes>
+        <RelationshipType ID="MicrosoftSCOREIntegrationServer.Contains.MicrosoftSCOREDomain" Accessibility="Public" Abstract="false" Base="System!System.Hosting">
+          <Source ID="src" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCORE.IntegrationServer.Class" />
+          <Target ID="trgt" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCORE.IntegrationServer.Domain.Class" />
+        </RelationshipType>
+      </RelationshipTypes>
     </EntityTypes>
   <SecureReferences>
     <SecureReference ID="SCORE.IntegrationServer.AD.RunasProfile" Accessibility="Public" />
@@ -122,6 +132,10 @@
         <DisplayString ElementID="SCORE.IntegrationServer.OpsMgr.RunasProfile">
           <Name>SCORE OpsMgr Run As Profile</Name>
           <Description>An AD Account. Must be a member of the Advanced Operators Group.</Description>
+        </DisplayString>
+        <DisplayString ElementID="MicrosoftSCOREIntegrationServer.Contains.MicrosoftSCOREDomain">
+          <Name>Microsoft SCORE Integration Server Contains Microsoft SCORE Domain</Name>
+          <Description>Microsoft SCORE Integration Server Contains Microsoft SCORE Domain</Description>
         </DisplayString>
       </DisplayStrings>
       <KnowledgeArticles>
