@@ -1959,6 +1959,7 @@ WHERE
         </DataSetReference>
       </DefaultValue>
       <Prompt>Time Zone</Prompt>
+      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>SystemTimeZone</DataSetName>

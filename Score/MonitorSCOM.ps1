@@ -1422,11 +1422,15 @@ Param (
 	[Parameter(Mandatory=$True,Position=2)]
 	[string]$objectClass,
 	[Parameter(Mandatory=$True,Position=3)]
+	[string]$genericClass,
+	[Parameter(Mandatory=$True,Position=4)]
+	[string]$distributedApplication,
+	[Parameter(Mandatory=$True,Position=5)]
 	[ValidateSet("Full","Incremental","None")]
 	[string]$syncType,
-	[Parameter(Mandatory=$True,Position=4)]
+	[Parameter(Mandatory=$True,Position=6)]
     [DateTime]$lastUpdate,
-	[Parameter(Mandatory=$False,Position=5)]
+	[Parameter(Mandatory=$False,Position=7)]
 	[System.Data.SqlClient.SqlConnection]$sqlConnection
 )
     # Initialize error variables
@@ -1464,6 +1468,39 @@ Param (
         ################################################################################
         Try {
             $class = Get-SCOMClass -name $objectClass
+
+			[datetime]$timeNow = (Get-Date)
+
+			$sqlCommand = GetStoredProc $sqlConnection "scom.spObjectClassUpsert"
+			[Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
+			[Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+			[Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
+			[Void]$sqlCommand.Parameters.Add("@GenericName", [system.data.SqlDbType]::nvarchar)
+			[Void]$sqlCommand.Parameters.Add("@ManagementPackName", [system.data.SqlDbType]::nvarchar)
+			[Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
+			[Void]$sqlCommand.Parameters.Add("@DistributedApplication", [system.data.SqlDbType]::nvarchar)
+
+			[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+			[Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+
+
+			If($distributedApplication -eq "True"){$distApp = 1} Else {$distApp = 0}
+            $sqlCommand.Parameters["@ID"].Value = $class.Id
+            $sqlCommand.Parameters["@Name"].Value = NullToString $class.Name ""
+            $sqlCommand.Parameters["@DisplayName"].Value = NullToString $class.DisplayName ""
+            $sqlCommand.Parameters["@GenericName"].Value = $genericClass
+            $sqlCommand.Parameters["@ManagementPackName"].Value = NullToString $class.ManagementPackName ""
+            $sqlCommand.Parameters["@Description"].Value = NullToString $class.DisplayName ""
+            $sqlCommand.Parameters["@DistributedApplication"].Value = $distApp
+
+            $sqlCommand.Parameters["@Active"].Value = $True
+            $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+	                
+			[void]$sqlCommand.ExecuteNonQuery()
+
+			################################################################################
+			# WRITE TO OBJECTCLASS
+			################################################################################
             If($syncType -eq "Full"){
                 $Objects = Get-SCOMClassInstance -Class $class
             } Else {
@@ -2047,6 +2084,9 @@ foreach ($objectClass in $ObjectClasses){
                             $Classes=$appConfig.SelectNodes("/configuration/ObjectClasses/ObjectClass[@active='True']")
                             foreach($Class in $Classes){
                                 $className = $class.name
+								$distributedApplication = $class.DistributedApplication
+								$genericClass = $class.genericClass
+
 	                            $lastSyncStatus = GetSyncStatus -scomManagementGroup $scomManagementGroup -ObjectClass $className -sqlConnection $sqlConnection
                                 $thisSyncType = GetSyncType $lastSyncStatus $syncType
 
@@ -2054,7 +2094,7 @@ foreach ($objectClass in $ObjectClasses){
 	                            [datetime]$startDate = (Get-Date)
                                 SetSyncStatus -scomManagementGroup $scomManagementGroup -ObjectClass $className -SyncType $thisSyncType.SyncType -startDate $startDate -syncStatus "Starting..." -sqlConnection $sqlConnection
 
-							    $result = WriteSCOMObjects -scomManagementGroup $scomManagementGroup -objectClass $className -syncType $thisSyncType.syncType -lastUpdate $thisSyncType.lastUpdate -sqlConnection $sqlConnection
+							    $result = WriteSCOMObjects -scomManagementGroup $scomManagementGroup -objectClass $className -genericClass $genericClass -distributedApplication $distributedApplication -syncType $thisSyncType.syncType -lastUpdate $thisSyncType.lastUpdate -sqlConnection $sqlConnection
                                 $scomObjects = $result.ObjectCount
 							    $errorCounter += $result.ErrorCount
 							    $warningCounter += $result.WarningCount
