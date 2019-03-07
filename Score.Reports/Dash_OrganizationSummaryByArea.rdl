@@ -91,47 +91,6 @@ WHERE
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="DistributedApplications">
-      <Query>
-        <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT
-	oc.genericname, 
-	case 
-		when InMaintenanceMode = 1 then 'MaintenanceMode'
-		when IsAvailable=0 then 'NotAvailable' 
-		else HealthState
-		
-	end as [HealthState],
-
-	IsAvailable, 
-	InMaintenanceMode 
-FROM 
-	scom.[ObjectHealthState] o inner join scom.[ObjectClass] oc 
-		on o.ObjectClass = oc.Name
-WHERE
-	o.Active = 1
-	AND oc.Active = 1
-	AND oc.DistributedApplication = 1</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="genericname">
-          <DataField>genericname</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="HealthState">
-          <DataField>HealthState</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="IsAvailable">
-          <DataField>IsAvailable</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="InMaintenanceMode">
-          <DataField>InMaintenanceMode</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
     <DataSet Name="ReportHeaderSettings">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
@@ -341,43 +300,11 @@ WHERE
     <ReportSection>
       <Body>
         <ReportItems>
-          <Textbox Name="Textbox21">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Application Summary</Value>
-                    <Style>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox21</rd:DefaultName>
-            <Top>5.80083in</Top>
-            <Left>0.11632in</Left>
-            <Height>0.25in</Height>
-            <Width>4in</Width>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Line Name="Line1">
             <Top>5.74875in</Top>
             <Left>0.13417in</Left>
             <Height>0in</Height>
             <Width>9.97101in</Width>
-            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -438,7 +365,7 @@ WHERE
             <KeepTogether>true</KeepTogether>
             <Height>1in</Height>
             <Width>10.5in</Width>
-            <ZIndex>2</ZIndex>
+            <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -729,292 +656,13 @@ WHERE
             <Left>0.11333in</Left>
             <Height>0.35417in</Height>
             <Width>9.99184in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Rectangle>
-          <Tablix Name="ApplicationSummary">
-            <TablixBody>
-              <TablixColumns>
-                <TablixColumn>
-                  <Width>3.00299in</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>1in</Width>
-                </TablixColumn>
-              </TablixColumns>
-              <TablixRows>
-                <TablixRow>
-                  <Height>0.2in</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox2">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Application Name</Value>
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox2</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox5">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Health</Value>
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox5</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
-                <TablixRow>
-                  <Height>0.2in</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="genericname">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!genericname.Value</Value>
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                    <TextDecoration>Underline</TextDecoration>
-                                    <Color>DarkBlue</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>genericname</rd:DefaultName>
-                          <ActionInfo>
-                            <Actions>
-                              <Action>
-                                <Drillthrough>
-                                  <ReportName>List_ObjectHealthState</ReportName>
-                                  <Parameters>
-                                    <Parameter Name="ObjectGenericName">
-                                      <Value>=Fields!genericname.Value</Value>
-                                    </Parameter>
-                                  </Parameters>
-                                </Drillthrough>
-                              </Action>
-                            </Actions>
-                          </ActionInfo>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=Iif(RowNumber(Nothing) mod 2 = 0, "Transparent","LightSteelBlue")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Rectangle Name="Rectangle2">
-                          <ReportItems>
-                            <Rectangle Name="Rectangle16">
-                              <KeepTogether>true</KeepTogether>
-                              <Top>0.025in</Top>
-                              <Left>0.425in</Left>
-                              <Height>0.15in</Height>
-                              <Width>0.15in</Width>
-                              <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <BackgroundColor>=Iif(Fields!HealthState.Value="MaintenanceMode", "Blue", Iif(Fields!HealthState.Value="NotAvailable", "Black", Iif(Fields!HealthState.Value="Success","Green",Iif(Fields!HealthState.Value="Warning","Gold",Iif(Fields!HealthState.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
-                              </Style>
-                            </Rectangle>
-                          </ReportItems>
-                          <KeepTogether>true</KeepTogether>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BackgroundColor>=Iif(RowNumber(Nothing) mod 2 = 0, "Transparent","LightSteelBlue")</BackgroundColor>
-                          </Style>
-                        </Rectangle>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
-                <TablixRow>
-                  <Height>0.2in</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox14">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox14</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox15">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox15</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
-              </TablixRows>
-            </TablixBody>
-            <TablixColumnHierarchy>
-              <TablixMembers>
-                <TablixMember />
-                <TablixMember />
-              </TablixMembers>
-            </TablixColumnHierarchy>
-            <TablixRowHierarchy>
-              <TablixMembers>
-                <TablixMember>
-                  <KeepWithGroup>After</KeepWithGroup>
-                </TablixMember>
-                <TablixMember>
-                  <Group Name="Details" />
-                </TablixMember>
-                <TablixMember>
-                  <KeepWithGroup>Before</KeepWithGroup>
-                </TablixMember>
-              </TablixMembers>
-            </TablixRowHierarchy>
-            <DataSetName>DistributedApplications</DataSetName>
-            <SortExpressions>
-              <SortExpression>
-                <Value>=Fields!genericname.Value</Value>
-              </SortExpression>
-            </SortExpressions>
-            <Top>6.06472in</Top>
-            <Left>0.11333in</Left>
-            <Height>0.6in</Height>
-            <Width>4.00299in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-            </Style>
-          </Tablix>
           <Tablix Name="Tablix2">
             <TablixBody>
               <TablixColumns>
@@ -1085,7 +733,7 @@ WHERE
             <Left>2.66146in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>3</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1162,7 +810,7 @@ WHERE
             <Left>5.25in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1239,7 +887,7 @@ WHERE
             <Left>0.13417in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1316,7 +964,7 @@ WHERE
             <Left>0.13417in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1393,7 +1041,7 @@ WHERE
             <Left>2.66146in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>9</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1470,7 +1118,7 @@ WHERE
             <Left>5.25in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>10</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1499,6 +1147,7 @@ WHERE
                                   <Value>=Fields!ItemParameters.Value</Value>
                                 </Parameter>
                               </Parameters>
+                              <Top>0in</Top>
                               <Left>0.00001in</Left>
                               <Height>1.66in</Height>
                               <Width>2.28573in</Width>
@@ -1548,7 +1197,7 @@ WHERE
             <Left>7.81945in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1625,7 +1274,7 @@ WHERE
             <Left>7.81944in</Left>
             <Height>1.66in</Height>
             <Width>2.28573in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1639,7 +1288,7 @@ WHERE
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Organization Summary By Area"</Value>
+                    <Value>Organization Summary By Area</Value>
                     <Style>
                       <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
@@ -1664,7 +1313,7 @@ WHERE
             <Left>0.13417in</Left>
             <Height>0.45325in</Height>
             <Width>9.971in</Width>
-            <ZIndex>13</ZIndex>
+            <ZIndex>11</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1678,7 +1327,7 @@ WHERE
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>6.7793in</Height>
+        <Height>5.91472in</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1712,7 +1361,7 @@ WHERE
               <Top>0.07583in</Top>
               <Left>0.11632in</Left>
               <Height>0.42417in</Height>
-              <Width>9.74828in</Width>
+              <Width>9.98885in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>

@@ -15661,25 +15661,25 @@ GO
 *
 ****************************************************************/
 CREATE PROC [scom].[spWindowsComputerUpsert]
-	@ID uniqueidentifier,
-	@DNSHostName nvarchar(255),
-	@IPAddress nvarchar(255) = N'',
-	@ObjectSID nvarchar(255) = N'',
-	@NetBIOSDomainName nvarchar(255) = N'',
-	@DomainDNSName nvarchar(255) = N'',
-	@OrganizationalUnit nvarchar(2048) = N'',
-	@ForestDNSName nvarchar(255) = N'',
-	@ActiveDirectorySite nvarchar(255) = N'',
-	@IsVirtualMachine bit = Null,
-	@HealthState nvarchar(255) = N'',
-	@StateLastModified datetime2(3) = Null,
-	@IsAvailable bit = Null,
-	@AvailabilityLastModified datetime2(3) = Null,
-	@InMaintenanceMode bit = Null,
-	@MaintenanceModeLastModified datetime2(3) = Null,
-	@ManagementGroup nvarchar(255) = Null,
-	@Active bit,
-	@dbLastUpdate datetime2(3)
+	@ID UNIQUEIDENTIFIER,
+	@DNSHostName NVARCHAR(255),
+	@IPAddress NVARCHAR(255) = N'',
+	@ObjectSID NVARCHAR(255) = N'',
+	@NetBIOSDomainName NVARCHAR(255) = N'',
+	@DomainDNSName NVARCHAR(255) = N'',
+	@OrganizationalUnit NVARCHAR(2048) = N'',
+	@ForestDNSName NVARCHAR(255) = N'',
+	@ActiveDirectorySite NVARCHAR(255) = N'',
+	@IsVirtualMachine BIT = NULL,
+	@HealthState NVARCHAR(255) = N'',
+	@StateLastModified DATETIME2(3) = NULL,
+	@IsAvailable BIT = NULL,
+	@AvailabilityLastModified DATETIME2(3) = NULL,
+	@InMaintenanceMode BIT = NULL,
+	@MaintenanceModeLastModified DATETIME2(3) = NULL,
+	@ManagementGroup NVARCHAR(255) = NULL,
+	@Active BIT,
+	@dbLastUpdate DATETIME2(3)
 
 AS
 
@@ -15695,7 +15695,7 @@ END
 
 BEGIN TRAN
 
-	MERGE [scom].[WindowsComputer] as [target]
+	MERGE [scom].[WindowsComputer] AS [target]
 	USING (SELECT 	
 		@ID ,
 		@DNSHostName,
@@ -15716,7 +15716,7 @@ BEGIN TRAN
 		@ManagementGroup,
 		@Active ,
 		@dbLastUpdate ,
-		@dbLastUpdate ) as [Source]
+		@dbLastUpdate ) AS [Source]
 
 		(ID,
 		DNSHostName,
@@ -15737,7 +15737,7 @@ BEGIN TRAN
 		ManagementGroup,
 		Active,
 		dbAddDate,
-		dbLastUpdate) on ([target].ID = @ID)
+		dbLastUpdate) ON ([target].ID = @ID)
 
 
 	WHEN MATCHED 
@@ -15809,7 +15809,84 @@ BEGIN TRAN
 	;
 COMMIT
 GO
-USE [master]
+
+/****************************************************************
+* Name: scom.spObjectClassUpsert
+* Author: huscott
+* Date: 2019-03-05
+*
+* Description:
+*
+****************************************************************/
+CREATE PROC scom.spObjectClassUpsert
+(
+	@ID nvarchar(255)
+	,@Name nvarchar(255)
+	,@DisplayName nvarchar(255)
+	,@GenericName nvarchar(255)
+	,@ManagementPackName nvarchar(255)
+	,@Description nvarchar(1024)
+	,@DistributedApplication bit
+	,@Active bit
+	,@dbLastUpdate datetime2(3)
+)
+
+AS
+
+SET NOCOUNT ON
+SET XACT_ABORT ON
+
+IF EXISTS (SELECT Name FROM scom.[ObjectClass] WHERE (Name = @Name AND [ID] != @ID))
+BEGIN
+	DELETE 
+	FROM scom.[ObjectClass]
+	WHERE [Name] = @Name
+END
+
+IF EXISTS (SELECT ID FROM scom.[ObjectClass] WHERE ([ID] = @ID))
+BEGIN
+
+	UPDATE [scom].[ObjectClass]
+	   SET [Name] = @Name
+		  ,[DisplayName] = @DisplayName
+		  ,[GenericName] = @GenericName
+		  ,[ManagementPackName] = @ManagementPackName
+		  ,[Description] = @Description
+		  ,[DistributedApplication] = @DistributedApplication
+		  ,[Active] = @Active
+		  ,[dbLastUpdate] = @dbLastUpdate
+	 WHERE 
+		[ID] = @ID
+END
+
+ELSE
+
+BEGIN
+
+	INSERT INTO [scom].[ObjectClass]
+			   ([ID]
+			   ,[Name]
+			   ,[DisplayName]
+			   ,[GenericName]
+			   ,[ManagementPackName]
+			   ,[Description]
+			   ,[DistributedApplication]
+			   ,[Active]
+			   ,[dbAddDate]
+			   ,[dbLastUpdate])
+		 VALUES
+			   (@ID
+			   ,@Name
+			   ,@DisplayName
+			   ,@GenericName
+			   ,@ManagementPackName
+			   ,@Description
+			   ,@DistributedApplication
+			   ,@Active
+			   ,@dbLastUpdate
+			   ,@dbLastUpdate)
+END
 GO
+
 ALTER DATABASE [SCORE] SET  READ_WRITE 
 GO

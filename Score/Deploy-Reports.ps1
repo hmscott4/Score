@@ -487,7 +487,7 @@ If($IsOverwriteDataSet)
             $rep | ForEach-Object {
                 $proxyNamespace = $_.GetType().Namespace
 
-                [xml]$xmlDataSource=Get-Content ".\Reports\$rsdFile"
+                [xml]$xmlDataSource=Get-Content "$sourceDirectory\$rsdFile"
                 $dataSourceName = $xmlDataSource.SharedDataset.DataSet.Query.DataSourceReference
 
                 $thisDataSource = New-Object ("$proxyNamespace.DataSource")
