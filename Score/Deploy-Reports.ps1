@@ -82,7 +82,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 # WORKING VARIABLES
 ###################################################################################
 $CurrentWorkingFolder = split-path -parent $MyInvocation.MyCommand.Definition
-$sourceDirectory = "$CurrentWorkingFolder\Reports"
+$sourceDirectory = "$CurrentWorkingFolder\Score.Reports"
 
 ###################################################################################
 # OBTAIN RUNTIME VALUES
@@ -105,7 +105,7 @@ $dfDataSetFolder = "SCORE"
 $prompt = Read-Host "Dataset Folder [$($dfDataSetFolder)]"
 $dataSetFolder = ($dfDataSetFolder,$prompt)[[bool]$prompt]
 
-$IsInitialDeployment = switch (Read-Host -Prompt 'Initial Deployment (Y,N)? [N]')
+$IsInitialDeployment = switch (Read-Host -Prompt 'Initial Deployment (Y/N)? [N]')
 {
     "Y" {[Boolean] 1}
     default {[Boolean] 0}
@@ -120,17 +120,17 @@ If($IsInitialDeployment)
 Else
 {
     # Overwrite properties
-    $IsOverwriteDataSource = switch (Read-Host -Prompt 'Overwrite DataSources (Y,N)? [N]')
+    $IsOverwriteDataSource = switch (Read-Host -Prompt 'Overwrite DataSources (Y/N)? [N]')
     {
         "Y" {[Boolean] 1}
         default {[Boolean] 0}
     }
-    $IsOverwriteDataSet = switch (Read-Host -Prompt 'Overwrite DataSet (Y,N)? [N]')
+    $IsOverwriteDataSet = switch (Read-Host -Prompt 'Overwrite DataSet (Y/N)? [N]')
     {
         "Y" {[Boolean] 1}
         default {[Boolean] 0}
     }
-    $IsOverwriteReport = switch (Read-Host -Prompt 'Overwrite Reports (Y,N)? [Y]')
+    $IsOverwriteReport = switch (Read-Host -Prompt 'Overwrite Reports (Y/N)? [Y]')
     {
         "N" {[Boolean] 0}
         default {[Boolean] 1}
