@@ -313,9 +313,9 @@ $tmpFolder = $null
 ###################################################################################
 # CREATE DATA SOURCES
 ###################################################################################
-If($IsInitialDeployment -or $IsOverwriteDataSource)
+If($IsOverwriteDataSource)
 {
-    Write-host "Uploading Shared Data Sources to $dataSourceFolder" -ForegroundColor Green
+    Write-host "Uploading Shared Data Sources to $rsDataSourceFolder" -ForegroundColor Green
 
     foreach ($rdsFile in Get-ChildItem $sourceDirectory -Filter *.rds)
     {
@@ -327,7 +327,7 @@ If($IsInitialDeployment -or $IsOverwriteDataSource)
             try
             {
 
-                $rdsf = [System.IO.Path]::GetFileNameWithoutExtension($rdsFile);
+                $rdsf = $rdsFile.BaseName;
 
                 $rdsPath = $sourceDirectory+"\"+$rdsf+".rds"
 
@@ -444,7 +444,7 @@ If($IsOverwriteDataSet)
         {
 
             try {
-                $rsdf = [System.IO.Path]::GetFileNameWithoutExtension($rsdfile)
+                $rsdf = $rsdfile.BaseName
                 $RsdPath = $sourceDirectory+'\'+$rsdf+'.rsd'
 
                 # Write-Verbose "New-SSRSDataSet -RsdPath $RsdPath -Folder $dataSetFolder"
@@ -523,7 +523,7 @@ Write-host "Uploading Reports to $rsReportFolder" -ForegroundColor Green
 foreach ($rdlfile in Get-ChildItem $sourceDirectory -Filter *.rdl)
 {
 
-    $reportName = [System.IO.Path]::GetFileNameWithoutExtension($rdlFile);
+    $reportName = $rdlfile.BaseName;
     write-verbose "Uploading $reportName" 
     try
     {
