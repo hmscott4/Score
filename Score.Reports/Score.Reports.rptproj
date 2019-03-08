@@ -9,8 +9,8 @@
     <TargetServerVersion>SSRS2016</TargetServerVersion>
     <Platform>Win32</Platform>
     <TargetReportFolder>Score</TargetReportFolder>
-    <TargetDatasetFolder>Datasets</TargetDatasetFolder>
-    <TargetDatasourceFolder>Data Sources</TargetDatasourceFolder>
+    <TargetDatasetFolder>Score</TargetDatasetFolder>
+    <TargetDatasourceFolder>Score</TargetDatasourceFolder>
     <TargetReportPartFolder>Report Parts</TargetReportPartFolder>
     <TargetServerURL>https://reports.abcd.lcl/reportserver</TargetServerURL>
   </PropertyGroup>

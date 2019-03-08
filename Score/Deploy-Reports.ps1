@@ -56,7 +56,7 @@
 
 #>
 try{
-    Write-Output "This script only runs in Powershell 2.0 or above"
+    Write-Verbose "This script only runs in Powershell 2.0 or above"
     #Requires -Version 2.0
 }
 catch {
@@ -317,7 +317,7 @@ If($IsInitialDeployment -or $IsOverwriteDataSource)
 {
     Write-host "Uploading Shared Data Sources to $dataSourceFolder" -ForegroundColor Green
 
-    foreach($rdsFile in Get-ChildItem $sourceDirectory -Filter *.rds)
+    foreach ($rdsFile in Get-ChildItem $sourceDirectory -Filter *.rds)
     {
         # Write-Verbose "Uploading $rdsFile"
         # Check for existence of data source
@@ -448,11 +448,20 @@ If($IsOverwriteDataSet)
                 $RsdPath = $sourceDirectory+'\'+$rsdf+'.rsd'
 
                 # Write-Verbose "New-SSRSDataSet -RsdPath $RsdPath -Folder $dataSetFolder"
-
                 $RawDefinition = Get-Content -Encoding Byte -Path $RsdPath
+
+                # Hide shared data sets        
+                $type = $ssrsProxy.GetType().Namespace
+                $datatype = ($type + '.Property')
+
+                $hiddenProp = New-Object($datatype)
+	            $hiddenProp.Name = 'Hidden'
+	            $hiddenProp.Value = 'true'
+                $rsProperties = @($descProp, $hiddenProp)
+
                 $warnings = $null
 
-                $Results = $ssrsProxy.CreateCatalogItem("DataSet", $rsdf, $rsDataSetFolder, $IsOverwriteDataSet, $RawDefinition, $null, [ref]$warnings)
+                $Results = $ssrsProxy.CreateCatalogItem("DataSet", $rsdf, $rsDataSetFolder, $IsOverwriteDataSet, $RawDefinition, $rsProperties, [ref]$warnings)
 
                 write-verbose "Shared Dataset $rsdf created successfully." 
             }
@@ -511,7 +520,7 @@ If($IsOverwriteDataSet)
 # CREATE REPORTS
 ###################################################################################
 Write-host "Uploading Reports to $rsReportFolder" -ForegroundColor Green
-foreach($rdlfile in Get-ChildItem $sourceDirectory -Filter *.rdl)
+foreach ($rdlfile in Get-ChildItem $sourceDirectory -Filter *.rdl)
 {
 
     $reportName = [System.IO.Path]::GetFileNameWithoutExtension($rdlFile);
@@ -629,6 +638,6 @@ Write-host ""
 Write-host "Successfully Deployed SSRS Project" -ForegroundColor Magenta
 Write-host ""
 
-#Open IE
-$RPServernameUI = $RPServerName.Replace('ReportServer','Reports')
-Start-Process "iexplore.exe" $webServiceUrl'/'$RPServernameUI"/Pages/Folder.aspx"
+# Open IE
+# $RPServernameUI = $RPServerName.Replace('ReportServer','Reports')
+# Start-Process "iexplore.exe" $webServiceUrl'/'$RPServernameUI"/Pages/Folder.aspx"
