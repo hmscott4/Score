@@ -27,12 +27,22 @@ SET @EndDate = GETUTCDATE()
 SET @ObjectName = N'SQL Database'
 
 SELECT 
-	Path, 
-	DisplayName , 
-	FullName, 
-	ObjectName, 
-	CounterName, 
-	InstanceName, 
+	case
+		when CHARINDEX(';',vme.Path) &gt; 0 THEN REPLACE(vme.Path, RIGHT(vme.Path, (LEN(vme.Path) - CHARINDEX(';',vme.Path))), '')
+		else REPLACE(vme.Path, RIGHT(vmeTop.DisplayName, (LEN(vmeTop.DisplayName) - CHARINDEX('\', vmeTop.DisplayName))), '')
+	end as ServerName,
+	case
+		when CHARINDEX(';',vme.Path) &gt; 0 THEN RIGHT(vme.Path, (LEN(vme.Path) - CHARINDEX(';',vme.Path)))
+		else RIGHT(vmeTop.DisplayName, (LEN(vmeTop.DisplayName) - CHARINDEX('\', vmeTop.DisplayName)))
+	end as InstanceName,
+	--vmetop.Name,
+	--vmeTop.DisplayName,
+	--vmeTop.FullName,
+	vme.Path, 
+	vme.DisplayName , 
+	vme.FullName, 
+	vpr.ObjectName, 
+	vpr.CounterName, 
 	AVG(SampleValue) [SpaceAllocated]
 	-- StandardDeviation,
 	-- [DateTime] 
@@ -41,21 +51,43 @@ FROM
 		INNER JOIN vManagedEntity vme on pvpr.ManagedEntityRowId = vme.ManagedEntityRowId 
 		INNER JOIN vPerformanceRuleInstance vpri on pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId 
 		INNER JOIN vPerformanceRule vpr on vpr.RuleRowId = vpri.RuleRowId 
+		INNER JOIN vManagedEntity vmeTop ON vme.TopLevelHostManagedEntityRowId = vmeTop.ManagedEntityRowId
 WHERE 
 	vpr.ObjectName = @ObjectName
 	AND vpr.CounterName IN (N'DB Allocated Size (MB)',
 		N'DB Allocated Space (MB)')
 	AND pvpr.[datetime] BETWEEN @StartDate AND @EndDate
 GROUP BY
-	Path, 
-	DisplayName , 
-	FullName, 
-	ObjectName, 
-	CounterName, 
-	InstanceName</CommandText>
+	case
+		when CHARINDEX(';',vme.Path) &gt; 0 THEN REPLACE(vme.Path, RIGHT(vme.Path, (LEN(vme.Path) - CHARINDEX(';',vme.Path))), '')
+		else REPLACE(vme.Path, RIGHT(vmeTop.DisplayName, (LEN(vmeTop.DisplayName) - CHARINDEX('\', vmeTop.DisplayName))), '')
+	end,
+	case
+		when CHARINDEX(';',vme.Path) &gt; 0 THEN RIGHT(vme.Path, (LEN(vme.Path) - CHARINDEX(';',vme.Path)))
+		else RIGHT(vmeTop.DisplayName, (LEN(vmeTop.DisplayName) - CHARINDEX('\', vmeTop.DisplayName)))
+	end,
+	--vmetop.Name,
+	--vmeTop.DisplayName,
+	--vmeTop.FullName,
+	vme.Path, 
+	vme.DisplayName , 
+	vme.FullName, 
+	vpr.ObjectName, 
+	vpr.CounterName</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
+        <Field Name="IsSystemDB">
+          <Value>=Iif(Fields!DisplayName.Value="master", 1, iif(Fields!DisplayName.Value="model", 1, iif(Fields!DisplayName.Value="msdb", 1, iif(Fields!DisplayName.Value="tempdb", 1, 0))))</Value>
+        </Field>
+        <Field Name="ServerName">
+          <DataField>ServerName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="InstanceName">
+          <DataField>InstanceName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="Path">
           <DataField>Path</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -76,16 +108,9 @@ GROUP BY
           <DataField>CounterName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="InstanceName">
-          <DataField>InstanceName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="SpaceAllocated">
           <DataField>SpaceAllocated</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="IsSystemDB">
-          <Value>=Iif(Fields!DisplayName.Value="master", 1, iif(Fields!DisplayName.Value="model", 1, iif(Fields!DisplayName.Value="msdb", 1, iif(Fields!DisplayName.Value="tempdb", 1, 0))))</Value>
         </Field>
       </Fields>
       <Filters>
@@ -527,7 +552,7 @@ GROUP BY
                         <Textbox Name="Textbox1">
                           <CanGrow>true</CanGrow>
                           <UserSort>
-                            <SortExpression>=Fields!Path.Value</SortExpression>
+                            <SortExpression>=Fields!ServerName.Value</SortExpression>
                           </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -556,12 +581,16 @@ GROUP BY
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox2">
                           <CanGrow>true</CanGrow>
+                          <UserSort>
+                            <SortExpression>=Fields!InstanceName.Value</SortExpression>
+                          </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -790,7 +819,7 @@ GROUP BY
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Left(Fields!Path.Value, Instr(Fields!Path.Value,";")-1)</Value>
+                                  <Value>=Left(Fields!ServerName.Value, Len(Fields!ServerName.Value)-1)</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -809,7 +838,6 @@ GROUP BY
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -821,7 +849,7 @@ GROUP BY
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Right(Fields!Path.Value, Len(Fields!Path.Value) - InStr(Fields!Path.Value,";"))</Value>
+                                  <Value>=Fields!InstanceName.Value</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>

@@ -2,7 +2,7 @@
 <RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="OperationsManagerDW">
   <ConnectionProperties>
     <Extension>SQL</Extension>
-    <ConnectString>Data Source=__OPSMGRDW__;Initial Catalog=OperationsManagerDW;Integrated Security=SSPI;Application Name=SCORE.v1.3</ConnectString>
+    <ConnectString>Data Source=sql94.abcd.lcl;Initial Catalog=OperationsManagerDW;Integrated Security=SSPI;Application Name=SCORE.v1.3</ConnectString>
     <IntegratedSecurity>true</IntegratedSecurity>
   </ConnectionProperties>
   <DataSourceID>6ffef878-d7f1-49d0-b2c2-98a6c903b216</DataSourceID>

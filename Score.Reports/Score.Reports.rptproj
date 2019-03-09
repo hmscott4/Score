@@ -68,6 +68,7 @@
     <Report Include="Chart_DatabasePerf.rdl" />
     <Report Include="Chart_DatabasePerfDetail.rdl" />
     <Report Include="Chart_DatabaseTopN.rdl" />
+    <Report Include="Chart_GroupHealthSummary.rdl" />
     <Report Include="Chart_HostPerf.rdl" />
     <Report Include="Chart_HostPerf_ForGroup.rdl" />
     <Report Include="Chart_HostPerf_Linux.rdl" />
@@ -82,6 +83,7 @@
     <Report Include="Dash_AlertSummaryByOwner.rdl" />
     <Report Include="Dash_OrganizationSummary.rdl" />
     <Report Include="Dash_OrganizationSummaryByArea.rdl" />
+    <Report Include="Dash_OrganizationSummaryByGroup.rdl" />
     <Report Include="Dash_OrganizationSummaryByHealth.rdl" />
     <Report Include="Dash_OrganizationSummary_SQL.rdl" />
     <Report Include="Dash_OrganizationSummary_WindowsLogicalDisk.rdl" />
@@ -90,6 +92,7 @@
     <Report Include="List_ActiveDirectoryExtracts.rdl" />
     <Report Include="List_ActiveDirectoryExtractsHistory.rdl" />
     <Report Include="List_AlertDetails.rdl" />
+    <Report Include="List_GroupHealthState.rdl" />
     <Report Include="List_LinuxServersTopNPerf.rdl" />
     <Report Include="List_ObjectAlerts.rdl" />
     <Report Include="List_ObjectHealthState.rdl" />

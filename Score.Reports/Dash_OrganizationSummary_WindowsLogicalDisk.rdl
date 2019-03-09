@@ -76,7 +76,8 @@ FROM
 		on o.ObjectClass = oc.Name
 WHERE
 	o.Active = 1
-	AND oc.Active = 1</CommandText>
+	AND oc.Active = 1
+                   AND oc.GenericName in ('Windows Server','Windows Logical Disk')</CommandText>
       </Query>
       <Fields>
         <Field Name="genericname">
