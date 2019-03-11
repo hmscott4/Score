@@ -6,6 +6,7 @@
     [ItemFont]       NVARCHAR (255)   NOT NULL,
     [ItemFontSize]   NVARCHAR (7)     NOT NULL,
     [ItemFontColor]  NVARCHAR (7)     NOT NULL,
+	[ItemDisplay]    NVARCHAR(1024)   NOT NULL,
     [ItemParameters] NVARCHAR (MAX)   NULL,
     [dbAddDate]      DATETIME2 (3)    CONSTRAINT [DF__ReportCon__dbAdd__07E124C1] DEFAULT (getdate()) NOT NULL,
     [dbModDate]      DATETIME2 (3)    CONSTRAINT [DF__ReportCon__dbMod__08D548FA] DEFAULT (getdate()) NOT NULL,

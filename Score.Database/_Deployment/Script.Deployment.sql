@@ -2286,6 +2286,7 @@ CREATE TABLE [dbo].[ReportContent](
 	[ItemFont] [nvarchar](255) NOT NULL,
 	[ItemFontSize] [nvarchar](7) NOT NULL,
 	[ItemFontColor] [nvarchar](7) NOT NULL,
+	[ItemDisplay] [nvarchar](1024) NOT NULL,
 	[ItemParameters] [nvarchar](max) NULL,
 	[dbAddDate] [datetime2](3) NOT NULL,
 	[dbModDate] [datetime2](3) NOT NULL,

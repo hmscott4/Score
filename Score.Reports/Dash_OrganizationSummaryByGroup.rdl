@@ -341,7 +341,7 @@ WHERE
       <Body>
         <ReportItems>
           <Line Name="Line1">
-            <Top>5.74875in</Top>
+            <Top>5.24875in</Top>
             <Left>0.13417in</Left>
             <Height>0in</Height>
             <Width>9.97101in</Width>
@@ -388,7 +388,7 @@ WHERE
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
                 <Left>1.26958in</Left>
-                <Height>1in</Height>
+                <Height>0.5in</Height>
                 <Width>7.67324in</Width>
                 <Style>
                   <Border>
@@ -403,7 +403,7 @@ WHERE
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Height>1in</Height>
+            <Height>0.5in</Height>
             <Width>10.5in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -692,7 +692,7 @@ WHERE
               </Rectangle>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>5.24875in</Top>
+            <Top>4.78in</Top>
             <Left>0.11333in</Left>
             <Height>0.35417in</Height>
             <Width>9.99184in</Width>
@@ -731,7 +731,7 @@ WHERE
                 </Action>
               </Actions>
             </ActionInfo>
-            <Top>1.12657in</Top>
+            <Top>0.65782in</Top>
             <Left>0.13417in</Left>
             <Height>0.45325in</Height>
             <Width>4.98958in</Width>
@@ -750,7 +750,7 @@ WHERE
           </Textbox>
           <Subreport Name="Subreport3">
             <ReportName>Chart_GroupHealthSummary</ReportName>
-            <Top>1.73833in</Top>
+            <Top>1.26958in</Top>
             <Left>0.13417in</Left>
             <Height>3.29167in</Height>
             <Width>4.98958in</Width>
@@ -789,7 +789,7 @@ WHERE
                 </Action>
               </Actions>
             </ActionInfo>
-            <Top>1.12657in</Top>
+            <Top>0.65782in</Top>
             <Left>5.32813in</Left>
             <Height>0.45325in</Height>
             <Width>4.98958in</Width>
@@ -903,13 +903,34 @@ WHERE
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!DisplayName.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <TextDecoration>Underline</TextDecoration>
+                                    <Color>Blue</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>DisplayName</rd:DefaultName>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>List_GroupAlerts</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="GroupID">
+                                      <Value>=Fields!GroupID.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="GroupName">
+                                      <Value>=Fields!DisplayName.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -922,6 +943,7 @@ WHERE
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -979,7 +1001,7 @@ WHERE
                 <Value>=Fields!DisplayName.Value</Value>
               </SortExpression>
             </SortExpressions>
-            <Top>1.73833in</Top>
+            <Top>1.26958in</Top>
             <Left>5.32813in</Left>
             <Height>0.5in</Height>
             <Width>4.98958in</Width>
@@ -991,7 +1013,7 @@ WHERE
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>5.87375in</Height>
+        <Height>5.37375in</Height>
         <Style>
           <Border>
             <Style>None</Style>
