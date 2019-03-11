@@ -92,6 +92,7 @@
     <Report Include="List_ActiveDirectoryExtracts.rdl" />
     <Report Include="List_ActiveDirectoryExtractsHistory.rdl" />
     <Report Include="List_AlertDetails.rdl" />
+    <Report Include="List_GroupAlerts.rdl" />
     <Report Include="List_GroupHealthState.rdl" />
     <Report Include="List_LinuxServersTopNPerf.rdl" />
     <Report Include="List_ObjectAlerts.rdl" />

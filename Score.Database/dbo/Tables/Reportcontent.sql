@@ -9,8 +9,11 @@
     [ItemParameters] NVARCHAR (MAX)   NULL,
     [dbAddDate]      DATETIME2 (3)    CONSTRAINT [DF__ReportCon__dbAdd__07E124C1] DEFAULT (getdate()) NOT NULL,
     [dbModDate]      DATETIME2 (3)    CONSTRAINT [DF__ReportCon__dbMod__08D548FA] DEFAULT (getdate()) NOT NULL,
-    CONSTRAINT [PK_ReportContent] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_ReportContent] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_ReportContent_ReportHeader] FOREIGN KEY ([ReportId]) REFERENCES [dbo].[ReportHeader] ([Id])
 );
+
+
 
 
 

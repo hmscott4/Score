@@ -2672,6 +2672,7 @@ CREATE TABLE [scom].[GroupHealthState](
 	[AvailabilityLastModified] [datetime2](3) NULL,
 	[InMaintenanceMode] [bit] NOT NULL,
 	[MaintenanceModeLastModified] [datetime2](3) NULL,
+	[Display] [bit] NOT NULL DEFAULT [DF_scom_GroupHealthState_Display] (0),
 	[Active] [bit] NOT NULL,
 	[dbAddDate] [datetime2](3) NOT NULL,
 	[dbLastUpdate] [datetime2](3) NOT NULL,
@@ -3496,11 +3497,11 @@ ALTER TABLE [dbo].[Computer] ADD  CONSTRAINT [DF_Computer_ID]  DEFAULT (newid())
 GO
 ALTER TABLE [dbo].[Credential] ADD  CONSTRAINT [DF_Credential_ID]  DEFAULT (newid()) FOR [ID]
 GO
-ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF__ReportCon__dbAdd__07E124C1]  DEFAULT (getdate()) FOR [dbAddDate]
+ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF_ReportContent_dbAddDate]  DEFAULT (getdate()) FOR [dbAddDate]
 GO
-ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF__ReportCon__dbMod__08D548FA]  DEFAULT (getdate()) FOR [dbModDate]
+ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF_ReportContent_dbModDate]  DEFAULT (getdate()) FOR [dbModDate]
 GO
-ALTER TABLE [dbo].[ReportHeader] ADD  CONSTRAINT [DF__ReportHeader__Id__09C96D33]  DEFAULT (newid()) FOR [Id]
+ALTER TABLE [dbo].[ReportHeader] ADD  CONSTRAINT [DF_ReportHeader_Id]  DEFAULT (newid()) FOR [Id]
 GO
 ALTER TABLE [dbo].[SystemTimeZone] ADD  CONSTRAINT [DF_SystemTimeZone_ZoneID]  DEFAULT (newid()) FOR [ZoneID]
 GO
@@ -3660,6 +3661,15 @@ ALTER TABLE [pm].[LogicalVolumeSizeRaw]  WITH CHECK ADD  CONSTRAINT [FK_LogicalV
 REFERENCES [cm].[LogicalVolume] ([ComputerGUID], [objectGUID])
 GO
 ALTER TABLE [pm].[LogicalVolumeSizeRaw] CHECK CONSTRAINT [FK_LogicalVolumeSizeRaw_LogicalVolume]
+GO
+ALTER TABLE [dbo].[ReportContent]  WITH CHECK ADD  CONSTRAINT [FK_ReportContent_ReportHeader] FOREIGN KEY([ReportId])
+REFERENCES [dbo].[ReportHeader] ([Id])
+GO
+ALTER TABLE [scom].[GroupHealthStateAlertRelationship]  WITH CHECK ADD  CONSTRAINT [FK_scom_GroupHealthStateAlertRelationship_GroupHealthState] FOREIGN KEY([GroupId])
+REFERENCES [scom].[GroupHealthState] ([Id])
+GO
+ALTER TABLE [scom].[GroupHealthStateAlertRelationship]  WITH CHECK ADD  CONSTRAINT [FK_scom_GroupHealthStateAlertRelationship_Alert] FOREIGN KEY([AlertId])
+REFERENCES [scom].[Alert] ([AlertId])
 GO
 /****** Object:  StoredProcedure [ad].[spComputerDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON

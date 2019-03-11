@@ -205,6 +205,7 @@
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <CommandText>SELECT
+                   g.ID as GroupID,
 	g.DisplayName, 
 	case 
 		when InMaintenanceMode = 1 then 'MaintenanceMode'
@@ -223,19 +224,25 @@ FROM
 	scom.[GroupHealthState] g LEFT OUTER JOIN
 	(SELECT GroupID, Count(*) as Alerts 
 	FROM 
-		scom.[GroupHealthStateAlertRelationship]
-	WHERE ACTIVE = 1
+		scom.[GroupHealthStateAlertRelationship] gsar INNER JOIN scom.Alert a ON
+			gsar.AlertID = a.AlertId
+	WHERE 
+		gsar.Active = 1
+		and a.Active = 1
+		and a.ResolutionState &lt; 255
 	GROUP BY
 		GroupID) gar 
 	
 	ON g.Id = gar.GroupID
 WHERE
 	g.Active = 1
-
-
 </CommandText>
       </Query>
       <Fields>
+        <Field Name="GroupID">
+          <DataField>GroupID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
         <Field Name="DisplayName">
           <DataField>DisplayName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -768,6 +775,23 @@ WHERE
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>List_GroupAlerts</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="GroupID">
+                                      <Value>=Fields!GroupID.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="GroupName">
+                                      <Value>=Fields!DisplayName.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -780,6 +804,7 @@ WHERE
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

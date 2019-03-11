@@ -11,6 +11,7 @@
     [AvailabilityLastModified]    DATETIME2 (3)    NULL,
     [InMaintenanceMode]           BIT              NOT NULL,
     [MaintenanceModeLastModified] DATETIME2 (3)    NULL,
+	[Display]					  BIT              NOT NULL DEFAULT DF_scom_GroupHealthState (0),
     [Active]                      BIT              NOT NULL,
     [dbAddDate]                   DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]                DATETIME2 (3)    NOT NULL,
