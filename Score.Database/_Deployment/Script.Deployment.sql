@@ -3671,6 +3671,12 @@ GO
 ALTER TABLE [scom].[GroupHealthStateAlertRelationship]  WITH CHECK ADD  CONSTRAINT [FK_scom_GroupHealthStateAlertRelationship_Alert] FOREIGN KEY([AlertId])
 REFERENCES [scom].[Alert] ([AlertId])
 GO
+ALTER TABLE [scom].[ObjectHealthStateAlertRelationship]  WITH CHECK ADD  CONSTRAINT [FK_scom_ObjectHealthStateAlertRelationship_ObjectHealthState] FOREIGN KEY([ObjectId])
+REFERENCES [scom].[ObjectHealthState] ([Id])
+GO
+ALTER TABLE [scom].[ObjectHealthStateAlertRelationship]  WITH CHECK ADD  CONSTRAINT [FK_scom_ObjectHealthStateAlertRelationship_Alert] FOREIGN KEY([AlertId])
+REFERENCES [scom].[Alert] ([AlertId])
+GO
 /****** Object:  StoredProcedure [ad].[spComputerDelete]    Script Date: 2/12/2019 10:38:48 AM ******/
 SET ANSI_NULLS ON
 GO
