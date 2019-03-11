@@ -255,6 +255,86 @@
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="GroupHealthState">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT
+                   g.ID as GroupID,
+	g.DisplayName, 
+	case 
+		when InMaintenanceMode = 1 then 'MaintenanceMode'
+		when IsAvailable=0 then 'NotAvailable' 
+		else g.HealthState
+		
+	end as [HealthState],
+	g.IsAvailable, 
+	g.InMaintenanceMode,
+	ISNULL(gar.Alerts,0) as Alerts,
+	g.[Availability],
+	g.[Performance],
+	g.[Configuration],
+	g.[Security]
+FROM 
+	scom.[GroupHealthState] g LEFT OUTER JOIN
+	(SELECT GroupID, Count(*) as Alerts 
+	FROM 
+		scom.[GroupHealthStateAlertRelationship] gsar INNER JOIN scom.Alert a ON
+			gsar.AlertID = a.AlertId
+	WHERE 
+		gsar.Active = 1
+		and a.Active = 1
+		and a.ResolutionState &lt; 255
+	GROUP BY
+		GroupID) gar 
+	
+	ON g.Id = gar.GroupID
+WHERE
+	g.Active = 1
+                  AND g.Display = 1</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="GroupID">
+          <DataField>GroupID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="DisplayName">
+          <DataField>DisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="HealthState">
+          <DataField>HealthState</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="IsAvailable">
+          <DataField>IsAvailable</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="InMaintenanceMode">
+          <DataField>InMaintenanceMode</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Alerts">
+          <DataField>Alerts</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Availability">
+          <DataField>Availability</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Performance">
+          <DataField>Performance</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Configuration">
+          <DataField>Configuration</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Security">
+          <DataField>Security</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -654,7 +734,7 @@
             <Top>1.12657in</Top>
             <Left>0.13417in</Left>
             <Height>0.45325in</Height>
-            <Width>9.971in</Width>
+            <Width>4.98958in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -681,6 +761,235 @@
               </Border>
             </Style>
           </Subreport>
+          <Textbox Name="Textbox4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Group Health State</Value>
+                    <Style>
+                      <FontFamily>=First(Fields!SubTitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
+                      <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <ActionInfo>
+              <Actions>
+                <Action>
+                  <Drillthrough>
+                    <ReportName>Dash_OrganizationSummaryByArea</ReportName>
+                  </Drillthrough>
+                </Action>
+              </Actions>
+            </ActionInfo>
+            <Top>1.12657in</Top>
+            <Left>5.32813in</Left>
+            <Height>0.45325in</Height>
+            <Width>4.98958in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>=First(Fields!SubTitleBackground.Value, "ReportHeaderSettings")</BackgroundColor>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Tablix Name="Tablix1">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>3.98958in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox5">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Display Name</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox5</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Health</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="DisplayName">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!DisplayName.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>DisplayName</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(Nothing) mod 2 = 0, "LightSteelBlue","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Rectangle Name="Rectangle2">
+                          <ReportItems>
+                            <Rectangle Name="Rectangle16">
+                              <KeepTogether>true</KeepTogether>
+                              <Top>0.05in</Top>
+                              <Left>0.44063in</Left>
+                              <Height>0.15in</Height>
+                              <Width>0.15in</Width>
+                              <Style>
+                                <Border>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=1, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!HealthState.Value="Success","Green",Iif(Fields!HealthState.Value="Warning","Gold",Iif(Fields!HealthState.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                              </Style>
+                            </Rectangle>
+                          </ReportItems>
+                          <KeepTogether>true</KeepTogether>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0,"LightSteelBlue","White")</BackgroundColor>
+                          </Style>
+                        </Rectangle>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Details" />
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>GroupHealthState</DataSetName>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!DisplayName.Value</Value>
+              </SortExpression>
+            </SortExpressions>
+            <Top>1.73833in</Top>
+            <Left>5.32813in</Left>
+            <Height>0.5in</Height>
+            <Width>4.98958in</Width>
+            <ZIndex>6</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Tablix>
         </ReportItems>
         <Height>5.87375in</Height>
         <Style>
