@@ -1503,7 +1503,7 @@ WHERE
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>5.40099in</Width>
+                  <Width>5.27395in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1629,7 +1629,7 @@ WHERE
             <Top>4.56707in</Top>
             <Left>0.05803in</Left>
             <Height>0.5in</Height>
-            <Width>5.40099in</Width>
+            <Width>5.27395in</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
