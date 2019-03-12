@@ -1483,6 +1483,15 @@ WHERE
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DistributedApplications</DataSetName>
+            <Filters>
+              <Filter>
+                <FilterExpression>=Fields!genericname.Value</FilterExpression>
+                <Operator>TopN</Operator>
+                <FilterValues>
+                  <FilterValue>10</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
             <SortExpressions>
               <SortExpression>
                 <Value>=Fields!genericname.Value</Value>

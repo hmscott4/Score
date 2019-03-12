@@ -2673,7 +2673,7 @@ CREATE TABLE [scom].[GroupHealthState](
 	[AvailabilityLastModified] [datetime2](3) NULL,
 	[InMaintenanceMode] [bit] NOT NULL,
 	[MaintenanceModeLastModified] [datetime2](3) NULL,
-	[Display] [bit] NOT NULL DEFAULT [DF_scom_GroupHealthState_Display] (0),
+	[Display] [bit] NOT NULL,
 	[Active] [bit] NOT NULL,
 	[dbAddDate] [datetime2](3) NOT NULL,
 	[dbLastUpdate] [datetime2](3) NOT NULL,
@@ -3506,7 +3506,9 @@ ALTER TABLE [dbo].[ReportHeader] ADD  CONSTRAINT [DF_ReportHeader_Id]  DEFAULT (
 GO
 ALTER TABLE [dbo].[SystemTimeZone] ADD  CONSTRAINT [DF_SystemTimeZone_ZoneID]  DEFAULT (newid()) FOR [ZoneID]
 GO
-ALTER TABLE [scom].[MaintenanceReasonCode] ADD  DEFAULT (newid()) FOR [Id]
+ALTER TABLE [scom].[MaintenanceReasonCode] ADD CONSTRAINT [DF_scom_MaintenanceReasonCode] DEFAULT (newid()) FOR [Id]
+GO
+ALTER TABLE [scom].[GroupHealthState] ADD CONSTRAINT [DF_scom_GroupHealthState_Display] DEFAULT (0) FOR [Display]
 GO
 ALTER TABLE [cm].[AnalysisDatabase]  WITH CHECK ADD  CONSTRAINT [FK_AnalysisDatabase_AnalysisInstance] FOREIGN KEY([AnalysisInstanceGUID])
 REFERENCES [cm].[AnalysisInstance] ([objectGUID])
