@@ -300,7 +300,7 @@ VALUES (N'd3cf156c-ec0f-4415-90af-b583a2085c95', N'Montevideo Standard Time', N'
 (N'1eaff6d5-9f62-4d99-b9ed-c9ee41e84b4c', N'E. Africa Standard Time', N'(UTC+03:00) Nairobi', N'E. Africa Standard Time', N'E. Africa Daylight Time', 180, 180, 0, 0, 0, 1, GetDate(), GetDate()),
 (N'9aa133cf-1c4e-49c9-b457-cc4e647987fa', N'Russian Standard Time', N'(UTC+03:00) Moscow, St. Petersburg', N'Russia TZ 2 Standard Time', N'Russia TZ 2 Daylight Time', 180, 180, 1, 0, 0, 1, GetDate(), GetDate()),
 (N'3dbfbfb9-ddb7-4e04-bdf2-cf926572bb75', N'Tocantins Standard Time', N'(UTC-03:00) Araguaina', N'Tocantins Standard Time', N'Tocantins Daylight Time', -180, -180, 1, 0, 0, 1, GetDate(), GetDate()),
-(N'e242d0eb-54f5-4b23-863f-cfe400d5a739', N'UTC', N'(UTC) Coordinated Universal Time', N'Coordinated Universal Time', N'Coordinated Universal Time', 0, 0, 0, 0, 0, 1, GetDate(), GetDate()),
+(N'e242d0eb-54f5-4b23-863f-cfe400d5a739', N'UTC', N'(UTC) Coordinated Universal Time', N'Coordinated Universal Time', N'Coordinated Universal Time', 0, 0, 0, 1, 0, 1, GetDate(), GetDate()),
 (N'f76eca1a-b5c3-4a0b-8afe-d13368b582ee', N'UTC-08', N'(UTC-08:00) Coordinated Universal Time-08', N'UTC-08', N'UTC-08', -480, -480, 0, 0, 0, 1, GetDate(), GetDate()),
 (N'4f66a897-0588-4396-9800-d24d4143e766', N'Nepal Standard Time', N'(UTC+05:45) Kathmandu', N'Nepal Standard Time', N'Nepal Daylight Time', 345, 345, 0, 0, 0, 1, GetDate(), GetDate()),
 (N'ead6d7b1-5156-4956-9268-d3313212f8ac', N'Romance Standard Time', N'(UTC+01:00) Brussels, Copenhagen, Madrid, Paris', N'Romance Standard Time', N'Romance Daylight Time', 60, 60, 1, 0, 0, 1, GetDate(), GetDate()),
@@ -331,3 +331,11 @@ COMMIT;
 RAISERROR (N'[dbo].[SystemTimeZone]: Insert Batch: 3.....Done!', 10, 1) WITH NOWAIT;
 GO
 
+
+-- UPDATE TimeZone Information FROM sys.time_zone_info
+-- This will also be done the first time that the user synchronizes TimeZone data
+UPDATE dbo.SystemTimeZone
+SET CurrentUTCOffset = cast(left(b.current_utc_offset, 3) as int) * 60
+FROM
+	dbo.SystemTimeZone inner join sys.time_zone_info b on
+		SystemTimeZone.StandardName = b.name
