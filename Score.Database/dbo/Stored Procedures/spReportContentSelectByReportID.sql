@@ -1,4 +1,4 @@
-﻿CREATE PROC dbo.spReportContentSelectByReportID
+﻿CREATE PROC [dbo].[spReportContentSelectByReportID]
 @ReportID uniqueidentifier
 
 AS
@@ -13,7 +13,7 @@ SELECT [Id]
       ,[ItemFont]
       ,[ItemFontSize]
       ,[ItemFontColor]
-	  ,[DisplayName]
+	  ,[ItemDisplay]
       ,[ItemParameters]
       ,[dbAddDate]
       ,[dbModDate]

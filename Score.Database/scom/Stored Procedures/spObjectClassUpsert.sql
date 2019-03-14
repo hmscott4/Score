@@ -8,7 +8,7 @@
 ****************************************************************/
 CREATE PROC scom.spObjectClassUpsert
 (
-	@ID nvarchar(255)
+	@ID uniqueidentifier
 	,@Name nvarchar(255)
 	,@DisplayName nvarchar(255)
 	,@GenericName nvarchar(255)

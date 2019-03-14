@@ -1659,7 +1659,9 @@
     <Build Include="scom\Tables\AgentExclusions.sql" />
     <Build Include="scom\Tables\MaintenanceReasonCode.sql" />
     <Build Include="scom\Tables\ObjectHealthState.sql" />
-    <Build Include="scom\Tables\ObjectHealthStateAlertRelationship.sql" />
+    <Build Include="scom\Tables\ObjectHealthStateAlertRelationship.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
     <Build Include="scom\Tables\ObjectClass.sql" />
     <Build Include="dbo\Stored Procedures\spSystemTimeZoneSelect.sql" />
     <Build Include="scom\Stored Procedures\spAgentExclusionsInsert.sql" />

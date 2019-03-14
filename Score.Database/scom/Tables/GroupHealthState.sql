@@ -11,7 +11,7 @@
     [AvailabilityLastModified]    DATETIME2 (3)    NULL,
     [InMaintenanceMode]           BIT              NOT NULL,
     [MaintenanceModeLastModified] DATETIME2 (3)    NULL,
-	[Display]					  BIT              NOT NULL DEFAULT DF_scom_GroupHealthState (0),
+	[Display]					  BIT              NOT NULL,
     [Active]                      BIT              NOT NULL,
     [dbAddDate]                   DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]                DATETIME2 (3)    NOT NULL,
@@ -23,7 +23,10 @@
     [Other]                       NVARCHAR (255)   NULL,
     CONSTRAINT [PK_scom_GroupHealthState] PRIMARY KEY NONCLUSTERED ([Id] ASC) WITH (FILLFACTOR = 80)
 );
+GO
 
+ALTER TABLE [scom].[GroupHealthState] ADD CONSTRAINT [DF_scom_GroupHealthState_Display] DEFAULT (0) FOR [Display]
+GO
 
 
 GO

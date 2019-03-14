@@ -6,9 +6,9 @@ AS
 SET NOCOUNT ON
 SET XACT_ABORT ON
 
-DECLARE @ReportId uniqueidentifier
+DECLARE @ReportID uniqueidentifier
 
-SELECT @ReportID = Id
+SELECT @ReportId = Id
 FROM dbo.ReportHeader
 WHERE ReportName = @ReportName
 
@@ -19,7 +19,7 @@ SELECT [Id]
       ,[ItemFont]
       ,[ItemFontSize]
       ,[ItemFontColor]
-	  ,[DisplayName]
+	  ,[ItemDisplay]
       ,[ItemParameters]
       ,[dbAddDate]
       ,[dbModDate]

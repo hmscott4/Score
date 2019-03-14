@@ -7,7 +7,7 @@
 *
 ****************************************************************/
 CREATE PROC [scom].[spGroupHealthStateUpsert]
-	@ID UNIQUEIDENTIFIER,
+	@Id UNIQUEIDENTIFIER,
 	@Name nvarchar(255),
 	@DisplayName nvarchar(255),
 	@FullName nvarchar(255),
@@ -33,7 +33,7 @@ AS
 SET NOCOUNT ON
 SET XACT_ABORT ON
 
-IF EXISTS (SELECT FullName FROM scom.[ObjectHealthState] WHERE (FullName = @FullName AND [ID] != @ID))
+IF EXISTS (SELECT FullName FROM scom.[ObjectHealthState] WHERE (FullName = @FullName AND [Id] != @Id))
 BEGIN
 	DELETE 
 	FROM scom.[ObjectHealthState]
@@ -44,7 +44,7 @@ BEGIN TRAN
 
 	MERGE [scom].[GroupHealthState] AS [target]
 	USING (SELECT 	
-		@ID ,
+		@Id ,
 		@Name,
 		@DisplayName,
 		@FullName,
@@ -66,7 +66,7 @@ BEGIN TRAN
 		@Security ,
 		@Other	 ) AS [Source]
 
-		(ID,
+		(Id,
 		Name,
 		DisplayName,
 		FullName,
@@ -86,12 +86,12 @@ BEGIN TRAN
 		[Configuration],
 		[Performance],
 		[Security] ,
-		[Other]) ON ([target].ID = @ID)
+		[Other]) ON ([target].Id = @Id)
 
 
 	WHEN MATCHED 
 	THEN UPDATE 
-	   SET [ID] = @ID
+	   SET [Id] = @Id
 		  ,[Name] = @Name
 		  ,[DisplayName] = @DisplayName
 		  ,[FullName] = @FullName
@@ -114,7 +114,7 @@ BEGIN TRAN
 
 	WHEN NOT MATCHED
 	THEN INSERT (
-			ID,
+			Id,
 			Name,
 			DisplayName,
 			FullName,
@@ -137,7 +137,7 @@ BEGIN TRAN
 			[Security] ,
 			[Other])
 		VALUES (
-			@ID ,
+			@Id ,
 			@Name,
 			@DisplayName,
 			@FullName,
