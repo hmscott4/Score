@@ -33,10 +33,10 @@ AS
 SET NOCOUNT ON
 SET XACT_ABORT ON
 
-IF EXISTS (SELECT FullName FROM scom.[ObjectHealthState] WHERE (FullName = @FullName AND [Id] != @Id))
+IF EXISTS (SELECT FullName FROM scom.[GroupHealthState] WHERE (FullName = @FullName AND [Id] != @Id))
 BEGIN
 	DELETE 
-	FROM scom.[ObjectHealthState]
+	FROM scom.[GroupHealthState]
 	WHERE FullName = @FullName
 END
 
