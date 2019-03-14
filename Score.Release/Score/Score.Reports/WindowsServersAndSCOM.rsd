@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>SCORE</DataSourceReference>
+      <CommandText>SELECT
+               d.DNSRoot,
+               d.NetBIOSName as [Domain],
+               c.OperatingSystem,
+               c.DNSHostName,
+               c.IPv4Address,
+               c.LastLogon,
+               c.[Description],
+               c.whenCreated,
+               c.whenChanged,
+               CASE c.Enabled
+                              WHEN 1 THEN 'Yes'
+                              ELSE 'No'
+               END as [Enabled],
+               CASE
+                              WHEN c.Active = 0 THEN 'Removed'
+                              WHEN c.Active = 1 AND c.Enabled = 1 THEN 'Enabled'
+                              WHEN c.Active = 1 AND c.Enabled = 0 THEN 'Disabled'
+               END as ADAccountStatus,
+               CASE 
+                              WHEN c.LastLogon &gt; DATEADD(DAY, -14, GETDATE()) THEN 'Current'
+                              ELSE 'NotCurrent'
+               END as ADLogonStatus,
+               CASE 
+                              WHEN e.Reason IS NOT NULL THEN 'Excluded'
+                              WHEN a.Active = 1 AND a.IsAvailable = 1 THEN 'Available'
+                              WHEN a.Active = 1 AND a.IsAvailable = 0 THEN 'Not Available'
+                              WHEN a.Active = 0 THEN 'Removed'
+                              ELSE 'No Agent'
+               END as AgentStatus
+FROM 
+               ad.Computer c inner join ad.Domain d on
+                              c.Domain = d.DNSRoot
+               left outer join scom.Agent a on
+                              c.DNSHostName = a.Name
+               left outer join scom.AgentExclusions e on
+                              c.DNSHostName = e.DNSHostName
+WHERE 
+               OperatingSystem like N'%Server%'
+</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="DNSRoot">
+        <DataField>DNSRoot</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Domain">
+        <DataField>Domain</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="OperatingSystem">
+        <DataField>OperatingSystem</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="DNSHostName">
+        <DataField>DNSHostName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="IPv4Address">
+        <DataField>IPv4Address</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="LastLogon">
+        <DataField>LastLogon</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Description">
+        <DataField>Description</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="whenCreated">
+        <DataField>whenCreated</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="whenChanged">
+        <DataField>whenChanged</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Enabled">
+        <DataField>Enabled</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ADAccountStatus">
+        <DataField>ADAccountStatus</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ADLogonStatus">
+        <DataField>ADLogonStatus</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="AgentStatus">
+        <DataField>AgentStatus</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

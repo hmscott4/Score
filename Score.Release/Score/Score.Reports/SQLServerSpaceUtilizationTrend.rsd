@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>OperationsManagerDW</DataSourceReference>
+      <CommandText>DECLARE @StartDate datetime
+DECLARE @EndDate datetime
+DECLARE @ObjectName nvarchar(255)
+DECLARE @CounterName nvarchar(255)
+
+SET @StartDate = DateAdd(DAY, -90, GetUTCDate())
+SET @EndDate = GETUTCDATE()
+SET @ObjectName = N'SQL Database'
+
+SELECT
+               SpaceAllocated.Path, 
+               SpaceAllocated.DisplayName , 
+               SpaceAllocated.FullName, 
+               --SpaceAllocated.ObjectName, 
+               --SpaceAllocated.CounterName, 
+               SpaceAllocated.InstanceName, 
+               SpaceAllocated.SpaceAllocated,
+               SpaceUsed.SpaceUsed,
+               SpaceAllocated.DateTime
+FROM
+
+(SELECT 
+               Path, 
+               DisplayName , 
+               FullName, 
+               ObjectName, 
+               CounterName, 
+               InstanceName, 
+               AverageValue [SpaceAllocated],
+               -- StandardDeviation,
+               [DateTime] 
+FROM 
+               Perf.vPerfDaily pvpr 
+                              INNER JOIN vManagedEntity vme on pvpr.ManagedEntityRowId = vme.ManagedEntityRowId 
+                              INNER JOIN vPerformanceRuleInstance vpri on pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId 
+                              INNER JOIN vPerformanceRule vpr on vpr.RuleRowId = vpri.RuleRowId 
+WHERE 
+               vpr.ObjectName = @ObjectName
+               AND vpr.CounterName IN (N'DB Allocated Size (MB)',N'DB Allocated Space (MB)')
+               AND pvpr.[datetime] BETWEEN @StartDate AND @EndDate
+               AND DATEPART(WEEKDAY, pvpr.[DateTime]) = 1) as SpaceAllocated
+
+INNER JOIN (
+
+SELECT 
+               Path, 
+               DisplayName , 
+               FullName, 
+               ObjectName, 
+               CounterName, 
+               InstanceName, 
+               AverageValue [SpaceUsed],
+               -- StandardDeviation,
+               [DateTime] 
+FROM 
+               Perf.vPerfDaily pvpr 
+                              INNER JOIN vManagedEntity vme on pvpr.ManagedEntityRowId = vme.ManagedEntityRowId 
+                              INNER JOIN vPerformanceRuleInstance vpri on pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId 
+                              INNER JOIN vPerformanceRule vpr on vpr.RuleRowId = vpri.RuleRowId 
+WHERE 
+               vpr.ObjectName = @ObjectName
+               AND vpr.CounterName IN (N'DB Used Space (MB)', N'DB Allocated Space Used (MB)')
+               AND pvpr.[datetime] BETWEEN @StartDate AND @EndDate
+               AND DATEPART(WEEKDAY, pvpr.[DateTime]) = 1
+) as SpaceUsed
+
+ON SpaceAllocated.Path = SpaceUsed.Path
+AND SpaceAllocated.DisplayName = SpaceUsed.DisplayName
+AND SpaceAllocated.FullName = SpaceUsed.FullName
+AND SpaceAllocated.ObjectName = SpaceUsed.ObjectName
+AND SpaceAllocated.InstanceName = SpaceUsed.InstanceName
+AND SpaceAllocated.DateTime = SpaceUsed.DateTime
+</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="Path">
+        <DataField>Path</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="DisplayName">
+        <DataField>DisplayName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="FullName">
+        <DataField>FullName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="InstanceName">
+        <DataField>InstanceName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SpaceAllocated">
+        <DataField>SpaceAllocated</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="SpaceUsed">
+        <DataField>SpaceUsed</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="DateTime">
+        <DataField>DateTime</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

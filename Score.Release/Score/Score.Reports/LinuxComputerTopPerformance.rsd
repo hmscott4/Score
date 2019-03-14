@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>OperationsManagerDW</DataSourceReference>
+      <CommandText>DECLARE @ManagedGroupName nvarchar(255)
+DECLARE @StartDate datetime2(0)
+DECLARE @EndDate datetime2(0)
+DECLARE @UTCOffset int
+
+SET @ManagedGroupName = N'UNIX/Linux Computer Group'
+SET @StartDate = DATEADD(Hour, -24, GETUTCDATE())
+SET @EndDate = GETUTCDATE()
+SET @UTCOffset = 0
+
+DECLARE @GroupManagedEntityID INT
+DECLARE @ContainmentRelationshipTypeRowId INT
+DECLARE @CurrentLevel INT
+DECLARE @Rowcount INT
+
+
+SELECT  @GroupManagedEntityID = ManagedEntityRowID
+FROM    dbo.vManagedEntity
+WHERE   DisplayName = @ManagedGroupName
+
+-- build a list of all relationship
+-- types derived from "System.Containment"
+-- get row id of the "containment" relationship type
+
+SELECT  @ContainmentRelationshipTypeRowId = RelationshipTypeRowId
+FROM    vRelationshipType
+WHERE   ( RelationshipTypeSystemName = N'System.Containment' )
+
+-- create table to hold all relationship types found
+IF ( OBJECT_ID('tempdb..#RelationshipType') IS NOT NULL ) 
+    DROP TABLE #RelationshipType
+
+CREATE TABLE #RelationshipType
+    (
+      RelationshipTypeRowId INT
+    )
+
+-- use table-valued function to build relationship list
+INSERT  #RelationshipType
+        ( RelationshipTypeRowId
+        )
+        SELECT  RelationshipTypeRowId
+        FROM    dbo.RelationshipDerivedTypeHierarchy(@ContainmentRelationshipTypeRowId, 0)
+               
+
+-- create table to hold all contained objects
+IF ( OBJECT_ID('tempdb..#ContainedManagedEntity') IS NOT NULL ) 
+    DROP TABLE #ContainedManagedEntity
+  
+CREATE TABLE #ContainedManagedEntity
+    (
+      ManagedEntityRowId INT ,
+      [Level] INT
+    )
+
+-- prepare recursion: put group into contained objects
+INSERT  #ContainedManagedEntity
+        ( ManagedEntityRowId, [Level] )
+VALUES  ( @GroupManagedEntityID, 0 )
+  
+SET @CurrentLevel = 1
+
+SET @RowCount = 1
+
+-- recursively walk down containment hierarchy
+WHILE ( @RowCount &gt; 0 ) 
+    BEGIN
+        INSERT  #ContainedManagedEntity
+                ( ManagedEntityRowId ,
+                  [Level]
+                )
+                SELECT  r.TargetManagedEntityRowId ,
+                        @CurrentLevel
+                FROM    vRelationship r
+                        JOIN #RelationshipType rt ON ( r.RelationshipTypeRowId = rt.RelationshipTypeRowId )
+                        JOIN #ContainedManagedEntity c ON ( r.SourceManagedEntityRowId = c.ManagedEntityRowId )
+                                                          AND ( c.[Level] = @CurrentLevel
+                                                              - 1 )
+                WHERE   EXISTS ( SELECT *
+                                 FROM   vRelationshipManagementGroup rmg
+                                 WHERE  ( rmg.RelationshipRowId = r.RelationshipRowId )
+                                        AND ( GETUTCDATE() BETWEEN rmg.FromDateTime
+                                                           AND
+                                                              ISNULL(rmg.ToDateTime,
+                                                              '99991231') ) ) -- membership relationship exists as of NOW
+          
+        SELECT  @RowCount = @@ROWCOUNT
+        SET @CurrentLevel = @CurrentLevel + 1
+    END;
+
+SELECT  
+               NTILE(20) OVER (PARTITION BY CounterName ORDER BY CounterName, Avg(SampleValue) DESC) as [NTILE],
+               RANK() OVER (PARTITION BY CounterName ORDER BY CounterName, Avg(SampleValue) DESC) as [Rank],
+               vme.[Path] AS fqdn ,
+    --pvpr.[DateTime] AS LASTUPDATE,
+    vpr.ObjectName,
+    vpr.CounterName,
+               vpri.InstanceName,
+               Avg(pvpr.SampleValue)as SampleValue,
+               Count(pvpr.SampleValue) as Observations,
+               Max(pvpr.SampleValue) as MaxValue,
+               StDev(pvpr.SampleValue) as [StDev]
+FROM                  
+               Perf.vPerfRaw pvpr WITH (NOLOCK) inner join vManagedEntity vme 
+                              on pvpr.ManagedEntityRowId = vme.ManagedEntityRowId 
+               inner join vPerformanceRuleInstance vpri 
+                              on pvpr.PerformanceRuleInstanceRowId = vpri.PerformanceRuleInstanceRowId 
+               inner join vPerformanceRule vpr 
+                              on vpr.RuleRowId = vpri.RuleRowId 
+    INNER JOIN #ContainedManagedEntity cme 
+                              ON vme.ManagedEntityRowId = cme.ManagedEntityRowId
+                              AND cme.[Level] IN (2, 3, 4, 5 )
+WHERE 
+               ObjectName in (N'Logical Disk',N'Processor',N'Swap Space',N'Memory',N'Network Adapter')
+               AND CounterName IN (N'% Processor Time',N'% IO Wait Time',N'Pages/sec',N'% Used Memory',N'Disk Transfers/sec', N'% Free Space',N'% Used Swap Space',N'Bytes Total/Sec')
+               AND DateTime BETWEEN DateAdd(Minute, @UTCOffset, @StartDate) AND DateAdd(Minute, @UTCOffset, @EndDate)
+GROUP BY 
+               vme.[Path],
+        vpr.ObjectName,
+                   vpr.CounterName,
+                              vpri.InstanceName
+</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="NTILE">
+        <DataField>NTILE</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+      <Field Name="Rank">
+        <DataField>Rank</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+      <Field Name="fqdn">
+        <DataField>fqdn</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ObjectName">
+        <DataField>ObjectName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="CounterName">
+        <DataField>CounterName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="InstanceName">
+        <DataField>InstanceName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SampleValue">
+        <DataField>SampleValue</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Observations">
+        <DataField>Observations</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="MaxValue">
+        <DataField>MaxValue</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="StDev">
+        <DataField>StDev</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>
