@@ -1752,4 +1752,8 @@
   <ItemGroup>
     <PostDeploy Include="_Deployment\Script.DefaultData.sql" />
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

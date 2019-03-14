@@ -10,6 +10,9 @@ Hugh Scott
  4. Copy the results into a new query window AND execute			
 --------------------------------------------------------------------------------------
 */
+USE [SCORE]
+GO
+
 SET NOCOUNT ON
 
 SELECT 'GRANT SELECT, REFERENCES ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO cmRead;'

@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Score", "Score\Score.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0D2AA415-D7A3-4C77-8647-41A9ED18527F} = {0D2AA415-D7A3-4C77-8647-41A9ED18527F}
+		{42D3D281-33C5-4CAA-8E84-F009DC8FAF6D} = {42D3D281-33C5-4CAA-8E84-F009DC8FAF6D}
+		{68C083AA-BF7F-4B27-99C0-D86771430EB4} = {68C083AA-BF7F-4B27-99C0-D86771430EB4}
+	EndProjectSection
 EndProject
 Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Score.Reports", "Score.Reports\Score.Reports.rptproj", "{68C083AA-BF7F-4B27-99C0-D86771430EB4}"
 EndProject

@@ -8,10 +8,14 @@ Hugh Scott
  2. Customize the data after intitial deployment (e.g. Organization Name)
 --------------------------------------------------------------------------------------
 */
+USE [SCORE]
+GO
+
 /* Initialize dbo.Config
 * Hugh Scott
 * 2019/02/01
 */
+
 
 INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbModDate], [dbModBy]) VALUES (N'ProcessLogRetainDays', N'90', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO

@@ -16,6 +16,42 @@
     <PackageEntryPoint>Monitor.ps1</PackageEntryPoint>
     <DotNetVersion>v4.6.1</DotNetVersion>
     <PackageType>Console</PackageType>
+    <PostBuildScript># MOVE CORE PS FILES TO RELEASE FOLDER
+get-childitem -Filter *.ps1 | Copy-Item -Destination ..\Release\Score
+get-childitem -Filter *.config | Copy-Item -Destination ..\Release\Score
+get-childitem -Filter *.ps1 -Path .\Modules\ | Copy-Item -Destination ..\Release\Score\Modules
+
+# UPDATE APP CONFIG CONTENTS
+$config = Get-Content ..\Release\Score\app.monitor.config
+$config = $config.Replace("ABCD_OM","MGMT_GROUP")
+$config = $config.Replace("MGR31.ABCD.LCL","MGMT_SERVER")
+$config = $config.Replace("sqlag2.abcd.lcl","__SCORE_DB__")
+Set-Content ..\Release\Score\app.monitor.config -Value $config
+
+# MOVE REPORTS, DATA SOURCES AND DATA SETS
+get-item -Path ..\Score.Reports\bin\Debug\*.rdl | copy-item -Destination ..\Release\Score\Score.Reports\
+get-item -Path ..\Score.Reports\bin\Debug\*.rsd | copy-item -Destination ..\Release\Score\Score.Reports\
+get-item -Path ..\Score.Reports\bin\Debug\*.rds | copy-item -Destination ..\Release\Score\Score.Reports\
+
+# UPDATE DATA SOURCE FILES
+$OpsMgr = Get-Content -Path ..\Release\Score\Score.Reports\OperationsManager.rds
+$OpsMgr = $OpsMgr.Replace("sql94.abcd.lcl","__OPSMGR__")
+Set-Content -Path ..\Release\Score\Score.Reports\OperationsManager.rds -Value $OpsMgr
+
+
+$OpsMgrDW = Get-Content -Path ..\Release\Score\Score.Reports\OperationsManagerDW.rds
+$OpsMgrDW = $OpsMgr.Replace("sql94.abcd.lcl","__OPSMGRDW__")
+Set-Content -Path ..\Release\Score\Score.Reports\OperationsManagerDW.rds -Value $OpsMgrDW
+
+$SCORE = Get-Content -Path ..\Release\Score\Score.Reports\SCORE.rds
+$SCORE = $OpsMgr.Replace("sqlag2.abcd.lcl","__SCORE__")
+Set-Content -Path ..\Release\Score\Score.Reports\SCORE.rds -Value $SCORE
+
+# COPY MANAGEMENT PACK
+Get-Item -Path ..\Score.MP\bin\Debug\*.mp | Copy-Item -Destination ..\Release\Score\Score.MP
+
+# COPY DATABASE SCRIPTS
+get-item -Path ..\Score.Database\_Deployment\*.sql | Copy-Item -Destination ..\Release\Score\Score.Database\</PostBuildScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
