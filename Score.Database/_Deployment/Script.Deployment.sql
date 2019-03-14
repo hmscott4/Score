@@ -1493,8 +1493,8 @@ CREATE TABLE [ad].[GroupMember](
 	[MemberGUID] [uniqueidentifier] NOT NULL,
 	[MemberType] [nvarchar](128) NOT NULL,
 	[Active] [bit] NOT NULL,
-	[dbAddDate] [datetime2](3) NULL,
-	[dbLastUpdate] [datetime2](3) NULL,
+	[dbAddDate] [datetime2](3) NOT NULL,
+	[dbLastUpdate] [datetime2](3) NOT NULL,
  CONSTRAINT [PK_ad_GroupMember] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -2635,11 +2635,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ProcessLog](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Severity] [nvarchar](50) NULL,
-	[Process] [nvarchar](50) NULL,
-	[Object] [nvarchar](255) NULL,
-	[Message] [nvarchar](max) NULL,
-	[MessageDate] [datetime2](3) NULL,
+	[Severity] [nvarchar](50) NOT NULL,
+	[Process] [nvarchar](50) NOT NULL,
+	[Object] [nvarchar](255) NOT NULL,
+	[Message] [nvarchar](max) NOT NULL,
+	[MessageDate] [datetime2](3) NOT NULL,
  CONSTRAINT [PK_ProcessLog] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -3016,8 +3016,8 @@ CREATE TABLE [scom].[Alert](
 	[TfsWorkItemOwner] [nvarchar](255) NULL,
 	[HostID] [int] NULL,
 	[Active] [bit] NOT NULL,
-	[dbAddDate] [datetime2](3) NULL,
-	[dbLastUpdate] [datetime2](3) NULL,
+	[dbAddDate] [datetime2](3) NOT NULL,
+	[dbLastUpdate] [datetime2](3) NOT NULL,
  CONSTRAINT [PK_scom_Alert] PRIMARY KEY CLUSTERED 
 (
 	[AlertId] ASC
@@ -3947,17 +3947,21 @@ ALTER TABLE [dbo].[Computer] ADD  CONSTRAINT [DF_Computer_ID]  DEFAULT (newid())
 GO
 ALTER TABLE [dbo].[Credential] ADD  CONSTRAINT [DF_Credential_ID]  DEFAULT (newid()) FOR [ID]
 GO
-ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF__ReportCon__dbAdd__07E124C1]  DEFAULT (getdate()) FOR [dbAddDate]
+ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF_ReportContent_dbAddDate]  DEFAULT (getdate()) FOR [dbAddDate]
 GO
-ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF__ReportCon__dbMod__08D548FA]  DEFAULT (getdate()) FOR [dbModDate]
+ALTER TABLE [dbo].[ReportContent] ADD  CONSTRAINT [DF_ReportContent_dbModDate]  DEFAULT (getdate()) FOR [dbModDate]
 GO
-ALTER TABLE [dbo].[ReportHeader] ADD  CONSTRAINT [DF__ReportHeader__Id__09C96D33]  DEFAULT (newid()) FOR [Id]
+ALTER TABLE [dbo].[ReportHeader] ADD  CONSTRAINT [DF_ReportHeader_Id]  DEFAULT (newid()) FOR [Id]
 GO
 ALTER TABLE [dbo].[SystemTimeZone] ADD  CONSTRAINT [DF_SystemTimeZone_ZoneID]  DEFAULT (newid()) FOR [ZoneID]
 GO
 ALTER TABLE [scom].[GroupHealthState] ADD  CONSTRAINT [DF_scom_GroupHealthState_Display]  DEFAULT ((0)) FOR [Display]
 GO
 ALTER TABLE [scom].[MaintenanceReasonCode] ADD  DEFAULT (newid()) FOR [Id]
+GO
+ALTER TABLE [dbo].[SystemTimeZone] ADD  CONSTRAINT [DF_SystemTimeZone_Display]  DEFAULT (0) FOR [Display]
+GO
+ALTER TABLE [dbo].[SystemTimeZone] ADD  CONSTRAINT [DF_SystemTimeZone_DefaultTimeZone]  DEFAULT (0) FOR [DefaultTimeZone]
 GO
 ALTER TABLE [cm].[AnalysisDatabase]  WITH CHECK ADD  CONSTRAINT [FK_AnalysisDatabase_AnalysisInstance] FOREIGN KEY([AnalysisInstanceGUID])
 REFERENCES [cm].[AnalysisInstance] ([objectGUID])
@@ -14701,7 +14705,7 @@ SET XACT_ABORT ON
 
 BEGIN TRAN
 
-DECLARE @CurrentDate smalldatetime
+DECLARE @CurrentDate datetime
 SET @CurrentDate = GetDate()
 
 DELETE FROM [pm].[DatabaseSizeDaily]
@@ -14882,7 +14886,7 @@ SET XACT_ABORT ON
 
 BEGIN TRAN
 
-DECLARE @CurrentDate smalldatetime
+DECLARE @CurrentDate datetime
 SET @CurrentDate = GetDate()
 
 DELETE FROM [pm].[LogicalVolumeSizeDaily]

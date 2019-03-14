@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[ReportHeader] (
-    [Id]                    UNIQUEIDENTIFIER CONSTRAINT [DF__ReportHeader__Id__09C96D33] DEFAULT (newid()) NOT NULL,
+    [Id]                    UNIQUEIDENTIFIER CONSTRAINT [DF_ReportHeader__Id] DEFAULT (newid()) NOT NULL,
     [ReportName]            NVARCHAR (255)   NOT NULL,
     [ReportDisplayName]     NVARCHAR (255)   NOT NULL,
     [ReportBackground]      NVARCHAR (7)     NOT NULL,
