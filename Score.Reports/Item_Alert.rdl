@@ -185,7 +185,7 @@
 	,Priority
 	,Severity
 	,Category
-	,Owner
+	,ISNULL(Owner,'Unassigned') as Owner
 	,ResolvedBy
 	,TimeRaised
 	,TimeAdded

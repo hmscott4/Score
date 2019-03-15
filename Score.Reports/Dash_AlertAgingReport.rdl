@@ -48,7 +48,11 @@
 	b.Label,
  	b.LowValue,
 	b.HighValue,
-	a.Owner
+	CASE 
+                       WHEN a.Owner IS NULL THEN 'Unassigned'
+                       WHEN a.Owner = '' THEN 'Unassigned'
+                       Else a.Owner
+                   END as Owner
 	FROM 
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
@@ -75,11 +79,11 @@ WHERE
         </Field>
         <Field Name="TimeRaised">
           <DataField>TimeRaised</DataField>
-          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="TimeResolved">
           <DataField>TimeResolved</DataField>
-          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Severity">
           <DataField>Severity</DataField>

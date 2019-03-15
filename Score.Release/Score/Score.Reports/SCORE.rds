@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="OperationsManager">
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="SCORE">
   <ConnectionProperties>
     <Extension>SQL</Extension>
-    <ConnectString>Data Source=__OPSMGR__;Initial Catalog=OperationsManager;Integrated Security=SSPI;Application Name=SCORE.v1.3</ConnectString>
+    <ConnectString>Data Source=__SCORE__;Initial Catalog=SCORE;Integrated Security=SSPI;Application Name=SCORE.v1.3</ConnectString>
     <IntegratedSecurity>true</IntegratedSecurity>
   </ConnectionProperties>
-  <DataSourceID>be2e06b7-5fa4-401d-bd66-e33d94c7ab40</DataSourceID>
+  <DataSourceID>7f385674-d8d2-4498-9b60-a36b5628f143</DataSourceID>
 </RptDataSource>
