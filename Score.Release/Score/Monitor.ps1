@@ -199,11 +199,29 @@ param(
 	
 	If($daysRetain -gt 0 -and $daysRetain -le 365){
 	
-		AddLogEntry "DeleteSyncHistory" "Info" "Maintenance" "Deleting SyncHistory entries older than $daysRetain day(s)." $sqlConnection
+		AddLogEntry "adDeleteSyncHistory" "Info" "Maintenance" "Deleting AD Sync History entries older than $daysRetain day(s)." $sqlConnection
 		Write-Host " : Maintenance : Deleting SyncHistory entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "ad.spSyncHistoryDeleteByDate"
+			[Void]$sqlCommand.Parameters.Add("@DaysRetain", [system.data.SqlDbType]::Int)
+	        $sqlCommand.Parameters["@DaysRetain"].value = $daysRetain
+
+			[Void]$sqlCommand.ExecuteNonQuery()
+			$sqlCommand.Dispose()
+			
+		}
+		catch [System.Exception] {
+			$msg = $_.Exception.Message
+		    AddLogEntry "DeleteSyncHistory" "Error" "Maintenance" $msg $sqlConnection
+			$errorCounter++
+		}
+
+		AddLogEntry "scomDeleteSyncHistory" "Info" "Maintenance" "Deleting SCOM Sync History entries older than $daysRetain day(s)." $sqlConnection
+		Write-Host " : Maintenance : Deleting SyncHistory entries older than $daysRetain day(s)."
+		
+		try	{
+			$sqlCommand = GetStoredProc $sqlConnection "scom.spSyncHistoryDeleteByDate"
 			[Void]$sqlCommand.Parameters.Add("@DaysRetain", [system.data.SqlDbType]::Int)
 	        $sqlCommand.Parameters["@DaysRetain"].value = $daysRetain
 

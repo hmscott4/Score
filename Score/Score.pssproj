@@ -28,6 +28,9 @@ $config = $config.Replace("MGR31.ABCD.LCL","MGMT_SERVER")
 $config = $config.Replace("sqlag2.abcd.lcl","__SCORE__")
 Set-Content ..\Score.Release\Score\app.monitor.config -Value $config
 
+# REMOVE ALL REPORT FILES FROM RELEASE FOLDER
+get-childitem -Path ..\Score.Release\Score\Score.Reports\*.* | Remove-Item
+
 # MOVE REPORTS, DATA SOURCES AND DATA SETS
 get-item -Path ..\Score.Reports\bin\Debug\*.rdl | copy-item -Destination ..\Score.Release\Score\Score.Reports\
 get-item -Path ..\Score.Reports\bin\Debug\*.rsd | copy-item -Destination ..\Score.Release\Score\Score.Reports\

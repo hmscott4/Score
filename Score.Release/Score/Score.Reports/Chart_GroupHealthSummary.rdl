@@ -28,7 +28,7 @@ FROM
 	scom.[GroupHealthState] g
 WHERE
 	g.Active = 1
-</CommandText>
+                   AND g.Display = 1</CommandText>
       </Query>
       <Fields>
         <Field Name="DisplayName">

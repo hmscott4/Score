@@ -16364,7 +16364,7 @@ BEGIN TRAN
 			@InMaintenanceMode ,
 			@MaintenanceModeLastModified,
 			@ManagementGroup,
-			0,
+			1,
 			@Active ,
 			@dbLastUpdate,
 			@dbLastUpdate,
