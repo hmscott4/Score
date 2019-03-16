@@ -277,7 +277,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
                 <Left>1.26958in</Left>
-                <Height>1in</Height>
+                <Height>0.5in</Height>
                 <Width>7.67324in</Width>
                 <Style>
                   <Border>
@@ -292,7 +292,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Height>1in</Height>
+            <Height>0.5in</Height>
             <Width>10in</Width>
             <Style>
               <Border>
@@ -411,6 +411,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                         <Color>Gainsboro</Color>
                         <Style>None</Style>
                       </Border>
+                      <FontFamily>Arial</FontFamily>
                       <FontSize>8pt</FontSize>
                       <Color>#5c5c5c</Color>
                     </Style>
@@ -643,6 +644,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                 <Caption>="Top 5 Object Classes For Health State: " &amp; Parameters!HealthState.Value</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
+                  <FontFamily>Arial</FontFamily>
                   <FontSize>14pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <TextAlign>Left</TextAlign>
@@ -678,7 +680,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>1.10292in</Top>
+            <Top>0.72792in</Top>
             <Left>1.00917in</Left>
             <Height>2.80208in</Height>
             <Width>8.04167in</Width>
@@ -908,7 +910,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=Iif(RowNumber(Nothing) mod 2 = 0, "LightSteelBlue", "White")</BackgroundColor>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -945,7 +947,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=Iif(RowNumber(Nothing) mod 2 = 0, "LightSteelBlue", "White")</BackgroundColor>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -984,7 +986,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
                 <Direction>Descending</Direction>
               </SortExpression>
             </SortExpressions>
-            <Top>4.67583in</Top>
+            <Top>4.30083in</Top>
             <Left>1.00917in</Left>
             <Height>0.75in</Height>
             <Width>8.04167in</Width>
@@ -1003,14 +1005,16 @@ ORDER BY [ObjectCount] DESC</CommandText>
                 <TextRuns>
                   <TextRun>
                     <Value>="Report Executed : " &amp; Globals!ExecutionTime</Value>
-                    <Style />
+                    <Style>
+                      <FontFamily>Arial</FontFamily>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.14458in</Top>
+            <Top>3.76958in</Top>
             <Left>1.00917in</Left>
             <Height>0.25in</Height>
             <Width>8.04167in</Width>
@@ -1026,7 +1030,7 @@ ORDER BY [ObjectCount] DESC</CommandText>
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>5.53in</Height>
+        <Height>5.20708in</Height>
         <Style>
           <Border>
             <Style>None</Style>
