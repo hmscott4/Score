@@ -9,11 +9,12 @@
         <Id>Microsoft.SCORE.Integration.Domain.View</Id>
         <DisplayName>Microsoft SCORE Integration Domain View</DisplayName>
         <Description>Microsoft SCORE Integration Domain View</Description>
+        <Target>Microsoft.SCORE.IntegrationServer.Domain.Class</Target>
         <Category>Operations</Category>
       </CustomViewConfig>
     </Instance>
     <Instance ID="Instance3792708a2f224266992b48d3a58de3dc" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomView" Version="1.0.0.0">
-      <CustomViewConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <CustomViewConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <ViewFolder>Score.Integration.Folder</ViewFolder>
         <ViewType>SC!Microsoft.SystemCenter.StateViewType</ViewType>
         <ViewConfiguration />

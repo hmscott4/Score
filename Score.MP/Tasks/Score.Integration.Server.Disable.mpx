@@ -68,7 +68,7 @@
   </TypeDefinitions>
   <Monitoring>
     <Tasks>
-      <Task ID="Score.Integration.Server.Disable.Task" Accessibility="Public" Enabled="true" Target="Score.Integration.Server" Timeout="120" Remotable="false">
+      <Task ID="Score.Integration.Server.Disable.Task" Accessibility="Public" Enabled="true" Target="Microsoft.SCORE.IntegrationServer.Class" Timeout="120" Remotable="false">
         <Category>Custom</Category>
         <WriteAction ID="PSWA" TypeID="Score.Integration.Server.Disable.Task.WA">
           <TimeoutSeconds>60</TimeoutSeconds>

@@ -114,7 +114,7 @@
           <Name>Microsoft SCORE Integration Server Class</Name>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class.Discovery">
-          <Name>Microsoft SCORE Class Discovery</Name>
+          <Name>Microsoft SCORE Integration Server Class Discovery</Name>
           <Description>Discovers SCORE Integration Server Components</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Class" SubElementID="ScriptLocation">
