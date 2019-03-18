@@ -75,6 +75,12 @@
     <Compile Include="Rules\Score.Integration.OpsMgr.TimeZone.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tasks\Score.Integration.Server.Disable.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\Score.Integration.Server.Enable.mpx">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Views\Score.Integration.Folder.mpx">
       <SubType>Code</SubType>
     </Compile>

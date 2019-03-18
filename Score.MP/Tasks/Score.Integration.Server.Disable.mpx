@@ -1,0 +1,98 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <WriteActionModuleType ID="Score.Integration.Server.Disable.Task.WA" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="PSWA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>Score.Integration.Server.Disable.Task.WA.ps1</ScriptName>
+                <ScriptBody>
+                  #=================================================================================
+                  #  Script to execute a task in PowerShell
+                  #=================================================================================
+
+                  #=================================================================================
+                  # Constants section - modify stuff here:
+
+                  # Assign script name variable for use in event logging
+                  $ScriptName = "Score.Integration.Server.Disable.Task.WA.ps1"
+                  $EventID = "3349"
+                  #=================================================================================
+
+                  # Gather script start time
+                  $StartTime = Get-Date
+
+                  # Gather who the script is running as
+                  $whoami = whoami
+
+                  #Load the MOMScript API and discovery propertybag
+                  $momapi = New-Object -comObject "Mom.ScriptAPI"
+
+                  #Log script event that we are starting task
+                  $momapi.LogScriptEvent($ScriptName,$EventID,0, "Starting script task.  Running as ($whoami)")
+
+                  # Begin Main Script
+                  #=================================================================================
+                  If(Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\MP\NetworkFileShare\MgmtGroups\$Target/ManagementGroup/Name$")
+                  {
+                  Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\MP\NetworkFileShare\MgmtGroups\$Target/ManagementGroup/Name$" -Force
+                  }
+                  Write-Host "PowerShell script executed"
+                  Write-Host "Network File Share Watcher Node Disabled"
+                  #=================================================================================
+
+                  # Log an event for script ending and total execution time.
+                  $EndTime = Get-Date
+                  $ScriptTime = ($EndTime - $StartTime).TotalSeconds
+                  $momapi.LogScriptEvent($ScriptName,$EventID,0,"`n Script has completed. `n Runtime was ($ScriptTime) seconds.")
+                </ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PSWA" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.BaseData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+    </ModuleTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Tasks>
+      <Task ID="Score.Integration.Server.Disable.Task" Accessibility="Public" Enabled="true" Target="Score.Integration.Server" Timeout="120" Remotable="false">
+        <Category>Custom</Category>
+        <WriteAction ID="PSWA" TypeID="Score.Integration.Server.Disable.Task.WA">
+          <TimeoutSeconds>60</TimeoutSeconds>
+        </WriteAction>
+      </Task>
+    </Tasks>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Score.Integration.Server.Disable.Task">
+          <Name>Disable SCORE Integration Server Node</Name>
+          <Description>Disable Network File Share Watcher Node task</Description>
+        </DisplayString>
+        <DisplayString ElementID="Score.Integration.Server.Disable.Task.WA">
+          <Name>Disable SCORE Integration Server Node</Name>
+          <Description>Disable SCORE Integration Server Node</Description>
+        </DisplayString>
+        <DisplayString ElementID="Score.Integration.Server.Disable.Task.WA" SubElementID="TimeoutSeconds">
+          <Name>Timeout</Name>
+          <Description>Timeout</Description>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles></KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

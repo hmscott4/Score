@@ -1508,7 +1508,7 @@ Param (
             }
         } 
         Catch [System.Exception] {
-			    $msg=$_.Exception.Message
+			    $msg="$objectClass : " + $_.Exception.Message
 			    AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
 			    $errorCounter++
 	    }
@@ -1581,8 +1581,8 @@ Param (
 
                     $sqlCommand.Parameters["@ID"].Value = $Object.Id
                     $sqlCommand.Parameters["@Name"].Value = NullToString $Object.Name ""
-                    $sqlCommand.Parameters["@DisplayName"].Value = $Object.DisplayName
-                    $sqlCommand.Parameters["@FullName"].Value = $Object.FullName
+                    $sqlCommand.Parameters["@DisplayName"].Value = NullToString $Object.DisplayName ""
+                    $sqlCommand.Parameters["@FullName"].Value = NullToString $Object.FullName ""
                     $sqlCommand.Parameters["@Path"].Value = NullToString $Object.Path ""
                     $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
                     $sqlCommand.Parameters["@HealthState"].Value = $Object.HealthState.ToString()
@@ -1746,7 +1746,6 @@ Param (
         # GET SCOM GROUP
         ################################################################################
         Try {
-            # $class = Get-SCOMClass -name $objectClass
             If($syncType -eq "Full"){
                 $Group = Get-SCOMGroup | Where-Object {$_.DisplayName -eq $groupName}
             } Else {
@@ -1754,7 +1753,7 @@ Param (
             }
         } 
         Catch [System.Exception] {
-			    $msg=$_.Exception.Message
+			    $msg="$groupName : " + $_.Exception.Message
 			    AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
 			    $errorCounter++
 	    }
@@ -1817,8 +1816,8 @@ Param (
 
                 $sqlCommand.Parameters["@ID"].Value = $Group.Id
                 $sqlCommand.Parameters["@Name"].Value = NullToString $Group.Name ""
-                $sqlCommand.Parameters["@DisplayName"].Value = $Group.DisplayName
-                $sqlCommand.Parameters["@FullName"].Value = $Group.FullName
+                $sqlCommand.Parameters["@DisplayName"].Value = NullToString $Group.DisplayName ""
+                $sqlCommand.Parameters["@FullName"].Value = NullToString $Group.FullName ""
                 $sqlCommand.Parameters["@Path"].Value = NullToString $Group.Path ""
                 $sqlCommand.Parameters["@MonitoringClassIds"].Value = $tmpValue
                 $sqlCommand.Parameters["@HealthState"].Value = $Group.HealthState.ToString()

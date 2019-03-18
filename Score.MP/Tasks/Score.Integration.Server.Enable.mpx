@@ -1,0 +1,143 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <WriteActionModuleType ID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="Version" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="ScriptLocation" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="Version" Selector="$Config/Version$" ParameterType="string" />
+          <OverrideableParameter ID="ScriptLocation" Selector="$Config/ScriptLocation$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="PSWA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>Microsoft.SCORE.IntegrationServer.Enable.Task.WA.ps1</ScriptName>
+                <ScriptBody>
+                  #=================================================================================
+                  #  Script to execute a task in PowerShell
+                  #=================================================================================
+                  param($Version, $ScriptLocation)
+                  #=================================================================================
+                  # Constants section - modify stuff here:
+                  $registryKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\MP\SCORE\MgmtGroups\$Target/ManagementGroup/Name$"
+                  $EventId = "3340"
+
+                  $sScriptLocation = $ScriptLocation
+                  $sVersion = $Version
+
+                  # Test for the existence of Catalog Path directory; note that this is optional
+                  If(Test-Path $ScriptLocation -IsValid -PathType Container){
+                  $sScriptLocation = $ScriptLocation
+                  } else {
+                  $ScriptLocation = ""
+                  }
+
+                  # Assign script name variable for use in event logging
+                  $ScriptName = "Microsoft.SCORE.IntegrationServer.Enable.Task.WA.ps1"
+                  #=================================================================================
+
+                  # Gather script start time
+                  $StartTime = Get-Date
+
+                  # Gather who the script is running as
+                  $whoami = whoami
+
+                  #Load the MOMScript API and discovery propertybag
+                  $momapi = New-Object -comObject "Mom.ScriptAPI"
+
+                  #Log script event that we are starting task
+                  $momapi.LogScriptEvent($ScriptName,$EventID,0, "Starting script task.  Running as ($whoami)")
+
+                  # Begin Main Script
+                  #=================================================================================
+                  # Test the path to the registry key to see if it already exists
+                  If(Test-Path $registryKey)
+                  {
+                  $momapi.LogScriptEvent($ScriptName,$EventID,0, "Found existing registry key. ")
+                  }
+                  Else
+                  {
+                  New-Item -Path $registryKey -Force | Out-Null
+                  New-ItemProperty -Path $registryKey -Name "Version" -Value $sVersion -PropertyType String -Force | Out-Null
+                  New-ItemProperty -Path $registryKey -Name "ScriptLocation" -Value $sScriptLocation -PropertyType String -Force | Out-Null
+                  }
+
+
+                  Write-Host "PowerShell script executed"
+                  Write-Host "ScriptLocation : " $sScriptLocation
+                  Write-Host "Version        : " $sVersion
+                  #=================================================================================
+
+                  # Log an event for script ending and total execution time.
+                  $EndTime = Get-Date
+                  $ScriptTime = ($EndTime - $StartTime).TotalSeconds
+                  $momapi.LogScriptEvent($ScriptName,$EventID,0,"`n Script has completed. `n Runtime was ($ScriptTime) seconds.")
+                </ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>Version</Name>
+                    <Value>$Config/Version$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ScriptLocation</Name>
+                    <Value>$Config/ScriptLocation$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PSWA" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.BaseData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+    </ModuleTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Tasks>
+      <Task ID="Microsoft.SCORE.IntegrationServer.Enable.Task" Accessibility="Public" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="120" Remotable="false">
+        <Category>Custom</Category>
+        <WriteAction ID="PSWA" TypeID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA">
+          <Version>2.0</Version>
+          <ScriptLocation>ENTER DIRECTORY NAME HERE</ScriptLocation>
+          <TimeoutSeconds>60</TimeoutSeconds>
+        </WriteAction>
+      </Task>
+    </Tasks>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task">
+          <Name>Network File Share Enable Watcher Node Task</Name>
+          <Description>Enable a SCORE Integration Server node.  This task adds registry keys and creates SCOM object classes and objects for rule targeting..</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA">
+          <Name>Enable Network File Share Watcher Node</Name>
+          <Description>Enable Network File Share Watcher Node</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA" SubElementID="Version">
+          <Name>Script Version</Name>
+          <Description>Script Version</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA" SubElementID="ScriptLocation">
+          <Name>Script Path</Name>
+          <Description>Directory where SCORE PowerShell scripts are stored.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA" SubElementID="TimeoutSeconds">
+          <Name>Timeout</Name>
+          <Description>Timeout</Description>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles></KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

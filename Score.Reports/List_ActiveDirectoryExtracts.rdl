@@ -369,7 +369,7 @@ ORDER BY DNSRoot</CommandText>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox23</rd:DefaultName>
-            <Top>1.25222in</Top>
+            <Top>1.13972in</Top>
             <Height>0.15833in</Height>
             <Width>10.46181in</Width>
             <ZIndex>2</ZIndex>
@@ -687,8 +687,7 @@ ORDER BY DNSRoot</CommandText>
                                   <Value>=Fields!Domain.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
-                                    <TextDecoration>Underline</TextDecoration>
-                                    <Color>Blue</Color>
+                                    <TextDecoration>None</TextDecoration>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -696,23 +695,6 @@ ORDER BY DNSRoot</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Domain</rd:DefaultName>
-                          <ActionInfo>
-                            <Actions>
-                              <Action>
-                                <Drillthrough>
-                                  <ReportName>List_ActiveDirectoryExtractsHistory</ReportName>
-                                  <Parameters>
-                                    <Parameter Name="Domain">
-                                      <Value>=Fields!Domain.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="ObjectClass">
-                                      <Value>=Fields!ObjectClass.Value</Value>
-                                    </Parameter>
-                                  </Parameters>
-                                </Drillthrough>
-                              </Action>
-                            </Actions>
-                          </ActionInfo>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -739,6 +721,8 @@ ORDER BY DNSRoot</CommandText>
                                   <Value>=Fields!ObjectClass.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
+                                    <TextDecoration>Underline</TextDecoration>
+                                    <Color>Blue</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -746,6 +730,23 @@ ORDER BY DNSRoot</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ObjectClass</rd:DefaultName>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>List_ActiveDirectoryExtractsHistory</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="Domain">
+                                      <Value>=Fields!Domain.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="ObjectClass">
+                                      <Value>=Fields!ObjectClass.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1221,8 +1222,112 @@ ORDER BY DNSRoot</CommandText>
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="Textbox32">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>="Domains : " &amp; Join(Parameters!Domain.Value, ", ")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox23</rd:DefaultName>
+            <Top>1.36749in</Top>
+            <Height>0.15833in</Height>
+            <Width>10.46181in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox33">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>="Object Classes : " &amp; Join(Parameters!ObjectClass.Value, ", ")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox23</rd:DefaultName>
+            <Top>1.59527in</Top>
+            <Height>0.15833in</Height>
+            <Width>10.46181in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>SCORE Error log summary report</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>Underline</TextDecoration>
+                      <Color>Blue</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox4</rd:DefaultName>
+            <ActionInfo>
+              <Actions>
+                <Action>
+                  <Drillthrough>
+                    <ReportName>List_ProcessLogSummary</ReportName>
+                  </Drillthrough>
+                </Action>
+              </Actions>
+            </ActionInfo>
+            <Top>2.98139in</Top>
+            <Height>0.25in</Height>
+            <Width>2.33333in</Width>
+            <ZIndex>6</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
-        <Height>3.19667in</Height>
+        <Height>3.30083in</Height>
         <Style>
           <Border>
             <Style>None</Style>

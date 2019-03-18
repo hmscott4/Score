@@ -74,7 +74,7 @@
                   # Assign script name variable for use in event logging.
                   # ScriptName should be the same as the ID of the module that the script is contained in
                   $ScriptName = "Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.WA.ps1"
-                  $EventID = "3340"
+                  $EventID = "3341"
                   #=================================================================================
 
 

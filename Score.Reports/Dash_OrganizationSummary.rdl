@@ -1666,7 +1666,7 @@ WHERE
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Item Display</Value>
+                                  <Value>Report Links</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
                                     <FontWeight>Bold</FontWeight>
@@ -1787,7 +1787,7 @@ WHERE
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>9.27164in</Height>
+        <Height>5.28206in</Height>
         <Style>
           <Border>
             <Style>None</Style>

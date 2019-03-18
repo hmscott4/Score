@@ -99,6 +99,8 @@
     <Report Include="List_ObjectHealthState.rdl" />
     <Report Include="List_OpsMgrExtracts.rdl" />
     <Report Include="List_OpsMgrExtractsHistory.rdl" />
+    <Report Include="List_ProcessLogDetail.rdl" />
+    <Report Include="List_ProcessLogSummary.rdl" />
     <Report Include="List_ServerMaintenanceModeDetail.rdl" />
     <Report Include="List_ServerUptimeByGroup.rdl" />
     <Report Include="List_ServerUtilization.rdl" />

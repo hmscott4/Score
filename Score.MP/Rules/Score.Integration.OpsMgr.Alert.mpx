@@ -71,7 +71,7 @@
                   # Assign script name variable for use in event logging.
                   # ScriptName should be the same as the ID of the module that the script is contained in
                   $ScriptName = "Score.Integration.OpsMgr.Alert.ps1"
-                  $EventID = "3341"
+                  $EventID = "3342"
                   #=================================================================================
 
 
@@ -96,7 +96,7 @@
                   # End MAIN script section
                   Set-Location $ScriptLocation
                   $objects=$objectClasses.Split(",")
-                  .\MonitorSCOM.ps1 -managementGroup $managementGroup -objectClasses $objects
+                  .\MonitorSCOM.ps1 -managementGroup $managementGroup -objectClasses $objects -syncType Incremental
 
 
                   # End of script section
