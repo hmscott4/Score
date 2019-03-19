@@ -117,12 +117,12 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task">
-          <Name>Network File Share Enable Watcher Node Task</Name>
+          <Name>SCORE Integration Server enable Task</Name>
           <Description>Enable a SCORE Integration Server node.  This task adds registry keys and creates SCOM object classes and objects for rule targeting..</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA">
-          <Name>Enable Network File Share Watcher Node</Name>
-          <Description>Enable Network File Share Watcher Node</Description>
+          <Name>Enable SCORE Integration Server Node</Name>
+          <Description>Enable SCORE Integration Server Node</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.IntegrationServer.Enable.Task.WA" SubElementID="Version">
           <Name>Script Version</Name>

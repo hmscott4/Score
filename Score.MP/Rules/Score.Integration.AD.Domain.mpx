@@ -166,7 +166,7 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule">
-          <Name>Microsoft SCORED omain Integration Rule</Name>
+          <Name>Microsoft SCORE Domain Integration Rule</Name>
           <Description>Updates SCORE database with current list of Active Directory sites and subnets for user-specified domain.</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.SCORE.AD.Domain.Integration.TimedPowerShell.Rule.DS" SubElementID="IntervalSeconds">
