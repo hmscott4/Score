@@ -53,6 +53,8 @@
             $instance.AddProperty("$MPElement[Name='Microsoft.SCORE.IntegrationServer.Domain.Class']/IsForest$", "0")
             $instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $Key)
             $propertyBag.AddInstance($instance)
+            
+            # $momapi.LogScriptEvent($ScriptName,$eventID,0,"Discovered registry entry for Domain $Key.")
             }
             }
             Else

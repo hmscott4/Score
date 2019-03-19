@@ -342,6 +342,7 @@ FROM
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
             <Top>0.58333in</Top>
+            <Left>0in</Left>
             <Height>0.24375in</Height>
             <Width>10in</Width>
             <Style>
@@ -2584,6 +2585,7 @@ FROM
               </SortExpression>
             </SortExpressions>
             <Top>1.53in</Top>
+            <Left>0in</Left>
             <Height>1.23958in</Height>
             <Width>10in</Width>
             <ZIndex>1</ZIndex>
@@ -2615,6 +2617,7 @@ FROM
             </Paragraphs>
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Left>0in</Left>
             <Height>0.46251in</Height>
             <Width>10in</Width>
             <ZIndex>2</ZIndex>
@@ -2650,6 +2653,7 @@ FROM
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
             <Top>0.89652in</Top>
+            <Left>0in</Left>
             <Height>0.20208in</Height>
             <Width>10in</Width>
             <ZIndex>3</ZIndex>
@@ -2681,6 +2685,7 @@ FROM
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>4.12722in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>10in</Width>
             <ZIndex>4</ZIndex>
@@ -2712,6 +2717,7 @@ FROM
             </Paragraphs>
             <rd:DefaultName>Textbox25</rd:DefaultName>
             <Top>1.2425in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>10in</Width>
             <ZIndex>5</ZIndex>
@@ -2726,7 +2732,7 @@ FROM
             </Style>
           </Textbox>
           <Line Name="Line1">
-            <Top>3.39458in</Top>
+            <Top>2.89458in</Top>
             <Left>0.00917in</Left>
             <Height>0in</Height>
             <Width>9.99083in</Width>
@@ -2789,7 +2795,8 @@ FROM
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox47</rd:DefaultName>
-            <Top>3.48833in</Top>
+            <Top>3.11333in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>10in</Width>
             <ZIndex>7</ZIndex>
@@ -2855,7 +2862,7 @@ FROM
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox47</rd:DefaultName>
-            <Top>3.83555in</Top>
+            <Top>3.46055in</Top>
             <Left>0.00917in</Left>
             <Height>0.25in</Height>
             <Width>10in</Width>
@@ -2870,8 +2877,78 @@ FROM
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="Textbox49">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Click </Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>here</Value>
+                    <ActionInfo>
+                      <Actions>
+                        <Action>
+                          <Drillthrough>
+                            <ReportName>List_ProcessLogSummary</ReportName>
+                          </Drillthrough>
+                        </Action>
+                      </Actions>
+                    </ActionInfo>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <TextDecoration>Underline</TextDecoration>
+                      <Color>Blue</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <ActionInfo>
+                      <Actions>
+                        <Action>
+                          <Drillthrough>
+                            <ReportName>List_ProcessLogSummary</ReportName>
+                          </Drillthrough>
+                        </Action>
+                      </Actions>
+                    </ActionInfo>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>to view SCORE error log summary.</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox47</rd:DefaultName>
+            <Top>3.77999in</Top>
+            <Height>0.25in</Height>
+            <Width>10in</Width>
+            <ZIndex>9</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
-        <Height>4.54736in</Height>
+        <Height>4.4918in</Height>
         <Style>
           <Border>
             <Style>None</Style>
