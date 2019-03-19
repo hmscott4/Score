@@ -51,10 +51,10 @@
     </ManagementPackReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes and Discoveries\Score.Integration.AD.Domain.Discovery.mpx">
+    <Compile Include="Classes and Discoveries\Score.Integration.Domain.Discovery.mpx">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes and Discoveries\Score.IntegrationServer.Discovery.mpx">
+    <Compile Include="Classes and Discoveries\Score.Integration.Server.Discovery.mpx">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rules\Score.Integration.AD.Computer.mpx">
