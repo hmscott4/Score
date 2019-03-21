@@ -801,7 +801,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox8</rd:DefaultName>
-                <Top>1.9213in</Top>
+                <Top>2.18083in</Top>
                 <Left>0.03472in</Left>
                 <Height>0.25in</Height>
                 <Width>5.01167in</Width>
@@ -1501,8 +1501,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox2</rd:DefaultName>
-                <Top>3.08704in</Top>
-                <Left>0.03472in</Left>
+                <Top>3.06972in</Top>
                 <Height>0.40625in</Height>
                 <Width>5.01167in</Width>
                 <ZIndex>3</ZIndex>
@@ -1553,7 +1552,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                   <Color>#7292cc</Color>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>Khaki</BackgroundColor>
+                                <BackgroundColor>CornflowerBlue</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -1592,7 +1591,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "Transparent", "LightSteelBlue")</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -1638,7 +1636,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                 <Color>#7292cc</Color>
                                 <Style>Solid</Style>
                               </Border>
-                              <BackgroundColor>Khaki</BackgroundColor>
+                              <BackgroundColor>CornflowerBlue</BackgroundColor>
                               <PaddingLeft>2pt</PaddingLeft>
                               <PaddingRight>2pt</PaddingRight>
                               <PaddingTop>2pt</PaddingTop>
@@ -1676,7 +1674,7 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                     <Color>#7292cc</Color>
                                     <Style>Solid</Style>
                                   </Border>
-                                  <BackgroundColor>Khaki</BackgroundColor>
+                                  <BackgroundColor>CornflowerBlue</BackgroundColor>
                                   <PaddingLeft>2pt</PaddingLeft>
                                   <PaddingRight>2pt</PaddingRight>
                                   <PaddingTop>2pt</PaddingTop>
@@ -1729,7 +1727,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                 <Color>LightGrey</Color>
                                 <Style>Solid</Style>
                               </Border>
-                              <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "Transparent", "LightSteelBlue")</BackgroundColor>
                               <PaddingLeft>2pt</PaddingLeft>
                               <PaddingRight>2pt</PaddingRight>
                               <PaddingTop>2pt</PaddingTop>
@@ -1807,7 +1804,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                                     <Color>LightGrey</Color>
                                     <Style>Solid</Style>
                                   </Border>
-                                  <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "Transparent", "LightSteelBlue")</BackgroundColor>
                                   <PaddingLeft>2pt</PaddingLeft>
                                   <PaddingRight>2pt</PaddingRight>
                                   <PaddingTop>2pt</PaddingTop>
@@ -1824,13 +1820,14 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                     </TablixMember>
                   </TablixMembers>
                 </TablixRowHierarchy>
+                <NoRowsMessage>No Open Alerts</NoRowsMessage>
                 <DataSetName>SQLAlerts</DataSetName>
                 <SortExpressions>
                   <SortExpression>
                     <Value>=Fields!Severity.Value</Value>
                   </SortExpression>
                 </SortExpressions>
-                <Top>2.29861in</Top>
+                <Top>2.50027in</Top>
                 <Left>0.03472in</Left>
                 <Height>0.5in</Height>
                 <Width>5.01167in</Width>
@@ -1841,11 +1838,54 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
                   </Border>
                 </Style>
               </Tablix>
+              <Textbox Name="Textbox1">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value EvaluationMode="Constant">SQL Server Database Size Report</Value>
+                        <Style>
+                          <FontWeight>Bold</FontWeight>
+                          <TextDecoration>Underline</TextDecoration>
+                          <Color>Blue</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox1</rd:DefaultName>
+                <ActionInfo>
+                  <Actions>
+                    <Action>
+                      <Drillthrough>
+                        <ReportName>List_SQLDatabaseSize</ReportName>
+                      </Drillthrough>
+                    </Action>
+                  </Actions>
+                </ActionInfo>
+                <Top>1.86138in</Top>
+                <Left>0.03472in</Left>
+                <Height>0.25in</Height>
+                <Width>5.01167in</Width>
+                <ZIndex>5</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
             <Top>1.58486in</Top>
             <Left>0.0925in</Left>
-            <Height>3.8125in</Height>
+            <Height>3.80208in</Height>
             <Width>5.10926in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -1948,49 +1988,6 @@ AND SpaceAllocated.DateTime = SpaceUsed.DateTime</CommandText>
             <Height>0.4375in</Height>
             <Width>10.5in</Width>
             <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox1">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>SQL Server Database Size</Value>
-                    <Style>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>Underline</TextDecoration>
-                      <Color>Blue</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox1</rd:DefaultName>
-            <ActionInfo>
-              <Actions>
-                <Action>
-                  <Drillthrough>
-                    <ReportName>List_SQLDatabaseSize</ReportName>
-                  </Drillthrough>
-                </Action>
-              </Actions>
-            </ActionInfo>
-            <Top>5.4425in</Top>
-            <Left>5.28in</Left>
-            <Height>0.25in</Height>
-            <Width>5.0625in</Width>
-            <ZIndex>5</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
