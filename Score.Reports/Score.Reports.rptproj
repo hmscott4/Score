@@ -64,15 +64,12 @@
   <ItemGroup>
     <Report Include="Chart_AlertsByGroupTopN.rdl" />
     <Report Include="Chart_DailyAvailability.rdl" />
-    <Report Include="Chart_DailyAverageTopN.rdl" />
     <Report Include="Chart_DatabasePerf.rdl" />
     <Report Include="Chart_DatabasePerfDetail.rdl" />
-    <Report Include="Chart_DatabaseTopN.rdl" />
     <Report Include="Chart_GroupHealthSummary.rdl" />
     <Report Include="Chart_HostPerf.rdl" />
     <Report Include="Chart_HostPerf_ForGroup.rdl" />
     <Report Include="Chart_HostPerf_Linux.rdl" />
-    <Report Include="Chart_HostTopN.rdl" />
     <Report Include="Chart_HourlyMetrics.rdl" />
     <Report Include="Chart_ObjectHealthSummary.rdl" />
     <Report Include="Chart_RawMetrics.rdl" />

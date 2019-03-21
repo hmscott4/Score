@@ -57,6 +57,9 @@
     <Compile Include="Classes and Discoveries\Score.Integration.Server.Discovery.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Monitors\Score.Integration.ConfigFile.Valid.mpx">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Rules\Score.Integration.AD.Computer.mpx">
       <SubType>Code</SubType>
     </Compile>
