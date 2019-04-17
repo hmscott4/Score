@@ -1744,6 +1744,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="_Compare\SQLAG2.SCORE_Project.scmp" />
+    <None Include="_Compare\SQL33.SCORE_Project.scmp" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="_Deployment\Script.Deployment.sql" />
