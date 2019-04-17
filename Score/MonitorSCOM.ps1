@@ -1469,6 +1469,15 @@ Param (
         Try {
             $class = Get-SCOMClass -name $objectClass
 
+			If(!$class)
+			{
+				$msg="$objectClass : Object class not found; management pack not loaded."
+			    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
+			   				
+				Return New-Object psobject -Property @{Status = "Warning"; ObjectCount = 0; ErrorCount = 0; WarningCount = 0}
+    
+			}
+
 			[datetime]$timeNow = (Get-Date)
 
 			$sqlCommand = GetStoredProc $sqlConnection "scom.spObjectClassUpsert"
