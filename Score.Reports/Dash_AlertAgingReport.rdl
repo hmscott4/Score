@@ -9,136 +9,6 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="AlertsByDay">
-      <Query>
-        <DataSourceName>SCORE</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@TimeZone">
-            <Value>=Parameters!TimeZone.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT a.Name, 
-	a.MonitoringObjectName, 
-	Category, 
-	[TimeRaised], 
-	-- cast(floor(cast(cast(a.[TimeRaised] as datetime) as float)) as [datetime]) [DateRaised], 
-	[TimeResolved], 
-	-- cast(floor(cast(cast(a.[TimeResolved]as datetime) as float)) as [datetime]) [DateResolved],
-	[TimeRaised] AT TIME ZONE @TimeZone AS [TimeRaisedLocal], 
-	-- cast(floor(cast(cast(DATEADD(Minute, @UTCOffset, [TimeRaised]) as datetime) as float)) as [datetime]) [DateRaisedLocal], 
-	[TimeResolved] AT TIME ZONE @TimeZone AS [TimeResolvedLocal], 
-	-- cast(floor(cast(DATEADD(Minute, @UTCOffset, cast([TimeResolved] as [datetime])) as float)) as [datetime]) [DateResolvedLocal],
-	a.Severity as [SeverityID],
-	CASE a.Severity
-	 WHEN 0 THEN 'Info'
-	 WHEN 1 THEN 'Warning'
-	 WHEN 2 THEN 'Critical'
-	END as [Severity], 
-	a.Priority as [PriorityID],
-	CASE a.Priority
-	  WHEN 0 THEN 'Low'
-	  WHEN 1 THEN 'Medium'
-	  WHEN 2 THEN 'High'
-	END as [Priority], 
-	a.ResolutionState,
-	r.Name as ResolutionStateName, 
---	(DATEDIFF(Minute, [TimeRaised], GETUTCDATE()) /60.0 ) as AgeHours,
-	b.SortOrder,
-	b.Label,
- 	b.LowValue,
-	b.HighValue,
-	CASE 
-                       WHEN a.Owner IS NULL THEN 'Unassigned'
-                       WHEN a.Owner = '' THEN 'Unassigned'
-                       Else a.Owner
-                   END as Owner
-	FROM 
-	scom.Alert a inner join scom.AlertResolutionState r
-		on a.ResolutionState = r.ResolutionState
-	INNER JOIN scom.AlertAgingBuckets b on
-		(DATEDIFF(MINUTE, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
-WHERE 
-    a.Active = 1
-    AND a.Severity &gt; 0
-    AND a.ResolutionState &lt; 255</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-      <Fields>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="MonitoringObjectName">
-          <DataField>MonitoringObjectName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Category">
-          <DataField>Category</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="TimeRaised">
-          <DataField>TimeRaised</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="TimeResolved">
-          <DataField>TimeResolved</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Severity">
-          <DataField>Severity</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="TimeRaisedLocal">
-          <DataField>TimeRaisedLocal</DataField>
-          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
-        </Field>
-        <Field Name="SeverityID">
-          <DataField>SeverityID</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="Priority">
-          <DataField>Priority</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="TimeResolvedLocal">
-          <DataField>TimeResolvedLocal</DataField>
-          <rd:TypeName>System.DateTimeOffset</rd:TypeName>
-        </Field>
-        <Field Name="ResolutionStateName">
-          <DataField>ResolutionStateName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="PriorityID">
-          <DataField>PriorityID</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="ResolutionState">
-          <DataField>ResolutionState</DataField>
-          <rd:TypeName>System.Byte</rd:TypeName>
-        </Field>
-        <Field Name="SortOrder">
-          <DataField>SortOrder</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Label">
-          <DataField>Label</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="LowValue">
-          <DataField>LowValue</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Owner">
-          <DataField>Owner</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="HighValue">
-          <DataField>HighValue</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
     <DataSet Name="OrganizationDisplayName">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
@@ -285,28 +155,6 @@ WHERE
         </Field>
         <Field Name="dbModBy">
           <DataField>dbModBy</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Owner">
-      <Query>
-        <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT N'Unassigned' as Owner
-UNION ALL
-SELECT DISTINCT Owner as Owner
-FROM
-    scom.Alert
-WHERE 
-	Owner IS NOT NULL
- 	AND Owner != N''
- 	AND Owner != N'Unassigned'
-ORDER BY 1</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-      <Fields>
-        <Field Name="Owner">
-          <DataField>Owner</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -461,6 +309,131 @@ ORDER BY 1</CommandText>
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="OpenAlertAging">
+      <SharedDataSet>
+        <SharedDataSetReference>OpenAlertAging</SharedDataSetReference>
+      </SharedDataSet>
+      <Fields>
+        <Field Name="Count">
+          <DataField>Count</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Severity">
+          <DataField>Severity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Priority">
+          <DataField>Priority</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="AgeHours">
+          <DataField>AgeHours</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SortOrder">
+          <DataField>SortOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Label">
+          <DataField>Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LowValue">
+          <DataField>LowValue</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="HighValue">
+          <DataField>HighValue</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!Severity.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!Severity.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+        <Filter>
+          <FilterExpression>=Fields!Priority.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!Priority.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
+    </DataSet>
+    <DataSet Name="ReportContentSettings">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportName">
+            <Value>=Globals!ReportName</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>spReportContentSelectByReportName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Id">
+          <DataField>Id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ReportId">
+          <DataField>ReportId</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="SortSequence">
+          <DataField>SortSequence</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ItemBackground">
+          <DataField>ItemBackground</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ItemFont">
+          <DataField>ItemFont</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ItemFontSize">
+          <DataField>ItemFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ItemFontColor">
+          <DataField>ItemFontColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ItemDisplay">
+          <DataField>ItemDisplay</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ItemParameters">
+          <DataField>ItemParameters</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -488,6 +461,7 @@ ORDER BY 1</CommandText>
             </Paragraphs>
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Left>0in</Left>
             <Height>0.5in</Height>
             <Width>10.5in</Width>
             <Style>
@@ -538,16 +512,16 @@ ORDER BY 1</CommandText>
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -555,16 +529,16 @@ ORDER BY 1</CommandText>
                               <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
+                                  <Value>=Fields!Severity.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=DateAdd(DateInterval.Hour, -Fields!HighValue.Value, Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=DateAdd(DateInterval.Hour, -Fields!LowValue.Value, Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
+                                  <Value>True</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -572,7 +546,7 @@ ORDER BY 1</CommandText>
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -783,24 +757,25 @@ ORDER BY 1</CommandText>
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
             <Top>1.46389in</Top>
+            <Left>0in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>1</ZIndex>
@@ -832,6 +807,7 @@ ORDER BY 1</CommandText>
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>0.53208in</Top>
+            <Left>0in</Left>
             <Height>0.33333in</Height>
             <Width>10.5in</Width>
             <ZIndex>2</ZIndex>
@@ -864,6 +840,7 @@ ORDER BY 1</CommandText>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
             <Top>0.92167in</Top>
+            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>10.5in</Width>
             <ZIndex>3</ZIndex>
@@ -914,16 +891,16 @@ ORDER BY 1</CommandText>
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -931,16 +908,16 @@ ORDER BY 1</CommandText>
                               <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
+                                  <Value>=Fields!Severity.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
+                                  <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
                                   <Value>Active Directory Team</Value>
@@ -951,7 +928,7 @@ ORDER BY 1</CommandText>
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -1137,7 +1114,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>Active Directory Team</Caption>
+                <Caption>=Lookup( 1, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -1162,32 +1139,32 @@ ORDER BY 1</CommandText>
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
+                <FilterExpression>=Replace(Fields!Owner.Value,"DummyValue", Lookup( 1, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>Active Directory Team</FilterValue>
+                  <FilterValue>=Lookup( 1, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>1.46389in</Top>
-            <Left>3.40274in</Left>
+            <Top>1.46667in</Top>
+            <Left>3.40275in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>4</ZIndex>
@@ -1236,16 +1213,16 @@ ORDER BY 1</CommandText>
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -1253,16 +1230,16 @@ ORDER BY 1</CommandText>
                               <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
+                                  <Value>=Fields!Severity.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
+                                  <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
                                   <Value>Windows Team</Value>
@@ -1273,7 +1250,7 @@ ORDER BY 1</CommandText>
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -1459,7 +1436,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>Windows Team</Caption>
+                <Caption>=Lookup( 2, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -1484,27 +1461,27 @@ ORDER BY 1</CommandText>
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
+                <FilterExpression>=Replace(Fields!Owner.Value, "DummyValue", Lookup( 2, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>Windows Team</FilterValue>
+                  <FilterValue>=Lookup( 2, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -1558,16 +1535,16 @@ ORDER BY 1</CommandText>
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -1575,16 +1552,16 @@ ORDER BY 1</CommandText>
                               <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
+                                  <Value>=Fields!Severity.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
+                                  <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
                                   <Value>DBA Team</Value>
@@ -1595,7 +1572,7 @@ ORDER BY 1</CommandText>
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -1781,7 +1758,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>DBA Team</Caption>
+                <Caption>=Lookup( 3, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -1806,31 +1783,32 @@ ORDER BY 1</CommandText>
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
-                <Operator>Equal</Operator>
+                <FilterExpression>=Replace(Fields!Owner.Value,"DummyValue",Lookup(3 , Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>DBA Team</FilterValue>
+                  <FilterValue>=Lookup( 3, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>3.28056in</Top>
+            <Top>3.32778in</Top>
+            <Left>0in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>6</ZIndex>
@@ -1879,16 +1857,16 @@ ORDER BY 1</CommandText>
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -1896,16 +1874,16 @@ ORDER BY 1</CommandText>
                               <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
+                                  <Value>=Fields!Severity.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
+                                  <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
                                   <Value>Web Team</Value>
@@ -1916,7 +1894,7 @@ ORDER BY 1</CommandText>
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -2102,7 +2080,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>Web Team</Caption>
+                <Caption>=Lookup( 4, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -2127,32 +2105,32 @@ ORDER BY 1</CommandText>
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
+                <FilterExpression>=Replace(Fields!Owner.Value, "DummyValue", Lookup( 4, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>Web Team</FilterValue>
+                  <FilterValue>=Lookup( 4, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>3.28056in</Top>
-            <Left>3.40274in</Left>
+            <Top>3.32222in</Top>
+            <Left>3.40275in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>7</ZIndex>
@@ -2201,16 +2179,16 @@ ORDER BY 1</CommandText>
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -2218,16 +2196,16 @@ ORDER BY 1</CommandText>
                               <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
+                                  <Value>=Fields!Severity.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="EndDate">
-                                  <Value>=Microsoft.VisualBasic.DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Microsoft.VisualBasic.DateAndTime.Now)</Value>
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
+                                  <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
                                   <Value>Config Mgmt Team</Value>
@@ -2238,7 +2216,7 @@ ORDER BY 1</CommandText>
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -2424,7 +2402,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>Config Mgmt Team</Caption>
+                <Caption>=Lookup( 2, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -2449,679 +2427,35 @@ ORDER BY 1</CommandText>
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
+                <FilterExpression>=Replace(Fields!Owner.Value, "DummyValue", Lookup( 5, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>Config Mgmt Team</FilterValue>
+                  <FilterValue>=Lookup( 5, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>3.28056in</Top>
+            <Top>3.32778in</Top>
             <Left>6.80549in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>8</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>White</BackgroundColor>
-              <BackgroundGradientType>None</BackgroundGradientType>
-            </Style>
-          </Chart>
-          <Chart Name="Chart8">
-            <ChartCategoryHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_CategoryGroup7">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Label.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!SortOrder.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Label.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartCategoryHierarchy>
-            <ChartSeriesHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_SeriesGroup7">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Severity.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!Severity.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Severity.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartSeriesHierarchy>
-            <ChartData>
-              <ChartSeriesCollection>
-                <ChartSeries Name="Name">
-                  <ChartDataPoints>
-                    <ChartDataPoint>
-                      <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
-                      </ChartDataPointValues>
-                      <ChartDataLabel>
-                        <Style />
-                      </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
-                      <ActionInfo>
-                        <Actions>
-                          <Action>
-                            <Drillthrough>
-                              <ReportName>List_AlertDetails</ReportName>
-                              <Parameters>
-                                <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
-                                </Parameter>
-                                <Parameter Name="StartDate">
-                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="EndDate">
-                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
-                                </Parameter>
-                                <Parameter Name="Owner">
-                                  <Value>Unassigned</Value>
-                                </Parameter>
-                              </Parameters>
-                            </Drillthrough>
-                          </Action>
-                        </Actions>
-                      </ActionInfo>
-                      <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
-                      </Style>
-                      <ChartMarker>
-                        <Style />
-                      </ChartMarker>
-                      <DataElementOutput>Output</DataElementOutput>
-                    </ChartDataPoint>
-                  </ChartDataPoints>
-                  <Subtype>Stacked</Subtype>
-                  <Style />
-                  <ChartEmptyPoints>
-                    <Style />
-                    <ChartMarker>
-                      <Style />
-                    </ChartMarker>
-                    <ChartDataLabel>
-                      <Style />
-                    </ChartDataLabel>
-                  </ChartEmptyPoints>
-                  <ValueAxisName>Primary</ValueAxisName>
-                  <CategoryAxisName>Primary</CategoryAxisName>
-                  <ChartSmartLabel>
-                    <CalloutLineColor>Black</CalloutLineColor>
-                    <MinMovingDistance>0pt</MinMovingDistance>
-                  </ChartSmartLabel>
-                </ChartSeries>
-              </ChartSeriesCollection>
-            </ChartData>
-            <ChartAreas>
-              <ChartArea Name="Default">
-                <ChartCategoryAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption />
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartCategoryAxes>
-                <ChartValueAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                      <Format>#,0;(#,0)</Format>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Alerts</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartValueAxes>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                </Style>
-              </ChartArea>
-            </ChartAreas>
-            <ChartTitles>
-              <ChartTitle Name="Default">
-                <Caption>Unassigned</Caption>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                  <FontWeight>Bold</FontWeight>
-                  <TextAlign>General</TextAlign>
-                  <VerticalAlign>Top</VerticalAlign>
-                </Style>
-              </ChartTitle>
-            </ChartTitles>
-            <Palette>BrightPastel</Palette>
-            <ChartBorderSkin>
-              <Style>
-                <BackgroundColor>Gray</BackgroundColor>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <Color>White</Color>
-              </Style>
-            </ChartBorderSkin>
-            <ChartNoDataMessage Name="NoDataMessage">
-              <Caption>No Data Available</Caption>
-              <Style>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <TextAlign>General</TextAlign>
-                <VerticalAlign>Top</VerticalAlign>
-              </Style>
-            </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
-            <Filters>
-              <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
-                </FilterValues>
-              </Filter>
-              <Filter>
-                <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
-                </FilterValues>
-              </Filter>
-              <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
-                <Operator>Equal</Operator>
-                <FilterValues>
-                  <FilterValue>Config Mgmt Team</FilterValue>
-                </FilterValues>
-              </Filter>
-            </Filters>
-            <Top>5.16945in</Top>
-            <Left>6.80549in</Left>
-            <Height>1.8in</Height>
-            <Width>3.3333in</Width>
-            <ZIndex>9</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>White</BackgroundColor>
-              <BackgroundGradientType>None</BackgroundGradientType>
-            </Style>
-          </Chart>
-          <Chart Name="Chart9">
-            <ChartCategoryHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_CategoryGroup8">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Label.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!SortOrder.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Label.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartCategoryHierarchy>
-            <ChartSeriesHierarchy>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart2_SeriesGroup8">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!Severity.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!Severity.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!Severity.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-            </ChartSeriesHierarchy>
-            <ChartData>
-              <ChartSeriesCollection>
-                <ChartSeries Name="Name">
-                  <ChartDataPoints>
-                    <ChartDataPoint>
-                      <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
-                      </ChartDataPointValues>
-                      <ChartDataLabel>
-                        <Style />
-                      </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
-                      <ActionInfo>
-                        <Actions>
-                          <Action>
-                            <Drillthrough>
-                              <ReportName>List_AlertDetails</ReportName>
-                              <Parameters>
-                                <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
-                                </Parameter>
-                                <Parameter Name="StartDate">
-                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="EndDate">
-                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
-                                </Parameter>
-                                <Parameter Name="Owner">
-                                  <Value>Monitoring Team</Value>
-                                </Parameter>
-                              </Parameters>
-                            </Drillthrough>
-                          </Action>
-                        </Actions>
-                      </ActionInfo>
-                      <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
-                      </Style>
-                      <ChartMarker>
-                        <Style />
-                      </ChartMarker>
-                      <DataElementOutput>Output</DataElementOutput>
-                    </ChartDataPoint>
-                  </ChartDataPoints>
-                  <Subtype>Stacked</Subtype>
-                  <Style />
-                  <ChartEmptyPoints>
-                    <Style />
-                    <ChartMarker>
-                      <Style />
-                    </ChartMarker>
-                    <ChartDataLabel>
-                      <Style />
-                    </ChartDataLabel>
-                  </ChartEmptyPoints>
-                  <ValueAxisName>Primary</ValueAxisName>
-                  <CategoryAxisName>Primary</CategoryAxisName>
-                  <ChartSmartLabel>
-                    <CalloutLineColor>Black</CalloutLineColor>
-                    <MinMovingDistance>0pt</MinMovingDistance>
-                  </ChartSmartLabel>
-                </ChartSeries>
-              </ChartSeriesCollection>
-            </ChartData>
-            <ChartAreas>
-              <ChartArea Name="Default">
-                <ChartCategoryAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption />
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Enabled>False</Enabled>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartCategoryAxes>
-                <ChartValueAxes>
-                  <ChartAxis Name="Primary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                      <Format>#,0;(#,0)</Format>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Alerts</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                  <ChartAxis Name="Secondary">
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <ChartAxisTitle>
-                      <Caption>Axis Title</Caption>
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </ChartAxisTitle>
-                    <ChartMajorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                        </Border>
-                      </Style>
-                    </ChartMajorGridLines>
-                    <ChartMinorGridLines>
-                      <Style>
-                        <Border>
-                          <Color>Gainsboro</Color>
-                          <Style>Dotted</Style>
-                        </Border>
-                      </Style>
-                    </ChartMinorGridLines>
-                    <ChartMinorTickMarks>
-                      <Length>0.5</Length>
-                    </ChartMinorTickMarks>
-                    <CrossAt>NaN</CrossAt>
-                    <Location>Opposite</Location>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <ChartAxisScaleBreak>
-                      <Style />
-                    </ChartAxisScaleBreak>
-                  </ChartAxis>
-                </ChartValueAxes>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                </Style>
-              </ChartArea>
-            </ChartAreas>
-            <ChartTitles>
-              <ChartTitle Name="Default">
-                <Caption>Monitoring Team</Caption>
-                <Style>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                  <FontWeight>Bold</FontWeight>
-                  <TextAlign>General</TextAlign>
-                  <VerticalAlign>Top</VerticalAlign>
-                </Style>
-              </ChartTitle>
-            </ChartTitles>
-            <Palette>BrightPastel</Palette>
-            <ChartBorderSkin>
-              <Style>
-                <BackgroundColor>Gray</BackgroundColor>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <Color>White</Color>
-              </Style>
-            </ChartBorderSkin>
-            <ChartNoDataMessage Name="NoDataMessage">
-              <Caption>No Data Available</Caption>
-              <Style>
-                <BackgroundGradientType>None</BackgroundGradientType>
-                <TextAlign>General</TextAlign>
-                <VerticalAlign>Top</VerticalAlign>
-              </Style>
-            </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
-            <Filters>
-              <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
-                </FilterValues>
-              </Filter>
-              <Filter>
-                <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
-                <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
-                </FilterValues>
-              </Filter>
-              <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
-                <Operator>Equal</Operator>
-                <FilterValues>
-                  <FilterValue>Monitoring Team</FilterValue>
-                </FilterValues>
-              </Filter>
-            </Filters>
-            <Top>5.15in</Top>
-            <Left>3.40274in</Left>
-            <Height>1.8in</Height>
-            <Width>3.3333in</Width>
-            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3167,16 +2501,16 @@ ORDER BY 1</CommandText>
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -3184,7 +2518,7 @@ ORDER BY 1</CommandText>
                               <ReportName>List_AlertDetails</ReportName>
                               <Parameters>
                                 <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
+                                  <Value>=Fields!Severity.Value</Value>
                                 </Parameter>
                                 <Parameter Name="StartDate">
                                   <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
@@ -3193,10 +2527,10 @@ ORDER BY 1</CommandText>
                                   <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
                                 </Parameter>
                                 <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
+                                  <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Monitoring Team</Value>
+                                  <Value>Network Team</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -3204,7 +2538,7 @@ ORDER BY 1</CommandText>
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", Iif(Fields!Severity.Value = "Warning", "Gold", "CornflowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -3390,7 +2724,7 @@ ORDER BY 1</CommandText>
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>Network Team</Caption>
+                <Caption>=Lookup( 6, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -3415,31 +2749,675 @@ ORDER BY 1</CommandText>
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
-                <FilterExpression>=Fields!ResolutionStateName.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
                 <FilterValues>
-                  <FilterValue>="Closed"</FilterValue>
+                  <FilterValue DataType="Integer">255</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!Severity.Value</FilterExpression>
-                <Operator>NotEqual</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue>="Info"</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!Owner.Value</FilterExpression>
+                <FilterExpression>=Replace(Fields!Owner.Value, "DummyValue", Lookup( 6, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
                 <Operator>Equal</Operator>
                 <FilterValues>
-                  <FilterValue>Network Team</FilterValue>
+                  <FilterValue>=Lookup( 6, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>5.16945in</Top>
+            <Top>5.19202in</Top>
+            <Height>1.8in</Height>
+            <Width>3.3333in</Width>
+            <ZIndex>9</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>White</BackgroundColor>
+              <BackgroundGradientType>None</BackgroundGradientType>
+            </Style>
+          </Chart>
+          <Chart Name="Chart11">
+            <ChartCategoryHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Group Name="Chart2_CategoryGroup10">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Label.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!SortOrder.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <Label>=Fields!Label.Value</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartCategoryHierarchy>
+            <ChartSeriesHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Group Name="Chart2_SeriesGroup10">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Severity.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Severity.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <Label>=Fields!Severity.Value</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartSeriesHierarchy>
+            <ChartData>
+              <ChartSeriesCollection>
+                <ChartSeries Name="Count">
+                  <ChartDataPoints>
+                    <ChartDataPoint>
+                      <ChartDataPointValues>
+                        <Y>=Sum(Fields!Count.Value)</Y>
+                      </ChartDataPointValues>
+                      <ChartDataLabel>
+                        <Style />
+                      </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Drillthrough>
+                              <ReportName>List_AlertDetails</ReportName>
+                              <Parameters>
+                                <Parameter Name="Severity">
+                                  <Value>=Fields!Severity.Value</Value>
+                                </Parameter>
+                                <Parameter Name="StartDate">
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
+                                </Parameter>
+                                <Parameter Name="EndDate">
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
+                                </Parameter>
+                                <Parameter Name="OnlyOpenAlerts">
+                                  <Value>True</Value>
+                                </Parameter>
+                                <Parameter Name="Owner">
+                                  <Value>Monitoring Team</Value>
+                                </Parameter>
+                              </Parameters>
+                            </Drillthrough>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
+                      </Style>
+                      <ChartMarker>
+                        <Style />
+                      </ChartMarker>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </ChartDataPoint>
+                  </ChartDataPoints>
+                  <Subtype>Stacked</Subtype>
+                  <Style />
+                  <ChartEmptyPoints>
+                    <Style />
+                    <ChartMarker>
+                      <Style />
+                    </ChartMarker>
+                    <ChartDataLabel>
+                      <Style />
+                    </ChartDataLabel>
+                  </ChartEmptyPoints>
+                  <ValueAxisName>Primary</ValueAxisName>
+                  <CategoryAxisName>Primary</CategoryAxisName>
+                  <ChartSmartLabel>
+                    <CalloutLineColor>Black</CalloutLineColor>
+                    <MinMovingDistance>0pt</MinMovingDistance>
+                  </ChartSmartLabel>
+                </ChartSeries>
+              </ChartSeriesCollection>
+            </ChartData>
+            <ChartAreas>
+              <ChartArea Name="Default">
+                <ChartCategoryAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Axis Title</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartCategoryAxes>
+                <ChartValueAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <Format>#,0;(#,0)</Format>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Alerts</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Axis Title</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartValueAxes>
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </ChartArea>
+            </ChartAreas>
+            <ChartTitles>
+              <ChartTitle Name="Default">
+                <Caption>=Lookup( 7, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                  <FontWeight>Bold</FontWeight>
+                  <TextAlign>General</TextAlign>
+                  <VerticalAlign>Top</VerticalAlign>
+                </Style>
+              </ChartTitle>
+            </ChartTitles>
+            <Palette>BrightPastel</Palette>
+            <ChartBorderSkin>
+              <Style>
+                <BackgroundColor>Gray</BackgroundColor>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <Color>White</Color>
+              </Style>
+            </ChartBorderSkin>
+            <ChartNoDataMessage Name="NoDataMessage">
+              <Caption>No Data Available</Caption>
+              <Style>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <TextAlign>General</TextAlign>
+                <VerticalAlign>Top</VerticalAlign>
+              </Style>
+            </ChartNoDataMessage>
+            <DataSetName>OpenAlertAging</DataSetName>
+            <Filters>
+              <Filter>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
+                <FilterValues>
+                  <FilterValue DataType="Integer">255</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Fields!Severity.Value</FilterExpression>
+                <Operator>In</Operator>
+                <FilterValues>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Replace(Fields!Owner.Value, "DummyValue", Lookup( 7, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
+                <Operator>Equal</Operator>
+                <FilterValues>
+                  <FilterValue>=Lookup( 7, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
+            <Top>5.19202in</Top>
+            <Left>3.40275in</Left>
+            <Height>1.8in</Height>
+            <Width>3.3333in</Width>
+            <ZIndex>10</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>White</BackgroundColor>
+              <BackgroundGradientType>None</BackgroundGradientType>
+            </Style>
+          </Chart>
+          <Chart Name="Chart12">
+            <ChartCategoryHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Group Name="Chart2_CategoryGroup11">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Label.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!SortOrder.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <Label>=Fields!Label.Value</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartCategoryHierarchy>
+            <ChartSeriesHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Group Name="Chart2_SeriesGroup11">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Severity.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Severity.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <Label>=Fields!Severity.Value</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartSeriesHierarchy>
+            <ChartData>
+              <ChartSeriesCollection>
+                <ChartSeries Name="Count">
+                  <ChartDataPoints>
+                    <ChartDataPoint>
+                      <ChartDataPointValues>
+                        <Y>=Sum(Fields!Count.Value)</Y>
+                      </ChartDataPointValues>
+                      <ChartDataLabel>
+                        <Style />
+                      </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Drillthrough>
+                              <ReportName>List_AlertDetails</ReportName>
+                              <Parameters>
+                                <Parameter Name="Severity">
+                                  <Value>=Fields!Severity.Value</Value>
+                                </Parameter>
+                                <Parameter Name="StartDate">
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!HighValue.Value, Now)</Value>
+                                </Parameter>
+                                <Parameter Name="EndDate">
+                                  <Value>=DateAdd(Microsoft.VisualBasic.DateInterval.Hour, - Fields!LowValue.Value, Now)</Value>
+                                </Parameter>
+                                <Parameter Name="OnlyOpenAlerts">
+                                  <Value>True</Value>
+                                </Parameter>
+                                <Parameter Name="Owner">
+                                  <Value>Unassigned</Value>
+                                </Parameter>
+                              </Parameters>
+                            </Drillthrough>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", Iif(Fields!Severity.Value = 1, "Gold", "CornflowerBlue"))</Color>
+                      </Style>
+                      <ChartMarker>
+                        <Style />
+                      </ChartMarker>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </ChartDataPoint>
+                  </ChartDataPoints>
+                  <Subtype>Stacked</Subtype>
+                  <Style />
+                  <ChartEmptyPoints>
+                    <Style />
+                    <ChartMarker>
+                      <Style />
+                    </ChartMarker>
+                    <ChartDataLabel>
+                      <Style />
+                    </ChartDataLabel>
+                  </ChartEmptyPoints>
+                  <ValueAxisName>Primary</ValueAxisName>
+                  <CategoryAxisName>Primary</CategoryAxisName>
+                  <ChartSmartLabel>
+                    <CalloutLineColor>Black</CalloutLineColor>
+                    <MinMovingDistance>0pt</MinMovingDistance>
+                  </ChartSmartLabel>
+                </ChartSeries>
+              </ChartSeriesCollection>
+            </ChartData>
+            <ChartAreas>
+              <ChartArea Name="Default">
+                <ChartCategoryAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Axis Title</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartCategoryAxes>
+                <ChartValueAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <Format>#,0;(#,0)</Format>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Alerts</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Axis Title</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartValueAxes>
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </ChartArea>
+            </ChartAreas>
+            <ChartTitles>
+              <ChartTitle Name="Default">
+                <Caption>=Lookup( 8, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                  <FontWeight>Bold</FontWeight>
+                  <TextAlign>General</TextAlign>
+                  <VerticalAlign>Top</VerticalAlign>
+                </Style>
+              </ChartTitle>
+            </ChartTitles>
+            <Palette>BrightPastel</Palette>
+            <ChartBorderSkin>
+              <Style>
+                <BackgroundColor>Gray</BackgroundColor>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <Color>White</Color>
+              </Style>
+            </ChartBorderSkin>
+            <ChartNoDataMessage Name="NoDataMessage">
+              <Caption>No Data Available</Caption>
+              <Style>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <TextAlign>General</TextAlign>
+                <VerticalAlign>Top</VerticalAlign>
+              </Style>
+            </ChartNoDataMessage>
+            <DataSetName>OpenAlertAging</DataSetName>
+            <Filters>
+              <Filter>
+                <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+                <Operator>LessThan</Operator>
+                <FilterValues>
+                  <FilterValue DataType="Integer">255</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Fields!Severity.Value</FilterExpression>
+                <Operator>In</Operator>
+                <FilterValues>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Replace(Fields!Owner.Value, "DummyValue", Lookup( 8, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings"))</FilterExpression>
+                <Operator>Equal</Operator>
+                <FilterValues>
+                  <FilterValue>=Lookup( 8, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
+            <Top>5.19202in</Top>
+            <Left>6.80549in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>11</ZIndex>
@@ -3638,6 +3616,61 @@ ORDER BY 1</CommandText>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="Severity">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Severity</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Info</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Warning</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Critical</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Priority">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Priority</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Low</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Medium</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>High</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -3648,6 +3681,16 @@ ORDER BY 1</CommandText>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>TimeZone</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Severity</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Priority</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
