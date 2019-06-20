@@ -1741,6 +1741,7 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="scom\Stored Procedures\spAgentExclusionsUpsert.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="_Compare\SQLAG2.SCORE_Project.scmp" />

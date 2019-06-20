@@ -618,8 +618,8 @@ param(
  		$sqlCommand.Dispose()
 
 		# This section added to deal with MS Cluster Virtual Computer Objects
-		# This objects exist in Active Directory, but will never receive an agent
-	    # Retrieve computers from AD where OSName is like *Server*
+		# These objects exist in Active Directory, but will never receive an agent
+		# These records are added to the scom.AgentExclusions table. 
 		$PropList = @("DNSHostName")
         If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
     		$exclusions = Get-ADObject -Server $adDomain -searchBase $adDomainSearchRoot -LDAPFilter '(ServicePrincipalName=MSClusterVirtual*)' -Properties $PropList -Credential $Credential
