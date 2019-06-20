@@ -1328,6 +1328,13 @@ ORDER BY
                   <FilterValue>=Parameters!Priority.Value</FilterValue>
                 </FilterValues>
               </Filter>
+              <Filter>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
+                <Operator>In</Operator>
+                <FilterValues>
+                  <FilterValue>=Parameters!Owner.Value</FilterValue>
+                </FilterValues>
+              </Filter>
             </Filters>
             <Top>1.53459in</Top>
             <Left>4in</Left>
