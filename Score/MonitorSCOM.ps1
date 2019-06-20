@@ -1991,11 +1991,34 @@ If ($sqlConnection.State -ne "Open")	{
 }
 
 ################################################################################
-# RETRIEVE SCOM MANAGEMENT GROUP CONNECTION INFO
+# REVISED MANAGEMENT GROUP CONNECTION METHOD
+# GET LIST OF SERVERS; TRY CONNECTING UNTIL CONNECTION IS SUCCESSFUL
 ################################################################################
-$temp = $appConfig.SelectSingleNode("//configuration/servers/ManagementGroup[@name='$managementGroup']")
-$scomManagementGroup = @{"GroupName" = $temp.name; "ServerName" = $temp.server}
-#[string]$managementServerName = $appConfig.configuration.connectionstrings.ManagementServer.name
+Import-Module OperationsManager
+
+$managementServers=$appConfig.SelectNodes("//configuration/OperationsManager/ManagementGroup[@Name='$managementGroup' and @Active='True']/Servers/Server[@Active='True']")
+foreach($server in $managementServers){
+	$mgConnection = New-SCOMManagementGroupConnection $server.Name -PassThru
+	# IsActive is not positive confirmation that the connection is active
+	if($mgConnection.IsActive){
+		$connectionTest = Get-SCOMManagementGroup 
+		# Verify that the configured Management Group matches the group to which the app is connected
+		If($connectionTest.Name -eq $managementGroup){
+			
+			$scomManagementGroup = @{"GroupName" = $managementGroup; "ServerName" = $server.Name}
+			break;
+		}
+		Else {
+			
+		    AddLogEntry $ManagementGroup "Error" "Initial Connection" "Unable to establish connection to $ManagementGroup using server $server." $sqlConnection
+		}
+	}
+}
+
+If($scomManagementGroup -eq $null){
+	AddLogEntry $ManagementGroup "Error" "Initial Connection" "Unable to establish connection to $ManagementGroup using configured servers." $sqlConnection
+	Write-Host "Unable to establish connection to $ManagementGroup using configured servers."
+}
 
 foreach ($objectClass in $ObjectClasses){
     $objectClass = $objectClass.ToLower()

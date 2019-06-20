@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Report MustUnderstand="df" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:df="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition/defaultfontfamily">
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
-  <AutoRefresh>90</AutoRefresh>
+  <AutoRefresh>300</AutoRefresh>
   <DataSources>
     <DataSource Name="SCORE">
       <DataSourceReference>SCORE</DataSourceReference>
@@ -1809,17 +1809,18 @@ WHERE
                   <TextRuns>
                     <TextRun>
                       <Value>="Last refresh: " &amp; Now()</Value>
-                      <Style />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
                     </TextRun>
                   </TextRuns>
                   <Style />
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox6</rd:DefaultName>
-              <Top>0.11252in</Top>
-              <Left>0.05802in</Left>
+              <Top>0.06944in</Top>
               <Height>0.25in</Height>
-              <Width>5.401in</Width>
+              <Width>10.00002in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>

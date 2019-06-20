@@ -321,6 +321,12 @@ WHERE
           <QueryParameter Name="@Owner">
             <Value>=Parameters!Owner.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@Severity">
+            <Value>=Parameters!Severity.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Priority">
+            <Value>=Parameters!Priority.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT TOP 5 ROW_NUMBER() OVER (ORDER BY Count(*) DESC) as [RANK], 
     Name, 
@@ -332,7 +338,8 @@ WHERE
     TimeRaised &gt; DateAdd(Hour, -24, GetUTCDate())
     AND IsNull(Owner,'Unassiged') IN (@Owner)
     AND Active = 1
-    AND Severity &gt; 0
+    AND Severity IN (@Severity)
+    AND Priority IN (@Priority)
 GROUP BY 
     Name, 
     Severity
@@ -389,8 +396,14 @@ ORDER BY 1</CommandText>
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
+          <QueryParameter Name="@Severity">
+            <Value>=Parameters!Severity.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@Owner">
             <Value>=Parameters!Owner.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Priority">
+            <Value>=Parameters!Priority.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT 
@@ -403,7 +416,8 @@ FROM
 WHERE 
    ResolutionState &lt; 254
    AND Active = 1
-   AND Severity &gt; 0
+   AND Severity IN (@Severity)
+   AND Priority IN (@Priority)
    AND IsNull(Owner, 'Unassigned') IN (@Owner)
 GROUP BY 
    Name, 
@@ -580,6 +594,99 @@ ORDER BY
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="DashboardRefreshInterval">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ConfigName">
+            <Value>DashboardRefreshInterval</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>dbo.spConfigSelect</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ConfigName">
+          <DataField>ConfigName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ConfigValue">
+          <DataField>ConfigValue</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbAddDate">
+          <DataField>dbAddDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbAddBy">
+          <DataField>dbAddBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="dbModDate">
+          <DataField>dbModDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="dbModBy">
+          <DataField>dbModBy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="OpenAlertAging">
+      <SharedDataSet>
+        <SharedDataSetReference>OpenAlertAging</SharedDataSetReference>
+      </SharedDataSet>
+      <Fields>
+        <Field Name="Count">
+          <DataField>Count</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Severity">
+          <DataField>Severity</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Priority">
+          <DataField>Priority</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="AgeHours">
+          <DataField>AgeHours</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SortOrder">
+          <DataField>SortOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Label">
+          <DataField>Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LowValue">
+          <DataField>LowValue</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="HighValue">
+          <DataField>HighValue</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -691,7 +798,7 @@ ORDER BY
                         </Actions>
                       </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", iif(Fields!Severity.Value = "Warning", "Gold", "CornFlowerBlue"))</Color>
+                        <Color>=iif(Fields!SeverityID.Value = 2, "Firebrick", iif(Fields!SeverityID.Value = 1, "Gold", "CornFlowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -915,9 +1022,16 @@ ORDER BY
               </Filter>
               <Filter>
                 <FilterExpression>=Fields!SeverityID.Value</FilterExpression>
-                <Operator>GreaterThan</Operator>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue DataType="Integer">0</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Fields!PriorityID.Value</FilterExpression>
+                <Operator>In</Operator>
+                <FilterValues>
+                  <FilterValue>=Parameters!Priority.Value</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -937,14 +1051,14 @@ ORDER BY
             <ChartCategoryHierarchy>
               <ChartMembers>
                 <ChartMember>
-                  <Group Name="Chart2_CategoryGroup1">
+                  <Group Name="Chart2_CategoryGroup">
                     <GroupExpressions>
                       <GroupExpression>=Fields!Label.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>
                     <SortExpression>
-                      <Value>=Fields!SortOrder.Value</Value>
+                      <Value>=Fields!Label.Value</Value>
                     </SortExpression>
                   </SortExpressions>
                   <Label>=Fields!Label.Value</Label>
@@ -970,44 +1084,17 @@ ORDER BY
             </ChartSeriesHierarchy>
             <ChartData>
               <ChartSeriesCollection>
-                <ChartSeries Name="Name">
+                <ChartSeries Name="Count">
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
-                        <Y>=Count(Fields!Name.Value)</Y>
+                        <Y>=Sum(Fields!Count.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
-                      <ToolTip>=Count(Fields!Name.Value)</ToolTip>
-                      <ActionInfo>
-                        <Actions>
-                          <Action>
-                            <Drillthrough>
-                              <ReportName>List_AlertDetails</ReportName>
-                              <Parameters>
-                                <Parameter Name="Severity">
-                                  <Value>=Fields!SeverityID.Value</Value>
-                                </Parameter>
-                                <Parameter Name="StartDate">
-                                  <Value>=DateAdd(DateInterval.Hour, -Fields!HighValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="EndDate">
-                                  <Value>=DateAdd(DateInterval.Hour, -Fields!LowValue.Value, Now)</Value>
-                                </Parameter>
-                                <Parameter Name="OnlyOpenAlerts">
-                                  <Value>=True</Value>
-                                </Parameter>
-                                <Parameter Name="Owner">
-                                  <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
-                                </Parameter>
-                              </Parameters>
-                            </Drillthrough>
-                          </Action>
-                        </Actions>
-                      </ActionInfo>
                       <Style>
-                        <Color>=iif(Fields!Severity.Value = "Critical", "Firebrick", iif(Fields!Severity.Value = "Warning", "Gold", "CornFlowerBlue"))</Color>
+                        <Color>=iif(Fields!Severity.Value = 2, "Firebrick", iif(Fields!Severity.Value = 1, "Gold", "CornFlowerBlue"))</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -1218,7 +1305,7 @@ ORDER BY
                 <VerticalAlign>Top</VerticalAlign>
               </Style>
             </ChartNoDataMessage>
-            <DataSetName>AlertsByDay</DataSetName>
+            <DataSetName>OpenAlertAging</DataSetName>
             <Filters>
               <Filter>
                 <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
@@ -1228,10 +1315,24 @@ ORDER BY
                 </FilterValues>
               </Filter>
               <Filter>
-                <FilterExpression>=Fields!SeverityID.Value</FilterExpression>
-                <Operator>GreaterThan</Operator>
+                <FilterExpression>=Fields!Severity.Value</FilterExpression>
+                <Operator>In</Operator>
                 <FilterValues>
-                  <FilterValue DataType="Integer">0</FilterValue>
+                  <FilterValue>=Parameters!Severity.Value</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Fields!Priority.Value</FilterExpression>
+                <Operator>In</Operator>
+                <FilterValues>
+                  <FilterValue>=Parameters!Priority.Value</FilterValue>
+                </FilterValues>
+              </Filter>
+              <Filter>
+                <FilterExpression>=Fields!Owner.Value</FilterExpression>
+                <Operator>In</Operator>
+                <FilterValues>
+                  <FilterValue>=Parameters!Owner.Value</FilterValue>
                 </FilterValues>
               </Filter>
             </Filters>
@@ -2954,6 +3055,61 @@ ORDER BY
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="Severity">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Severity</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Critical</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Warn</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Info</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Priority">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Priority</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>High</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Medium</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Low</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -2969,6 +3125,16 @@ ORDER BY
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>Owner</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Severity</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Priority</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
