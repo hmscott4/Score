@@ -1,0 +1,771 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Line Name="Line1">
+        <Top>0.62903in</Top>
+        <Height>0in</Height>
+        <Width>9.14479in</Width>
+        <Style>
+          <Border>
+            <Color>SteelBlue</Color>
+            <Style>Solid</Style>
+            <Width>3pt</Width>
+          </Border>
+        </Style>
+      </Line>
+      <Textbox Name="Textbox1">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="System Center Top " &amp; Parameters!TopN.Value &amp; " Performance Charts for Hosts"</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>18pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Height>0.34376in</Height>
+        <Width>9.14479in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox2">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>CPU Performance Counters</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>0.6939in</Top>
+        <Height>0.25in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox3">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Disk Performance Counters</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>5.87813in</Top>
+        <Height>0.25in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox4">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="For Group: " &amp; Parameters!ManagedGroupName.Value</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Top>0.3632in</Top>
+        <Height>0.22in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox5">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="Report Executed:" &amp; Globals!ExecutionTime</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Top>0.37709in</Top>
+        <Left>6.15in</Left>
+        <Height>0.22in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox6">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Network</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>0.7064in</Top>
+        <Left>6.14479in</Left>
+        <Height>0.25in</Height>
+        <Width>3in</Width>
+        <ZIndex>6</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox7">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Memory Performance Counters</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>3.29417in</Top>
+        <Height>0.25in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Subreport Name="Subreport1">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>Processor%</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>% Processor Time</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="DecimalPlaces">
+            <Value>0</Value>
+          </Parameter>
+        </Parameters>
+        <Top>0.97474in</Top>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>8</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport2">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>System</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>Processor Queue Length</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="DecimalPlaces">
+            <Value>1</Value>
+          </Parameter>
+        </Parameters>
+        <Top>0.97474in</Top>
+        <Left>3.07761in</Left>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>9</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport3">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>Network%</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>Bytes Total/sec</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="Aggregate">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="DecimalPlaces">
+            <Value>0</Value>
+          </Parameter>
+        </Parameters>
+        <Top>0.98834in</Top>
+        <Left>6.15in</Left>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>10</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport4">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>Memory</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>PercentMemoryUsed</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="Aggregate">
+            <Value>1</Value>
+          </Parameter>
+        </Parameters>
+        <Top>3.60668in</Top>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>11</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport5">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>Memory</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>Pages/sec</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="Aggregate">
+            <Value>1</Value>
+          </Parameter>
+        </Parameters>
+        <Top>3.60668in</Top>
+        <Left>3.07761in</Left>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>12</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport6">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>Memory</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>% Committed Bytes in Use</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="Aggregate">
+            <Value>0</Value>
+          </Parameter>
+        </Parameters>
+        <Top>3.60668in</Top>
+        <Left>6.15in</Left>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>13</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport7">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>LogicalDisk</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>Avg. Disk sec/Transfer</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="Aggregate">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="DecimalPlaces">
+            <Value>3</Value>
+          </Parameter>
+        </Parameters>
+        <Top>6.15668in</Top>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>14</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport8">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>LogicalDisk</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>Disk Bytes/sec</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>1</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="Aggregate">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="DecimalPlaces">
+            <Value>0</Value>
+          </Parameter>
+        </Parameters>
+        <Top>6.15668in</Top>
+        <Left>3.07761in</Left>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>15</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+      <Subreport Name="Subreport9">
+        <ReportName>Chart_DailyAverageTopN</ReportName>
+        <Parameters>
+          <Parameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </Parameter>
+          <Parameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </Parameter>
+          <Parameter Name="ManagedGroupName">
+            <Value>=Parameters!ManagedGroupName.Value</Value>
+          </Parameter>
+          <Parameter Name="Object">
+            <Value>LogicalDisk</Value>
+          </Parameter>
+          <Parameter Name="Counter">
+            <Value>% Free Space</Value>
+          </Parameter>
+          <Parameter Name="TopN">
+            <Value>=Parameters!TopN.Value</Value>
+          </Parameter>
+          <Parameter Name="SortDirection">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="ShowTable">
+            <Value>0</Value>
+          </Parameter>
+          <Parameter Name="Aggregate">
+            <Value>0</Value>
+          </Parameter>
+        </Parameters>
+        <Top>6.15668in</Top>
+        <Left>6.15in</Left>
+        <Height>2.24999in</Height>
+        <Width>2.99479in</Width>
+        <ZIndex>16</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+    </ReportItems>
+    <Height>8.59667in</Height>
+    <Style />
+  </Body>
+  <Width>9.14479in</Width>
+  <Page>
+    <PageHeight>8.5in</PageHeight>
+    <PageWidth>11in</PageWidth>
+    <LeftMargin>0.25in</LeftMargin>
+    <RightMargin>0.25in</RightMargin>
+    <TopMargin>0.25in</TopMargin>
+    <BottomMargin>0.25in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <ReportParameters>
+    <ReportParameter Name="StartDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=DateAdd(DateInterval.Day, -28, Today)</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Start Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="EndDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=DateAdd(DateInterval.Day,1, Today)</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>End Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="TopN">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>5</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>TopN</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>5</Value>
+            <Label>5</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>10</Value>
+            <Label>10</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>15</Value>
+            <Label>15</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ManagedGroupName">
+      <DataType>String</DataType>
+      <Prompt>ManagedGroupName</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>AW-SQL-Department</Value>
+            <Label>AW-SQL-Department</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>AW-SQL-NonProduction</Value>
+            <Label>AW-SQL-NonProduction</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>AW-SQL-Production</Value>
+            <Label>AW-SQL-Production</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>AW-ES-NonProduction</Value>
+            <Label>AW-ES-NonProduction</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>AW-ES-Production</Value>
+            <Label>AW-ES-Production</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>AW-ES-VMServers</Value>
+            <Label>AW-ES-VMServers</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>All Windows Computers</Value>
+            <Label>All Windows Computers</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="UTCOffset">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>-240</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>UTCOffset</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>-240</Value>
+            <Label>Eastern</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>-300</Value>
+            <Label>Central</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>-360</Value>
+            <Label>Mountain</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>-420</Value>
+            <Label>Pacific</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>GMT</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>3fdb7836-63d5-4508-8e21-806217a0a106</rd:ReportID>
+</Report>

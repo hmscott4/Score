@@ -1750,6 +1750,7 @@
   <ItemGroup>
     <PreDeploy Include="_Deployment\Script.Deployment.sql" />
     <None Include="_Deployment\Script.RolePermissions.sql" />
+    <None Include="_Deployment\Script.Release.2019.06.20.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="_Deployment\Script.DefaultData.sql" />

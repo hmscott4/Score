@@ -235,8 +235,7 @@ FROM
 	
 	ON g.Id = gar.GroupID
 WHERE
-	g.Active = 1
-</CommandText>
+	g.Active = 1</CommandText>
       </Query>
       <Fields>
         <Field Name="GroupID">
@@ -285,7 +284,7 @@ WHERE
           <FilterExpression>=Fields!HealthState.Value</FilterExpression>
           <Operator>In</Operator>
           <FilterValues>
-            <FilterValue>=Parameters!HealthState.Value(0)</FilterValue>
+            <FilterValue>=Parameters!HealthState.Value</FilterValue>
           </FilterValues>
         </Filter>
       </Filters>
@@ -804,7 +803,6 @@ WHERE
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -995,7 +993,7 @@ WHERE
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>="Object Count: " &amp; Format(Count(Fields!DisplayName.Value), "#,##0")</Value>
+                                  <Value>="Group Count: " &amp; Format(Count(Fields!DisplayName.Value), "#,##0")</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -1019,6 +1017,7 @@ WHERE
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
