@@ -51,114 +51,6 @@
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="SystemTimeZone">
-      <Query>
-        <DataSourceName>SCORE</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@Display">
-            <Value>1</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandType>StoredProcedure</CommandType>
-        <CommandText>dbo.spSystemTimeZoneSelect</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ZoneID">
-          <DataField>ZoneID</DataField>
-          <rd:TypeName>System.Guid</rd:TypeName>
-        </Field>
-        <Field Name="ID">
-          <DataField>ID</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DisplayName">
-          <DataField>DisplayName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="StandardName">
-          <DataField>StandardName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DaylightName">
-          <DataField>DaylightName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="BaseUTCOffset">
-          <DataField>BaseUTCOffset</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="CurrentUTCOffset">
-          <DataField>CurrentUTCOffset</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="SupportsDaylightSavingTime">
-          <DataField>SupportsDaylightSavingTime</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="Display">
-          <DataField>Display</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="DefaultTimeZone">
-          <DataField>DefaultTimeZone</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="Active">
-          <DataField>Active</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="dbAddDate">
-          <DataField>dbAddDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="dbLastUpdate">
-          <DataField>dbLastUpdate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="DefaultTimeZoneOffset">
-      <Query>
-        <DataSourceName>SCORE</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@ConfigName">
-            <Value>DefaultTimeZoneCurrentOffset</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandType>StoredProcedure</CommandType>
-        <CommandText>dbo.spConfigSelect</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ID">
-          <DataField>ID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ConfigName">
-          <DataField>ConfigName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ConfigValue">
-          <DataField>ConfigValue</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="dbAddDate">
-          <DataField>dbAddDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="dbAddBy">
-          <DataField>dbAddBy</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="dbModDate">
-          <DataField>dbModDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="dbModBy">
-          <DataField>dbModBy</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
     <DataSet Name="ReportHeaderSettings">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
@@ -461,7 +353,6 @@
             </Paragraphs>
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
-            <Left>0in</Left>
             <Height>0.5in</Height>
             <Width>10.5in</Width>
             <Style>
@@ -775,7 +666,6 @@
               </Filter>
             </Filters>
             <Top>1.46389in</Top>
-            <Left>0in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>1</ZIndex>
@@ -807,7 +697,6 @@
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>0.53208in</Top>
-            <Left>0in</Left>
             <Height>0.33333in</Height>
             <Width>10.5in</Width>
             <ZIndex>2</ZIndex>
@@ -840,7 +729,6 @@
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
             <Top>0.92167in</Top>
-            <Left>0in</Left>
             <Height>0.25in</Height>
             <Width>10.5in</Width>
             <ZIndex>3</ZIndex>
@@ -1808,7 +1696,6 @@
               </Filter>
             </Filters>
             <Top>3.32778in</Top>
-            <Left>0in</Left>
             <Height>1.8in</Height>
             <Width>3.3333in</Width>
             <ZIndex>6</ZIndex>
@@ -3599,23 +3486,6 @@
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="TimeZone">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>SystemTimeZone</DataSetName>
-          <ValueField>StandardName</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>Time Zone</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>SystemTimeZone</DataSetName>
-          <ValueField>StandardName</ValueField>
-          <LabelField>DisplayName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
     <ReportParameter Name="Severity">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -3677,11 +3547,6 @@
       <NumberOfColumns>2</NumberOfColumns>
       <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>TimeZone</ParameterName>
-        </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>

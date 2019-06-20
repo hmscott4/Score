@@ -51,21 +51,6 @@
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="Domains">
-      <Query>
-        <DataSourceName>SCORE</DataSourceName>
-        <CommandText>SELECT DnsRoot
-FROM ad.Domain
-WHERE Active=1
-ORDER BY DNSRoot</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="DnsRoot">
-          <DataField>DnsRoot</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
     <DataSet Name="OpsMgrExtracts">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
@@ -422,6 +407,9 @@ ORDER BY 2</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
+                  <Width>0.61458in</Width>
+                </TablixColumn>
+                <TablixColumn>
                   <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
@@ -447,6 +435,40 @@ ORDER BY 2</CommandText>
                 <TablixRow>
                   <Height>0.2in</Height>
                   <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Row</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox3">
@@ -720,6 +742,42 @@ ORDER BY 2</CommandText>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Textbox2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=RowNumber(Nothing)</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <TextDecoration>None</TextDecoration>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=Iif(Rownumber("Tablix1") Mod 2 = 0, "White", "LightSteelBlue")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Domain">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -730,8 +788,7 @@ ORDER BY 2</CommandText>
                                   <Value>=Fields!ManagementGroup.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
-                                    <TextDecoration>Underline</TextDecoration>
-                                    <Color>Blue</Color>
+                                    <TextDecoration>None</TextDecoration>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -739,23 +796,6 @@ ORDER BY 2</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Domain</rd:DefaultName>
-                          <ActionInfo>
-                            <Actions>
-                              <Action>
-                                <Drillthrough>
-                                  <ReportName>List_OpsMgrExtractsHistory</ReportName>
-                                  <Parameters>
-                                    <Parameter Name="ManagementGroup">
-                                      <Value>=Fields!ManagementGroup.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="ObjectClass">
-                                      <Value>=Fields!ObjectClass.Value</Value>
-                                    </Parameter>
-                                  </Parameters>
-                                </Drillthrough>
-                              </Action>
-                            </Actions>
-                          </ActionInfo>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -782,7 +822,8 @@ ORDER BY 2</CommandText>
                                   <Value>=Fields!ObjectClass.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
-                                    <TextDecoration>None</TextDecoration>
+                                    <TextDecoration>Underline</TextDecoration>
+                                    <Color>Blue</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -792,6 +833,23 @@ ORDER BY 2</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ObjectClass</rd:DefaultName>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>List_OpsMgrExtractsHistory</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="ManagementGroup">
+                                      <Value>=Fields!ManagementGroup.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="ObjectClass">
+                                      <Value>=Fields!ObjectClass.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -992,6 +1050,40 @@ ORDER BY 2</CommandText>
                 <TablixRow>
                   <Height>0.25in</Height>
                   <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox8">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox8</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox24">
@@ -1243,6 +1335,7 @@ ORDER BY 2</CommandText>
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -1262,7 +1355,7 @@ ORDER BY 2</CommandText>
             <DataSetName>OpsMgrExtracts</DataSetName>
             <Top>2.16542in</Top>
             <Height>0.65in</Height>
-            <Width>10.46181in</Width>
+            <Width>11.07639in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -1382,7 +1475,7 @@ ORDER BY 2</CommandText>
           </Border>
         </Style>
       </Body>
-      <Width>10.46181in</Width>
+      <Width>11.46181in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
