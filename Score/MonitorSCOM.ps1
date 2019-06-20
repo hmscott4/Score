@@ -709,80 +709,59 @@ Param (
 	AddLogEntry $managementGroup "Info" $moduleName "Starting $syncType check for Config..." $sqlConnection
 
     ################################################################################
-    # CONNECT TO SCOM
-    ################################################################################  
-    # Check if the OperationsManager Module is loaded
-    Import-module OperationsManager
-
-
-    # Connect to localhost when running on the management server or define a server to connect to.
+    # GET SCOM ALERT RESOLUTION STATES
+    ################################################################################
     Try {
-        $connect = New-SCOMManagementGroupConnection -ComputerName $managementServer -PassThru
+	    $AlertResolutionStates = Get-SCOMAlertResolutionState
     } 
     Catch [System.Exception] {
-		$msg=$_.Exception.Message
-		AddLogEntry $managementGroup "Error" $moduleName $msg $sqlConnection
-		$errorCounter++
+			$msg=$_.Exception.Message
+			AddLogEntry $managementGroup "Error" $moduleName $msg $sqlConnection
+			$errorCounter++
 	}
+	
+	$sqlCommand = GetStoredProc $sqlConnection "scom.spAlertResolutionStateUpsert"
+	[Void]$sqlCommand.Parameters.Add("@ResolutionStateID", [system.data.SqlDbType]::uniqueidentifier)
+	[Void]$sqlCommand.Parameters.Add("@ResolutionState", [system.data.SqlDbType]::tinyint)
+	[Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+	[Void]$sqlCommand.Parameters.Add("@IsSystem", [system.data.SqlDbType]::bit)
+	[Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
 
-    If($connect.IsActive){
-
-        ################################################################################
-        # GET SCOM ALERT RESOLUTION STATES
-        ################################################################################
+	[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+	[Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime)
+	
+    foreach($AlertResolutionState in $AlertResolutionStates){
         Try {
-	        $AlertResolutionStates = Get-SCOMAlertResolutionState
+	        [datetime]$timeNow = (Get-Date)
+	        $sqlCommand.Parameters["@ResolutionStateID"].Value = $AlertResolutionState.ID
+	        $sqlCommand.Parameters["@ResolutionState"].Value = $AlertResolutionState.ResolutionState
+	        $sqlCommand.Parameters["@Name"].Value = $AlertResolutionState.Name
+	        $sqlCommand.Parameters["@IsSystem"].Value = $AlertResolutionState.IsSystem
+	        $sqlCommand.Parameters["@ManagementGroup"].Value = $AlertResolutionState.ManagementGroup.ToString()
+
+	        $sqlCommand.Parameters["@Active"].Value = $true
+	        $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+	        [void]$sqlCommand.ExecuteNonQuery()
+            $configCounter++
         } 
         Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $managementGroup "Error" $moduleName $msg $sqlConnection
-			    $errorCounter++
+			$msg=$_.Exception.Message
+			AddLogEntry $managementGroup "Warning" $moduleName $msg $sqlConnection
+			$warningCounter++
 	    }
-	
-	    $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertResolutionStateUpsert"
-	    [Void]$sqlCommand.Parameters.Add("@ResolutionStateID", [system.data.SqlDbType]::uniqueidentifier)
-	    [Void]$sqlCommand.Parameters.Add("@ResolutionState", [system.data.SqlDbType]::tinyint)
-	    [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
-	    [Void]$sqlCommand.Parameters.Add("@IsSystem", [system.data.SqlDbType]::bit)
-	    [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
-
-	    [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
-	    [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime)
-	
-        foreach($AlertResolutionState in $AlertResolutionStates){
-            Try {
-	            [datetime]$timeNow = (Get-Date)
-	            $sqlCommand.Parameters["@ResolutionStateID"].Value = $AlertResolutionState.ID
-	            $sqlCommand.Parameters["@ResolutionState"].Value = $AlertResolutionState.ResolutionState
-	            $sqlCommand.Parameters["@Name"].Value = $AlertResolutionState.Name
-	            $sqlCommand.Parameters["@IsSystem"].Value = $AlertResolutionState.IsSystem
-	            $sqlCommand.Parameters["@ManagementGroup"].Value = $AlertResolutionState.ManagementGroup.ToString()
-
-	            $sqlCommand.Parameters["@Active"].Value = $true
-	            $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
-	            [void]$sqlCommand.ExecuteNonQuery()
-                $configCounter++
-            } 
-            Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $managementGroup "Warning" $moduleName $msg $sqlConnection
-			    $warningCounter++
-	        }
-        }
-	
-	    $sqlCommand.Dispose()
-	
-	    AddLogEntry $managementGroup "Info" $moduleName "Retrieved $configCounter configuration items from $managementGroup" $sqlConnection
-
-        # Determine Exit status
-	    If($errorCounter -gt 0) {$syncStatus = "Error"}
-	    ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
-	    Else {$syncStatus = "Success"}
-	
-	    Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $configCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
-    } Else {
-        Return New-Object psobject -Property @{Status = "Error"; ObjectCount = $configCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
     }
+	
+	$sqlCommand.Dispose()
+	
+	AddLogEntry $managementGroup "Info" $moduleName "Retrieved $configCounter configuration items from $managementGroup" $sqlConnection
+
+    # Determine Exit status
+	If($errorCounter -gt 0) {$syncStatus = "Error"}
+	ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
+	Else {$syncStatus = "Success"}
+	
+	Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $configCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
+
 }
 
 
@@ -903,254 +882,236 @@ Param (
 
 	AddLogEntry $ManagementGroup "Info" $moduleName "Starting $syncType check for Alerts..." $sqlConnection
 
-    ################################################################################
-    # CONNECT TO SCOM
-    ################################################################################  
-    # Check if the OperationsManager Module is loaded
-    Import-module OperationsManager
+    # Record time stamp
+    [datetime]$timeStart = (Get-Date)
+	$lastUpdate=$lastUpdate.ToUniversalTime()
 
-    # Connect to localhost when running on the management server or define a server to connect to.
+    ################################################################################
+    # GET SCOM ALERTS
+    ################################################################################
     Try {
-        $connect = New-SCOMManagementGroupConnection -ComputerName $managementServer -PassThru
+        If($syncType -eq "Full") {
+        	$Alerts = Get-SCOMAlert
+        } Else {
+            # $Alerts = Get-SCOMAlert | Where-Object {($_.LastModified -gt $lastUpdate)}
+            [string]$strlastUpdate = $lastUpdate.ToString()
+            [string]$criteria = "LastModified > '" + $strLastUpdate + "'"
+            $Alerts = Get-SCOMAlert -Criteria $criteria
+            AddLogEntry $ManagementGroup "Info" $moduleName "Getting SCOM alerts last modified since UTC $lastUpdate" $sqlConnection
+        }
+        [int]$alertCount = $alerts.Count
+		AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $alertCount alerts from $ManagementGroup" $sqlConnection
+
     }
     Catch [System.Exception] {
 		$msg=$_.Exception.Message
-		AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
+		AddLogEntry $ManagementGroup "Error" $moduleName "Get SCOM Alerts : $msg" $sqlConnection
 		$errorCounter++
 	}
-    If($connect.IsActive){
-        # Record time stamp
-        [datetime]$timeStart = (Get-Date)
-	    $lastUpdate=$lastUpdate.ToUniversalTime()
 
-        ################################################################################
-        # GET SCOM ALERTS
-        ################################################################################
+
+	$sqlCommand = GetStoredProc $sqlConnection "scom.spAlertUpsert"
+    [Void]$sqlCommand.Parameters.Add("@AlertId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringClassId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectDisplayName", [system.data.SqlDbType]::ntext)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectName", [system.data.SqlDbType]::ntext)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectPath", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectFullName", [system.data.SqlDbType]::ntext)
+    [Void]$sqlCommand.Parameters.Add("@IsMonitorAlert", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@ProblemId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringRuleId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@ResolutionState", [system.data.SqlDbType]::tinyint)
+    [Void]$sqlCommand.Parameters.Add("@ResolutionStateName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Priority", [system.data.SqlDbType]::tinyint)
+    [Void]$sqlCommand.Parameters.Add("@Severity", [system.data.SqlDbType]::tinyint)
+    [Void]$sqlCommand.Parameters.Add("@Category", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Owner", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@ResolvedBy", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@TimeRaised", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@TimeAdded", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@LastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@LastModifiedBy", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@TimeResolved", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@TimeResolutionStateLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@CustomField1", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField2", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField3", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField4", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField5", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField6", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField7", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField8", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField9", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@CustomField10", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@TicketId", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Context", [system.data.SqlDbType]::ntext)
+    [Void]$sqlCommand.Parameters.Add("@ConnectorId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@LastModifiedByNonConnector", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectInMaintenanceMode", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectHealthState", [system.data.SqlDbType]::tinyint)
+    [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@ConnectorStatus", [system.data.SqlDbType]::int)
+    [Void]$sqlCommand.Parameters.Add("@TopLevelHostEntityId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@RepeatCount", [system.data.SqlDbType]::int)
+    [Void]$sqlCommand.Parameters.Add("@AlertStringId", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@AlertStringName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@LanguageCode", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@AlertStringDescription", [system.data.SqlDbType]::ntext)
+    [Void]$sqlCommand.Parameters.Add("@AlertParams", [system.data.SqlDbType]::ntext)
+    [Void]$sqlCommand.Parameters.Add("@SiteName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@TfsWorkItemId", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@TfsWorkItemOwner", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@HostID", [system.data.SqlDbType]::int)
+
+    [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+	
+    foreach($Alert in $Alerts){
         Try {
-            If($syncType -eq "Full") {
-        	    $Alerts = Get-SCOMAlert
-            } Else {
-                # $Alerts = Get-SCOMAlert | Where-Object {($_.LastModified -gt $lastUpdate)}
-                [string]$strlastUpdate = $lastUpdate.ToString()
-                [string]$criteria = "LastModified > '" + $strLastUpdate + "'"
-                $Alerts = Get-SCOMAlert -Criteria $criteria
-                AddLogEntry $ManagementGroup "Info" $moduleName "Getting SCOM alerts last modified since UTC $lastUpdate" $sqlConnection
-            }
-            [int]$alertCount = $alerts.Count
-		    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $alertCount alerts from $ManagementGroup" $sqlConnection
+	        [datetime]$timeNow = (Get-Date)
+            If($Alert.MonitoringObjectName -eq $null){$MonitoringObjectName = [System.DBNull]::Value} Else {$MonitoringObjectName = $Alert.MonitoringObjectName}
+            If($Alert.MonitoringObjectPath -eq $null){$MonitoringObjectPath = [System.DBNull]::Value} Else {$MonitoringObjectPath = $Alert.MonitoringObjectPath}
+            If($Alert.Owner -eq $null){$Owner = [System.DBNull]::Value} Else {$Owner = $Alert.Owner}
+            If($Alert.ResolvedBy -eq $null){$ResolvedBy = [System.DBNull]::Value} Else {$ResolvedBy = $Alert.ResolvedBy}
+            If($Alert.TimeResolved -eq $null){$TimeResolved = [System.DBNull]::Value} Else {$TimeResolved = $Alert.TimeResolved }
+            If($Alert.Context -eq $null){$Context = [System.DBNull]::Value} Else {$Context = $Alert.Context }
+            
+            If($Alert.CustomField1 -eq $null){$CustomField1 = [System.DBNull]::Value} Else {$CustomField1 = $Alert.CustomField1}
+            If($Alert.CustomField2 -eq $null){$CustomField2 = [System.DBNull]::Value} Else {$CustomField2 = $Alert.CustomField2}
+            If($Alert.CustomField3 -eq $null){$CustomField3 = [System.DBNull]::Value} Else {$CustomField3 = $Alert.CustomField3}
+            If($Alert.CustomField4 -eq $null){$CustomField4 = [System.DBNull]::Value} Else {$CustomField4 = $Alert.CustomField4}
+            If($Alert.CustomField5 -eq $null){$CustomField5 = [System.DBNull]::Value} Else {$CustomField5 = $Alert.CustomField5}
+            If($Alert.CustomField6 -eq $null){$CustomField6 = [System.DBNull]::Value} Else {$CustomField6 = $Alert.CustomField6}
+            If($Alert.CustomField7 -eq $null){$CustomField7 = [System.DBNull]::Value} Else {$CustomField7 = $Alert.CustomField7}
+            If($Alert.CustomField8 -eq $null){$CustomField8 = [System.DBNull]::Value} Else {$CustomField8 = $Alert.CustomField8}
+            If($Alert.CustomField9 -eq $null){$CustomField9 = [System.DBNull]::Value} Else {$CustomField9 = $Alert.CustomField9}
+            If($Alert.CustomField10 -eq $null){$CustomField10 = [System.DBNull]::Value} Else {$CustomField10 = $Alert.CustomField10}
 
+            If($Alert.TicketID -eq $null){$TicketID = [System.DBNull]::Value} Else {$TicketID = $Alert.TicketID}
+            If($Alert.ConnectorID -eq $null){$ConnectorID = [System.DBNull]::Value} Else {$ConnectorID = $Alert.ConnectorID}
+            If($Alert.TfsWorkItemId -eq $null){$TfsWorkItemId = [System.DBNull]::Value} Else {$TfsWorkItemId = $Alert.TfsWorkItemId}
+            If($Alert.TfsWorkItemOwner -eq $null){$TfsWorkItemOwner = [System.DBNull]::Value} Else {$TfsWorkItemOwner = $Alert.TfsWorkItemOwner}
+
+
+		    $sqlCommand.Parameters["@AlertId"].Value = $Alert.Id
+		    $sqlCommand.Parameters["@Name"].Value = $Alert.Name
+		    $sqlCommand.Parameters["@Description"].Value = $Alert.Description
+		    $sqlCommand.Parameters["@MonitoringObjectId"].Value = $Alert.MonitoringObjectId
+		    $sqlCommand.Parameters["@MonitoringClassId"].Value = $Alert.MonitoringClassId
+		    $sqlCommand.Parameters["@MonitoringObjectDisplayName"].Value = $Alert.MonitoringObjectDisplayName
+		    $sqlCommand.Parameters["@MonitoringObjectName"].Value = $MonitoringObjectName
+		    $sqlCommand.Parameters["@MonitoringObjectPath"].Value = $MonitoringObjectPath
+		    $sqlCommand.Parameters["@MonitoringObjectFullName"].Value = $Alert.MonitoringObjectFullName
+		    $sqlCommand.Parameters["@IsMonitorAlert"].Value = $Alert.IsMonitorAlert
+		    $sqlCommand.Parameters["@ProblemId"].Value = $Alert.ProblemId
+		    $sqlCommand.Parameters["@MonitoringRuleId"].Value = $Alert.MonitoringRuleId
+		    $sqlCommand.Parameters["@ResolutionState"].Value = $Alert.ResolutionState
+		    $sqlCommand.Parameters["@ResolutionStateName"].Value = ""
+		    $sqlCommand.Parameters["@Priority"].Value = $Alert.Priority
+		    $sqlCommand.Parameters["@Severity"].Value = $Alert.Severity
+		    $sqlCommand.Parameters["@Category"].Value = $Alert.Category
+		    $sqlCommand.Parameters["@Owner"].Value = $Owner
+		    $sqlCommand.Parameters["@ResolvedBy"].Value = $ResolvedBy
+		    $sqlCommand.Parameters["@TimeRaised"].Value = $Alert.TimeRaised
+		    $sqlCommand.Parameters["@TimeAdded"].Value = $Alert.TimeAdded
+		    $sqlCommand.Parameters["@LastModified"].Value = $Alert.LastModified
+		    $sqlCommand.Parameters["@LastModifiedBy"].Value = $Alert.LastModifiedBy
+		    $sqlCommand.Parameters["@TimeResolved"].Value = $TimeResolved
+		    $sqlCommand.Parameters["@TimeResolutionStateLastModified"].Value = $Alert.TimeResolutionStateLastModified
+		    $sqlCommand.Parameters["@CustomField1"].Value = $CustomField1
+		    $sqlCommand.Parameters["@CustomField2"].Value = $CustomField2
+		    $sqlCommand.Parameters["@CustomField3"].Value = $CustomField3
+		    $sqlCommand.Parameters["@CustomField4"].Value = $CustomField4
+		    $sqlCommand.Parameters["@CustomField5"].Value = $CustomField5
+		    $sqlCommand.Parameters["@CustomField6"].Value = $CustomField6
+		    $sqlCommand.Parameters["@CustomField7"].Value = $CustomField7
+		    $sqlCommand.Parameters["@CustomField8"].Value = $CustomField8
+		    $sqlCommand.Parameters["@CustomField9"].Value = $CustomField9
+		    $sqlCommand.Parameters["@CustomField10"].Value = $CustomField10
+		    $sqlCommand.Parameters["@TicketId"].Value = $TicketID
+		    $sqlCommand.Parameters["@Context"].Value = $Context
+		    $sqlCommand.Parameters["@ConnectorId"].Value = $ConnectorID
+		    $sqlCommand.Parameters["@LastModifiedByNonConnector"].Value = $Alert.LastModifiedByNonConnector
+		    $sqlCommand.Parameters["@MonitoringObjectInMaintenanceMode"].Value = $Alert.MonitoringObjectInMaintenanceMode
+		    $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $Alert.MaintenanceModeLastModified
+		    $sqlCommand.Parameters["@MonitoringObjectHealthState"].Value = $Alert.MonitoringObjectHealthState
+		    $sqlCommand.Parameters["@StateLastModified"].Value = $Alert.StateLastModified
+		    $sqlCommand.Parameters["@ConnectorStatus"].Value = $Alert.ConnectorStatus
+		    $sqlCommand.Parameters["@TopLevelHostEntityId"].Value = [System.DBNull]::Value
+		    $sqlCommand.Parameters["@RepeatCount"].Value = $Alert.RepeatCount
+		    $sqlCommand.Parameters["@AlertStringId"].Value = [System.DBNull]::Value
+		    $sqlCommand.Parameters["@AlertStringName"].Value = [System.DBNull]::Value
+		    $sqlCommand.Parameters["@LanguageCode"].Value = [System.DBNull]::Value
+		    $sqlCommand.Parameters["@AlertStringDescription"].Value = [System.DBNull]::Value
+		    $sqlCommand.Parameters["@AlertParams"].Value = $Alert.Parameters.ToString()
+		    $sqlCommand.Parameters["@SiteName"].Value = [System.DBNull]::Value
+		    $sqlCommand.Parameters["@TfsWorkItemId"].Value = $TfsWorkItemId
+		    $sqlCommand.Parameters["@TfsWorkItemOwner"].Value = $TfsWorkItemOwner
+		    $sqlCommand.Parameters["@HostID"].Value = [System.DBNull]::Value
+
+	        $sqlCommand.Parameters["@Active"].Value = $true
+	        $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+	        [void]$sqlCommand.ExecuteNonQuery()
+            $alertCounter++
         }
         Catch [System.Exception] {
 			$msg=$_.Exception.Message
-			AddLogEntry $ManagementGroup "Error" $moduleName "Get SCOM Alerts : $msg" $sqlConnection
-			$errorCounter++
+			AddLogEntry $ManagementGroup "Warning" $moduleName "Update SCOM Alert : $msg" $sqlConnection
+			$warningCounter++
 	    }
-
-
-	    $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertUpsert"
-        [Void]$sqlCommand.Parameters.Add("@AlertId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringClassId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectDisplayName", [system.data.SqlDbType]::ntext)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectName", [system.data.SqlDbType]::ntext)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectPath", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectFullName", [system.data.SqlDbType]::ntext)
-        [Void]$sqlCommand.Parameters.Add("@IsMonitorAlert", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@ProblemId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringRuleId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@ResolutionState", [system.data.SqlDbType]::tinyint)
-        [Void]$sqlCommand.Parameters.Add("@ResolutionStateName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Priority", [system.data.SqlDbType]::tinyint)
-        [Void]$sqlCommand.Parameters.Add("@Severity", [system.data.SqlDbType]::tinyint)
-        [Void]$sqlCommand.Parameters.Add("@Category", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Owner", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@ResolvedBy", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@TimeRaised", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@TimeAdded", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@LastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@LastModifiedBy", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@TimeResolved", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@TimeResolutionStateLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@CustomField1", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField2", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField3", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField4", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField5", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField6", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField7", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField8", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField9", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@CustomField10", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@TicketId", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Context", [system.data.SqlDbType]::ntext)
-        [Void]$sqlCommand.Parameters.Add("@ConnectorId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@LastModifiedByNonConnector", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectInMaintenanceMode", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@MonitoringObjectHealthState", [system.data.SqlDbType]::tinyint)
-        [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@ConnectorStatus", [system.data.SqlDbType]::int)
-        [Void]$sqlCommand.Parameters.Add("@TopLevelHostEntityId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@RepeatCount", [system.data.SqlDbType]::int)
-        [Void]$sqlCommand.Parameters.Add("@AlertStringId", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@AlertStringName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@LanguageCode", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@AlertStringDescription", [system.data.SqlDbType]::ntext)
-        [Void]$sqlCommand.Parameters.Add("@AlertParams", [system.data.SqlDbType]::ntext)
-        [Void]$sqlCommand.Parameters.Add("@SiteName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@TfsWorkItemId", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@TfsWorkItemOwner", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@HostID", [system.data.SqlDbType]::int)
-
-        [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
-	
-        foreach($Alert in $Alerts){
-            Try {
-	            [datetime]$timeNow = (Get-Date)
-                If($Alert.MonitoringObjectName -eq $null){$MonitoringObjectName = [System.DBNull]::Value} Else {$MonitoringObjectName = $Alert.MonitoringObjectName}
-                If($Alert.MonitoringObjectPath -eq $null){$MonitoringObjectPath = [System.DBNull]::Value} Else {$MonitoringObjectPath = $Alert.MonitoringObjectPath}
-                If($Alert.Owner -eq $null){$Owner = [System.DBNull]::Value} Else {$Owner = $Alert.Owner}
-                If($Alert.ResolvedBy -eq $null){$ResolvedBy = [System.DBNull]::Value} Else {$ResolvedBy = $Alert.ResolvedBy}
-                If($Alert.TimeResolved -eq $null){$TimeResolved = [System.DBNull]::Value} Else {$TimeResolved = $Alert.TimeResolved }
-                If($Alert.Context -eq $null){$Context = [System.DBNull]::Value} Else {$Context = $Alert.Context }
-            
-                If($Alert.CustomField1 -eq $null){$CustomField1 = [System.DBNull]::Value} Else {$CustomField1 = $Alert.CustomField1}
-                If($Alert.CustomField2 -eq $null){$CustomField2 = [System.DBNull]::Value} Else {$CustomField2 = $Alert.CustomField2}
-                If($Alert.CustomField3 -eq $null){$CustomField3 = [System.DBNull]::Value} Else {$CustomField3 = $Alert.CustomField3}
-                If($Alert.CustomField4 -eq $null){$CustomField4 = [System.DBNull]::Value} Else {$CustomField4 = $Alert.CustomField4}
-                If($Alert.CustomField5 -eq $null){$CustomField5 = [System.DBNull]::Value} Else {$CustomField5 = $Alert.CustomField5}
-                If($Alert.CustomField6 -eq $null){$CustomField6 = [System.DBNull]::Value} Else {$CustomField6 = $Alert.CustomField6}
-                If($Alert.CustomField7 -eq $null){$CustomField7 = [System.DBNull]::Value} Else {$CustomField7 = $Alert.CustomField7}
-                If($Alert.CustomField8 -eq $null){$CustomField8 = [System.DBNull]::Value} Else {$CustomField8 = $Alert.CustomField8}
-                If($Alert.CustomField9 -eq $null){$CustomField9 = [System.DBNull]::Value} Else {$CustomField9 = $Alert.CustomField9}
-                If($Alert.CustomField10 -eq $null){$CustomField10 = [System.DBNull]::Value} Else {$CustomField10 = $Alert.CustomField10}
-
-                If($Alert.TicketID -eq $null){$TicketID = [System.DBNull]::Value} Else {$TicketID = $Alert.TicketID}
-                If($Alert.ConnectorID -eq $null){$ConnectorID = [System.DBNull]::Value} Else {$ConnectorID = $Alert.ConnectorID}
-                If($Alert.TfsWorkItemId -eq $null){$TfsWorkItemId = [System.DBNull]::Value} Else {$TfsWorkItemId = $Alert.TfsWorkItemId}
-                If($Alert.TfsWorkItemOwner -eq $null){$TfsWorkItemOwner = [System.DBNull]::Value} Else {$TfsWorkItemOwner = $Alert.TfsWorkItemOwner}
-
-
-		        $sqlCommand.Parameters["@AlertId"].Value = $Alert.Id
-		        $sqlCommand.Parameters["@Name"].Value = $Alert.Name
-		        $sqlCommand.Parameters["@Description"].Value = $Alert.Description
-		        $sqlCommand.Parameters["@MonitoringObjectId"].Value = $Alert.MonitoringObjectId
-		        $sqlCommand.Parameters["@MonitoringClassId"].Value = $Alert.MonitoringClassId
-		        $sqlCommand.Parameters["@MonitoringObjectDisplayName"].Value = $Alert.MonitoringObjectDisplayName
-		        $sqlCommand.Parameters["@MonitoringObjectName"].Value = $MonitoringObjectName
-		        $sqlCommand.Parameters["@MonitoringObjectPath"].Value = $MonitoringObjectPath
-		        $sqlCommand.Parameters["@MonitoringObjectFullName"].Value = $Alert.MonitoringObjectFullName
-		        $sqlCommand.Parameters["@IsMonitorAlert"].Value = $Alert.IsMonitorAlert
-		        $sqlCommand.Parameters["@ProblemId"].Value = $Alert.ProblemId
-		        $sqlCommand.Parameters["@MonitoringRuleId"].Value = $Alert.MonitoringRuleId
-		        $sqlCommand.Parameters["@ResolutionState"].Value = $Alert.ResolutionState
-		        $sqlCommand.Parameters["@ResolutionStateName"].Value = ""
-		        $sqlCommand.Parameters["@Priority"].Value = $Alert.Priority
-		        $sqlCommand.Parameters["@Severity"].Value = $Alert.Severity
-		        $sqlCommand.Parameters["@Category"].Value = $Alert.Category
-		        $sqlCommand.Parameters["@Owner"].Value = $Owner
-		        $sqlCommand.Parameters["@ResolvedBy"].Value = $ResolvedBy
-		        $sqlCommand.Parameters["@TimeRaised"].Value = $Alert.TimeRaised
-		        $sqlCommand.Parameters["@TimeAdded"].Value = $Alert.TimeAdded
-		        $sqlCommand.Parameters["@LastModified"].Value = $Alert.LastModified
-		        $sqlCommand.Parameters["@LastModifiedBy"].Value = $Alert.LastModifiedBy
-		        $sqlCommand.Parameters["@TimeResolved"].Value = $TimeResolved
-		        $sqlCommand.Parameters["@TimeResolutionStateLastModified"].Value = $Alert.TimeResolutionStateLastModified
-		        $sqlCommand.Parameters["@CustomField1"].Value = $CustomField1
-		        $sqlCommand.Parameters["@CustomField2"].Value = $CustomField2
-		        $sqlCommand.Parameters["@CustomField3"].Value = $CustomField3
-		        $sqlCommand.Parameters["@CustomField4"].Value = $CustomField4
-		        $sqlCommand.Parameters["@CustomField5"].Value = $CustomField5
-		        $sqlCommand.Parameters["@CustomField6"].Value = $CustomField6
-		        $sqlCommand.Parameters["@CustomField7"].Value = $CustomField7
-		        $sqlCommand.Parameters["@CustomField8"].Value = $CustomField8
-		        $sqlCommand.Parameters["@CustomField9"].Value = $CustomField9
-		        $sqlCommand.Parameters["@CustomField10"].Value = $CustomField10
-		        $sqlCommand.Parameters["@TicketId"].Value = $TicketID
-		        $sqlCommand.Parameters["@Context"].Value = $Context
-		        $sqlCommand.Parameters["@ConnectorId"].Value = $ConnectorID
-		        $sqlCommand.Parameters["@LastModifiedByNonConnector"].Value = $Alert.LastModifiedByNonConnector
-		        $sqlCommand.Parameters["@MonitoringObjectInMaintenanceMode"].Value = $Alert.MonitoringObjectInMaintenanceMode
-		        $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $Alert.MaintenanceModeLastModified
-		        $sqlCommand.Parameters["@MonitoringObjectHealthState"].Value = $Alert.MonitoringObjectHealthState
-		        $sqlCommand.Parameters["@StateLastModified"].Value = $Alert.StateLastModified
-		        $sqlCommand.Parameters["@ConnectorStatus"].Value = $Alert.ConnectorStatus
-		        $sqlCommand.Parameters["@TopLevelHostEntityId"].Value = [System.DBNull]::Value
-		        $sqlCommand.Parameters["@RepeatCount"].Value = $Alert.RepeatCount
-		        $sqlCommand.Parameters["@AlertStringId"].Value = [System.DBNull]::Value
-		        $sqlCommand.Parameters["@AlertStringName"].Value = [System.DBNull]::Value
-		        $sqlCommand.Parameters["@LanguageCode"].Value = [System.DBNull]::Value
-		        $sqlCommand.Parameters["@AlertStringDescription"].Value = [System.DBNull]::Value
-		        $sqlCommand.Parameters["@AlertParams"].Value = $Alert.Parameters.ToString()
-		        $sqlCommand.Parameters["@SiteName"].Value = [System.DBNull]::Value
-		        $sqlCommand.Parameters["@TfsWorkItemId"].Value = $TfsWorkItemId
-		        $sqlCommand.Parameters["@TfsWorkItemOwner"].Value = $TfsWorkItemOwner
-		        $sqlCommand.Parameters["@HostID"].Value = [System.DBNull]::Value
-
-	            $sqlCommand.Parameters["@Active"].Value = $true
-	            $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
-	            [void]$sqlCommand.ExecuteNonQuery()
-                $alertCounter++
-            }
-            Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Warning" $moduleName "Update SCOM Alert : $msg" $sqlConnection
-			    $warningCounter++
-	        }
-        }
-	
-	    $sqlCommand.Dispose()
-
-        ################################################################################
-        # SET ALERTS IN DATABASE TO INACTIVE
-        ################################################################################
-        If($syncType -eq "Full" -and $errorCounter -eq 0){
-            Try {
-	            $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertInactivateByDate"
-                [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
-
-		        $sqlCommand.Parameters["@BeforeDate"].Value = $timeStart
-
-	            [void]$sqlCommand.ExecuteNonQuery()
-                $sqlCommand.Dispose()
-            }
-            Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
-			    $warningCounter++
-	        }
-        }
-
-        ################################################################################
-        # DELETE ALERTS FROM DATABASE THAT ARE NO LONGER ACTIVE
-        ################################################################################
-        #If($syncType -eq "Full") {
-        #    Try {
-	    #        $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertDeleteInactive"
-	    #        [void]$sqlCommand.ExecuteNonQuery()
-        #        $sqlCommand.Dispose()
-        #    }
-        #    Catch [System.Exception] {
-		#	    $msg=$_.Exception.Message
-		#	    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
-		#	    $warningCounter++
-	    #    }
-        #}
-	
-	    AddLogEntry $ManagementGroup "Info" $moduleName "Processed $alertCounter alerts from $ManagementGroup" $sqlConnection
-
-        # Determine Exit status
-	    If($errorCounter -gt 0) {$syncStatus = "Error"}
-	    ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
-	    Else {$syncStatus = "Success"}
-	
-        Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $alertCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
-    } Else {
-        Return New-Object psobject -Property @{Status = "Error"; ObjectCount = $alertCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
     }
+	
+	$sqlCommand.Dispose()
+
+    ################################################################################
+    # SET ALERTS IN DATABASE TO INACTIVE
+    ################################################################################
+    If($syncType -eq "Full" -and $errorCounter -eq 0){
+        Try {
+	        $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertInactivateByDate"
+            [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
+
+		    $sqlCommand.Parameters["@BeforeDate"].Value = $timeStart
+
+	        [void]$sqlCommand.ExecuteNonQuery()
+            $sqlCommand.Dispose()
+        }
+        Catch [System.Exception] {
+			$msg=$_.Exception.Message
+			AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
+			$warningCounter++
+	    }
+    }
+
+    ################################################################################
+    # DELETE ALERTS FROM DATABASE THAT ARE NO LONGER ACTIVE
+    ################################################################################
+    #If($syncType -eq "Full") {
+    #    Try {
+	#        $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertDeleteInactive"
+	#        [void]$sqlCommand.ExecuteNonQuery()
+    #        $sqlCommand.Dispose()
+    #    }
+    #    Catch [System.Exception] {
+	#	    $msg=$_.Exception.Message
+	#	    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
+	#	    $warningCounter++
+	#    }
+    #}
+	
+	AddLogEntry $ManagementGroup "Info" $moduleName "Processed $alertCounter alerts from $ManagementGroup" $sqlConnection
+
+    # Determine Exit status
+	If($errorCounter -gt 0) {$syncStatus = "Error"}
+	ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
+	Else {$syncStatus = "Success"}
+	
+    Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $alertCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
+
 }
 
 #************************************************************************************************************************************
@@ -1191,166 +1152,146 @@ Param (
 
 	AddLogEntry $ManagementGroup "Info" $moduleName "Starting $syncType check for WindowsComputer..." $sqlConnection
 
-    ################################################################################
-    # CONNECT TO SCOM
-    ################################################################################  
-    # Check if the OperationsManager Module is loaded
-    Import-module OperationsManager
- 
+    $lastUpdate=$lastUpdate.ToUniversalTime()
 
-    # Connect to localhost when running on the management server or define a server to connect to.
+    ################################################################################
+    # GET SCOM WINDOWS COMPUTERS
+    ################################################################################
     Try {
-        $connect = New-SCOMManagementGroupConnection -ComputerName $managementServer -PassThru
+        $class = Get-SCOMClass -name "Microsoft.Windows.Computer"
+        If($syncType -eq "Full"){
+            $WindowsComputers = Get-SCOMClassInstance -Class $class
+        } Else {
+            $WindowsComputers = Get-SCOMClassInstance -Class $class | Where-Object {($_.LastModified -gt $lastUpdate) -or ($_.StateLastModified -gt $lastUpdate) -or ($_.AvailabilityLastModified -gt $lastUpdate)}
+        }
     } 
     Catch [System.Exception] {
-		$msg=$_.Exception.Message
-		AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
-		$errorCounter++
+			$msg=$_.Exception.Message
+			AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
+			$errorCounter++
 	}
-
-    If($connect.IsActive){
-        $lastUpdate=$lastUpdate.ToUniversalTime()
-
-        ################################################################################
-        # GET SCOM WINDOWS COMPUTERS
-        ################################################################################
-        Try {
-            $class = Get-SCOMClass -name "Microsoft.Windows.Computer"
-            If($syncType -eq "Full"){
-                $WindowsComputers = Get-SCOMClassInstance -Class $class
-            } Else {
-                $WindowsComputers = Get-SCOMClassInstance -Class $class | Where-Object {($_.LastModified -gt $lastUpdate) -or ($_.StateLastModified -gt $lastUpdate) -or ($_.AvailabilityLastModified -gt $lastUpdate)}
-            }
-        } 
-        Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
-			    $errorCounter++
-	    }
 	
-        [datetime]$startTime = (Get-Date)
+    [datetime]$startTime = (Get-Date)
 
-	    $sqlCommand = GetStoredProc $sqlConnection "scom.spWindowsComputerUpsert"
-        [Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@DNSHostName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@IPAddress", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@ObjectSID", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@NetBIOSDomainName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@DomainDNSName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@OrganizationalUnit", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@ForestDNSName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@ActiveDirectorySite", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@IsVirtualMachine", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@HealthState", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@IsAvailable", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@AvailabilityLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@InMaintenanceMode", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
+	$sqlCommand = GetStoredProc $sqlConnection "scom.spWindowsComputerUpsert"
+    [Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@DNSHostName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@IPAddress", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@ObjectSID", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@NetBIOSDomainName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@DomainDNSName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@OrganizationalUnit", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@ForestDNSName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@ActiveDirectorySite", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@IsVirtualMachine", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@HealthState", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@IsAvailable", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@AvailabilityLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@InMaintenanceMode", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
 
-        [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
 
 	
-        foreach($WindowsComputer in $WindowsComputers){
-            $IsVirtualNode = $WindowsComputer | select -ExpandProperty *.IsVirtualNode
-            # Write-Host $WindowsComputer.DisplayName : $IsVirtualNode.Value
-            If($IsVirtualNode.Value -eq $null){
-                Try {
-	                [datetime]$timeNow = (Get-Date)
-                    If($WindowsComputer.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $WindowsComputer.MaintenanceModeLastModified}
-                    $DNSHostName = $WindowsComputer | select -ExpandProperty *.DNSName
-                    $IpAddress = $WindowsComputer | select -ExpandProperty *.IpAddress
-                    $ActiveDirectoryObjectSid = $WindowsComputer | select -ExpandProperty *.ActiveDirectoryObjectSid
-                    $NetbiosDomainName = $WindowsComputer | select -ExpandProperty *.NetbiosDomainName
-                    $DomainDNSName = $WindowsComputer | select -ExpandProperty *.DomainDNSName
-                    $OrganizationalUnit = $WindowsComputer | select -ExpandProperty *.OrganizationalUnit
-                    $ForestDNSName = $WindowsComputer | select -ExpandProperty *.ForestDNSName
-                    $ActiveDirectorySite = $WindowsComputer | select -ExpandProperty *.ActiveDirectorySite
-                    $IsVirtualMachine = $WindowsComputer | select -ExpandProperty *.IsVirtualMachine
-                    If($ActiveDirectoryObjectSid.Value -eq $null){$ObjectSid = [System.DBNull]::Value} Else {$ObjectSid = $ActiveDirectoryObjectSid.Value }
-
-                    $sqlCommand.Parameters["@ID"].Value = $WindowsComputer.Id
-                    $sqlCommand.Parameters["@DNSHostName"].Value = $WindowsComputer.DisplayName
-                    $sqlCommand.Parameters["@IPAddress"].Value = $IpAddress.Value
-                    $sqlCommand.Parameters["@ObjectSID"].Value = $ObjectSid
-                    $sqlCommand.Parameters["@NetBIOSDomainName"].Value = $NetbiosDomainName.Value
-                    $sqlCommand.Parameters["@DomainDNSName"].Value = $DomainDNSName.Value
-                    $sqlCommand.Parameters["@OrganizationalUnit"].Value = $OrganizationalUnit.Value
-                    $sqlCommand.Parameters["@ForestDNSName"].Value = $ForestDNSName.Value
-                    $sqlCommand.Parameters["@ActiveDirectorySite"].Value = $ActiveDirectorySite.Value
-                    $sqlCommand.Parameters["@IsVirtualMachine"].Value = $IsVirtualMachine.Value
-                    $sqlCommand.Parameters["@HealthState"].Value = $WindowsComputer.HealthState.ToString()
-                    $sqlCommand.Parameters["@StateLastModified"].Value = $WindowsComputer.StateLastModified
-                    $sqlCommand.Parameters["@IsAvailable"].Value = $WindowsComputer.IsAvailable
-                    $sqlCommand.Parameters["@AvailabilityLastModified"].Value = $WindowsComputer.AvailabilityLastModified
-                    $sqlCommand.Parameters["@InMaintenanceMode"].Value = $WindowsComputer.InMaintenanceMode
-                    $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $MaintenanceModeLastModified
-                    $sqlCommand.Parameters["@ManagementGroup"].Value = $WindowsComputer.ManagementGroup.ToString()
-
-                    $sqlCommand.Parameters["@Active"].Value = $True
-                    $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
-
-	                [void]$sqlCommand.ExecuteNonQuery()
-                    $windowsComputerCounter++
-                } 
-                Catch [System.Exception] {
-			        $msg=$_.Exception.Message
-			        AddLogEntry $ManagementGroup "Warning" $moduleName "($WindowsComputer.DisplayName) : $msg" $sqlConnection
-			        $warningCounter++
-	            }
-            }
-        }
-	
-	    $sqlCommand.Dispose()
-
-        ############################################################################################################
-        # IF FULL SYNC, INACTIVATE OBJECTS THAT WERE NOT UPDATED
-        ############################################################################################################
-        If($syncType -eq "Full"){
+    foreach($WindowsComputer in $WindowsComputers){
+        $IsVirtualNode = $WindowsComputer | select -ExpandProperty *.IsVirtualNode
+        # Write-Host $WindowsComputer.DisplayName : $IsVirtualNode.Value
+        If($IsVirtualNode.Value -eq $null){
             Try {
-	            $sqlCommand = GetStoredProc $sqlConnection "scom.spWindowsComputerInactivateByDate"
-                [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
+	            [datetime]$timeNow = (Get-Date)
+                If($WindowsComputer.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $WindowsComputer.MaintenanceModeLastModified}
+                $DNSHostName = $WindowsComputer | select -ExpandProperty *.DNSName
+                $IpAddress = $WindowsComputer | select -ExpandProperty *.IpAddress
+                $ActiveDirectoryObjectSid = $WindowsComputer | select -ExpandProperty *.ActiveDirectoryObjectSid
+                $NetbiosDomainName = $WindowsComputer | select -ExpandProperty *.NetbiosDomainName
+                $DomainDNSName = $WindowsComputer | select -ExpandProperty *.DomainDNSName
+                $OrganizationalUnit = $WindowsComputer | select -ExpandProperty *.OrganizationalUnit
+                $ForestDNSName = $WindowsComputer | select -ExpandProperty *.ForestDNSName
+                $ActiveDirectorySite = $WindowsComputer | select -ExpandProperty *.ActiveDirectorySite
+                $IsVirtualMachine = $WindowsComputer | select -ExpandProperty *.IsVirtualMachine
+                If($ActiveDirectoryObjectSid.Value -eq $null){$ObjectSid = [System.DBNull]::Value} Else {$ObjectSid = $ActiveDirectoryObjectSid.Value }
 
-                $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
-                [void]$sqlCommand.ExecuteNonQuery()
-                $sqlCommand.Dispose()
-            }
+                $sqlCommand.Parameters["@ID"].Value = $WindowsComputer.Id
+                $sqlCommand.Parameters["@DNSHostName"].Value = $WindowsComputer.DisplayName
+                $sqlCommand.Parameters["@IPAddress"].Value = $IpAddress.Value
+                $sqlCommand.Parameters["@ObjectSID"].Value = $ObjectSid
+                $sqlCommand.Parameters["@NetBIOSDomainName"].Value = $NetbiosDomainName.Value
+                $sqlCommand.Parameters["@DomainDNSName"].Value = $DomainDNSName.Value
+                $sqlCommand.Parameters["@OrganizationalUnit"].Value = $OrganizationalUnit.Value
+                $sqlCommand.Parameters["@ForestDNSName"].Value = $ForestDNSName.Value
+                $sqlCommand.Parameters["@ActiveDirectorySite"].Value = $ActiveDirectorySite.Value
+                $sqlCommand.Parameters["@IsVirtualMachine"].Value = $IsVirtualMachine.Value
+                $sqlCommand.Parameters["@HealthState"].Value = $WindowsComputer.HealthState.ToString()
+                $sqlCommand.Parameters["@StateLastModified"].Value = $WindowsComputer.StateLastModified
+                $sqlCommand.Parameters["@IsAvailable"].Value = $WindowsComputer.IsAvailable
+                $sqlCommand.Parameters["@AvailabilityLastModified"].Value = $WindowsComputer.AvailabilityLastModified
+                $sqlCommand.Parameters["@InMaintenanceMode"].Value = $WindowsComputer.InMaintenanceMode
+                $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $MaintenanceModeLastModified
+                $sqlCommand.Parameters["@ManagementGroup"].Value = $WindowsComputer.ManagementGroup.ToString()
+
+                $sqlCommand.Parameters["@Active"].Value = $True
+                $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+
+	            [void]$sqlCommand.ExecuteNonQuery()
+                $windowsComputerCounter++
+            } 
             Catch [System.Exception] {
 			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Windows Computers : $msg" $sqlConnection
-			    $errorCounter++
+			    AddLogEntry $ManagementGroup "Warning" $moduleName "($WindowsComputer.DisplayName) : $msg" $sqlConnection
+			    $warningCounter++
 	        }
-
         }
+    }
+	
+	$sqlCommand.Dispose()
 
-        ############################################################################################################
-        # EXECUTE STORED PROC FOR AGENT EXCLUSIONS
-        ############################################################################################################
+    ############################################################################################################
+    # IF FULL SYNC, INACTIVATE OBJECTS THAT WERE NOT UPDATED
+    ############################################################################################################
+    If($syncType -eq "Full"){
         Try {
-	        $sqlCommand = GetStoredProc $sqlConnection "scom.spAgentExclusionsInsert"
+	        $sqlCommand = GetStoredProc $sqlConnection "scom.spWindowsComputerInactivateByDate"
+            [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
 
+            $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
             [void]$sqlCommand.ExecuteNonQuery()
             $sqlCommand.Dispose()
         }
         Catch [System.Exception] {
 			$msg=$_.Exception.Message
-			AddLogEntry $ManagementGroup "Info" $moduleName "Agent Exclusions Insert : $msg" $sqlConnection
+			AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Windows Computers : $msg" $sqlConnection
 			$errorCounter++
 	    }
-	
-	    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $windowsComputerCounter Windows Computers from $ManagementGroup" $sqlConnection
 
-        # Determine Exit status
-	    If($errorCounter -gt 0) {$syncStatus = "Error"}
-	    ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
-	    Else {$syncStatus = "Success"}
-	
-	    Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $windowsComputerCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
-    } Else {
-        Return New-Object psobject -Property @{Status = "Error"; ObjectCount = $windowsComputerCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
     }
+
+    ############################################################################################################
+    # EXECUTE STORED PROC FOR AGENT EXCLUSIONS
+    ############################################################################################################
+    Try {
+	    $sqlCommand = GetStoredProc $sqlConnection "scom.spAgentExclusionsInsert"
+
+        [void]$sqlCommand.ExecuteNonQuery()
+        $sqlCommand.Dispose()
+    }
+    Catch [System.Exception] {
+		$msg=$_.Exception.Message
+		AddLogEntry $ManagementGroup "Info" $moduleName "Agent Exclusions Insert : $msg" $sqlConnection
+		$errorCounter++
+	}
+	
+	AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $windowsComputerCounter Windows Computers from $ManagementGroup" $sqlConnection
+
+    # Determine Exit status
+	If($errorCounter -gt 0) {$syncStatus = "Error"}
+	ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
+	Else {$syncStatus = "Success"}
+	
+	Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $windowsComputerCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
+
 }
 
 #************************************************************************************************************************************
@@ -1448,246 +1389,231 @@ Param (
 
 	AddLogEntry $ManagementGroup "Info" $moduleName "Starting $syncType check for $objectClass..." $sqlConnection
 
+    $lastUpdate = $lastUpdate.ToUniversalTime()
+
     ################################################################################
-    # CONNECT TO SCOM
-    ################################################################################  
+    # GET SCOM OBJECT OF THE SPECIFIED CLASS
+    ################################################################################
     Try {
-        $connect = New-SCOMManagementGroupConnection -ComputerName $managementServer -PassThru
+        $class = Get-SCOMClass -name $objectClass
+
+		If(!$class)
+		{
+			$msg="$objectClass : Object class not found; management pack not loaded."
+			AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
+			   				
+			Return New-Object psobject -Property @{Status = "Warning"; ObjectCount = 0; ErrorCount = 0; WarningCount = 0}
+    
+		}
+
+		[datetime]$timeNow = (Get-Date)
+
+		$sqlCommand = GetStoredProc $sqlConnection "scom.spObjectClassUpsert"
+		[Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@GenericName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@ManagementPackName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@DistributedApplication", [system.data.SqlDbType]::nvarchar)
+
+		[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+		[Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+
+
+		If($distributedApplication -eq "True"){$distApp = 1} Else {$distApp = 0}
+        $sqlCommand.Parameters["@ID"].Value = $class.Id
+        $sqlCommand.Parameters["@Name"].Value = NullToString $class.Name ""
+        $sqlCommand.Parameters["@DisplayName"].Value = NullToString $class.DisplayName ""
+        $sqlCommand.Parameters["@GenericName"].Value = $genericClass
+        $sqlCommand.Parameters["@ManagementPackName"].Value = NullToString $class.ManagementPackName ""
+        $sqlCommand.Parameters["@Description"].Value = NullToString $class.DisplayName ""
+        $sqlCommand.Parameters["@DistributedApplication"].Value = $distApp
+
+        $sqlCommand.Parameters["@Active"].Value = $True
+        $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+	                
+		[void]$sqlCommand.ExecuteNonQuery()
+
+		################################################################################
+		# WRITE TO OBJECTCLASS
+		################################################################################
+        If($syncType -eq "Full"){
+            $Objects = Get-SCOMClassInstance -Class $class
+        } Else {
+            $Objects = Get-SCOMClassInstance -Class $class | Where-Object {($_.LastModified -gt $lastUpdate) -or ($_.StateLastModified -gt $lastUpdate) -or ($_.AvailabilityLastModified -gt $lastUpdate)}
+        }
     } 
     Catch [System.Exception] {
-		$msg=$_.Exception.Message
-		AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
-		$errorCounter++
+			$msg="$objectClass : " + $_.Exception.Message
+			AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
+			$errorCounter++
 	}
-
-    If($connect.IsActive){
-        $lastUpdate = $lastUpdate.ToUniversalTime()
-
-        ################################################################################
-        # GET SCOM OBJECT OF THE SPECIFIED CLASS
-        ################################################################################
-        Try {
-            $class = Get-SCOMClass -name $objectClass
-
-			If(!$class)
-			{
-				$msg="$objectClass : Object class not found; management pack not loaded."
-			    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
-			   				
-				Return New-Object psobject -Property @{Status = "Warning"; ObjectCount = 0; ErrorCount = 0; WarningCount = 0}
-    
-			}
-
-			[datetime]$timeNow = (Get-Date)
-
-			$sqlCommand = GetStoredProc $sqlConnection "scom.spObjectClassUpsert"
-			[Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
-			[Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
-			[Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
-			[Void]$sqlCommand.Parameters.Add("@GenericName", [system.data.SqlDbType]::nvarchar)
-			[Void]$sqlCommand.Parameters.Add("@ManagementPackName", [system.data.SqlDbType]::nvarchar)
-			[Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
-			[Void]$sqlCommand.Parameters.Add("@DistributedApplication", [system.data.SqlDbType]::nvarchar)
-
-			[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
-			[Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
-
-
-			If($distributedApplication -eq "True"){$distApp = 1} Else {$distApp = 0}
-            $sqlCommand.Parameters["@ID"].Value = $class.Id
-            $sqlCommand.Parameters["@Name"].Value = NullToString $class.Name ""
-            $sqlCommand.Parameters["@DisplayName"].Value = NullToString $class.DisplayName ""
-            $sqlCommand.Parameters["@GenericName"].Value = $genericClass
-            $sqlCommand.Parameters["@ManagementPackName"].Value = NullToString $class.ManagementPackName ""
-            $sqlCommand.Parameters["@Description"].Value = NullToString $class.DisplayName ""
-            $sqlCommand.Parameters["@DistributedApplication"].Value = $distApp
-
-            $sqlCommand.Parameters["@Active"].Value = $True
-            $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
-	                
-			[void]$sqlCommand.ExecuteNonQuery()
-
-			################################################################################
-			# WRITE TO OBJECTCLASS
-			################################################################################
-            If($syncType -eq "Full"){
-                $Objects = Get-SCOMClassInstance -Class $class
-            } Else {
-                $Objects = Get-SCOMClassInstance -Class $class | Where-Object {($_.LastModified -gt $lastUpdate) -or ($_.StateLastModified -gt $lastUpdate) -or ($_.AvailabilityLastModified -gt $lastUpdate)}
-            }
-        } 
-        Catch [System.Exception] {
-			    $msg="$objectClass : " + $_.Exception.Message
-			    AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
-			    $errorCounter++
-	    }
 	
-        [datetime]$startTime = (Get-Date)
+    [datetime]$startTime = (Get-Date)
 
-	    $sqlCommand = GetStoredProc $sqlConnection "scom.spObjectHealthStateUpsert"
-        [Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@FullName", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Path", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@HealthState", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@IsAvailable", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@AvailabilityLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@InMaintenanceMode", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
-        [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Availability", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Configuration", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Performance", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Security", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommand.Parameters.Add("@Other", [system.data.SqlDbType]::nvarchar)
+	$sqlCommand = GetStoredProc $sqlConnection "scom.spObjectHealthStateUpsert"
+    [Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@FullName", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Path", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@HealthState", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@IsAvailable", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@AvailabilityLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@InMaintenanceMode", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Availability", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Configuration", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Performance", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Security", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Other", [system.data.SqlDbType]::nvarchar)
 
-        [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
-        [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+    [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
 
 
-	    $sqlCommand2 = GetStoredProc $sqlConnection "scom.spObjectHealthStateAlertRelationshipUpsert"
-        [Void]$sqlCommand2.Parameters.Add("@ObjectID", [system.data.SqlDbType]::uniqueidentifier)
-        [Void]$sqlCommand2.Parameters.Add("@AlertID", [system.data.SqlDbType]::uniqueidentifier)
+	$sqlCommand2 = GetStoredProc $sqlConnection "scom.spObjectHealthStateAlertRelationshipUpsert"
+    [Void]$sqlCommand2.Parameters.Add("@ObjectID", [system.data.SqlDbType]::uniqueidentifier)
+    [Void]$sqlCommand2.Parameters.Add("@AlertID", [system.data.SqlDbType]::uniqueidentifier)
 	
-        foreach($Object in $Objects){
-            # If($Object.HealthState.ToString() -ne "Uninitialized" -and $Object.InMaintenanceMode -eq 0){
-            # Try to skip over Windows Server Virtual Nodes
-            $IsVirtualNode = $null
-            [bool]$skipObject = $null
-            Try{
-                # Check to see if the Windows computer property *.IsVirtualNode exists
-                $hasVirtualNodeMember = $Object | Get-Member -name *.IsVirtualNode
-                If($hasVirtualNodeMember -ne $null){
-                    # Write-Host $object.DisplayName
-                    $IsVirtualNode = $Object | select -ExpandProperty *.IsVirtualNode
-                    if($IsVirtualNode.Value -eq "True"){
-                        # This is a virtual Node; we want to skip this
-                        $skipObject = $true
-                    } Else {
-                        # This is not a virtual Node; we want this
-                        $skipObject = $false
-                    }
+    foreach($Object in $Objects){
+        # If($Object.HealthState.ToString() -ne "Uninitialized" -and $Object.InMaintenanceMode -eq 0){
+        # Try to skip over Windows Server Virtual Nodes
+        $IsVirtualNode = $null
+        [bool]$skipObject = $null
+        Try{
+            # Check to see if the Windows computer property *.IsVirtualNode exists
+            $hasVirtualNodeMember = $Object | Get-Member -name *.IsVirtualNode
+            If($hasVirtualNodeMember -ne $null){
+                # Write-Host $object.DisplayName
+                $IsVirtualNode = $Object | select -ExpandProperty *.IsVirtualNode
+                if($IsVirtualNode.Value -eq "True"){
+                    # This is a virtual Node; we want to skip this
+                    $skipObject = $true
                 } Else {
-                    # If the property is missing, it's not a virtual node
+                    # This is not a virtual Node; we want this
                     $skipObject = $false
                 }
-            } Catch {
-                # By default, we want to capture the object, so if there's an error, let's get it
-                $skipObject = $False
-                $Error.Clear()
+            } Else {
+                # If the property is missing, it's not a virtual node
+                $skipObject = $false
             }
-            If(!$skipObject){
-                Try {
+        } Catch {
+            # By default, we want to capture the object, so if there's an error, let's get it
+            $skipObject = $False
+            $Error.Clear()
+        }
+        If(!$skipObject){
+            Try {
 
-                    [datetime]$timeNow = (Get-Date)
-                    If($Object.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Object.MaintenanceModeLastModified}
+                [datetime]$timeNow = (Get-Date)
+                If($Object.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Object.MaintenanceModeLastModified}
 
                     
-                    $ObjectState = GetObjectState -MonitoringHierarchy $object.GetMonitoringStateHierarchy() 
+                $ObjectState = GetObjectState -MonitoringHierarchy $object.GetMonitoringStateHierarchy() 
 
-                    $sqlCommand.Parameters["@ID"].Value = $Object.Id
-                    $sqlCommand.Parameters["@Name"].Value = NullToString $Object.Name ""
-                    $sqlCommand.Parameters["@DisplayName"].Value = NullToString $Object.DisplayName ""
-                    $sqlCommand.Parameters["@FullName"].Value = NullToString $Object.FullName ""
-                    $sqlCommand.Parameters["@Path"].Value = NullToString $Object.Path ""
-                    $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
-                    $sqlCommand.Parameters["@HealthState"].Value = $Object.HealthState.ToString()
-                    $sqlCommand.Parameters["@StateLastModified"].Value = $Object.StateLastModified
-                    $sqlCommand.Parameters["@IsAvailable"].Value = $Object.IsAvailable
-                    $sqlCommand.Parameters["@AvailabilityLastModified"].Value = $Object.AvailabilityLastModified
-                    $sqlCommand.Parameters["@InMaintenanceMode"].Value = $Object.InMaintenanceMode
-                    $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $MaintenanceModeLastModified
-                    $sqlCommand.Parameters["@ManagementGroup"].Value = $Object.ManagementGroup.ToString()
-                    $sqlCommand.Parameters["@Availability"].Value = $ObjectState.Availability
-                    $sqlCommand.Parameters["@Configuration"].Value = $ObjectState.Configuration
-                    $sqlCommand.Parameters["@Performance"].Value = $ObjectState.Performance
-                    $sqlCommand.Parameters["@Security"].Value = $ObjectState.Security
-                    $sqlCommand.Parameters["@Other"].Value = $ObjectState.Other
-
-                    $sqlCommand.Parameters["@Active"].Value = $True
-                    $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
-
-	                [void]$sqlCommand.ExecuteNonQuery()
-                    $objectCounter++
-
-                    #### GET RELATED ALERTS FOR OBJECT ####
-                    If($Object.HealthState.ToString() -ne "Success") {
-                        $relatedAlerts = $Object.GetMonitoringAlerts(1)
-                        foreach($relatedAlert in $relatedAlerts){
-                            # $sqlCommand2.Parameters["@ObjectId"].Value = $relatedAlert.MonitoringObjectID
-                            $sqlCommand2.Parameters["@ObjectId"].Value = $object.Id
-                            $sqlCommand2.Parameters["@AlertID"].Value = $relatedAlert.Id
-
-                            [void]$sqlCommand2.ExecuteNonQuery()
-                        }
-                    }
-                } 
-                Catch [System.Exception] {
-			        $msg=$_.Exception.Message
-			        AddLogEntry $ManagementGroup "Warning" $moduleName "($Object.FullName) : $msg" $sqlConnection
-			        $warningCounter++
-	            }
-            } 
-        }
-
-
-	    $sqlCommand.Dispose()
-        $sqlCommand2.Dispose()
-
-        ############################################################################################################
-        # IF FULL SYNC, INACTIVATE OBJECTS THAT WERE NOT UPDATED
-        ############################################################################################################
-        If($syncType -eq "Full"){
-            Try {
-	            $sqlCommand = GetStoredProc $sqlConnection "scom.spObjectHealthStateInactivateByDate"
-                [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
-                [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
-
-                $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
+                $sqlCommand.Parameters["@ID"].Value = $Object.Id
+                $sqlCommand.Parameters["@Name"].Value = NullToString $Object.Name ""
+                $sqlCommand.Parameters["@DisplayName"].Value = NullToString $Object.DisplayName ""
+                $sqlCommand.Parameters["@FullName"].Value = NullToString $Object.FullName ""
+                $sqlCommand.Parameters["@Path"].Value = NullToString $Object.Path ""
                 $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
-                [void]$sqlCommand.ExecuteNonQuery()
-                $sqlCommand.Dispose()
+                $sqlCommand.Parameters["@HealthState"].Value = $Object.HealthState.ToString()
+                $sqlCommand.Parameters["@StateLastModified"].Value = $Object.StateLastModified
+                $sqlCommand.Parameters["@IsAvailable"].Value = $Object.IsAvailable
+                $sqlCommand.Parameters["@AvailabilityLastModified"].Value = $Object.AvailabilityLastModified
+                $sqlCommand.Parameters["@InMaintenanceMode"].Value = $Object.InMaintenanceMode
+                $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $MaintenanceModeLastModified
+                $sqlCommand.Parameters["@ManagementGroup"].Value = $Object.ManagementGroup.ToString()
+                $sqlCommand.Parameters["@Availability"].Value = $ObjectState.Availability
+                $sqlCommand.Parameters["@Configuration"].Value = $ObjectState.Configuration
+                $sqlCommand.Parameters["@Performance"].Value = $ObjectState.Performance
+                $sqlCommand.Parameters["@Security"].Value = $ObjectState.Security
+                $sqlCommand.Parameters["@Other"].Value = $ObjectState.Other
 
-            }
+                $sqlCommand.Parameters["@Active"].Value = $True
+                $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+
+	            [void]$sqlCommand.ExecuteNonQuery()
+                $objectCounter++
+
+                #### GET RELATED ALERTS FOR OBJECT ####
+                If($Object.HealthState.ToString() -ne "Success") {
+                    $relatedAlerts = $Object.GetMonitoringAlerts(1)
+                    foreach($relatedAlert in $relatedAlerts){
+                        # $sqlCommand2.Parameters["@ObjectId"].Value = $relatedAlert.MonitoringObjectID
+                        $sqlCommand2.Parameters["@ObjectId"].Value = $object.Id
+                        $sqlCommand2.Parameters["@AlertID"].Value = $relatedAlert.Id
+
+                        [void]$sqlCommand2.ExecuteNonQuery()
+                    }
+                }
+            } 
             Catch [System.Exception] {
 			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $msg" $sqlConnection
-			    $errorCounter++
+			    AddLogEntry $ManagementGroup "Warning" $moduleName "($Object.FullName) : $msg" $sqlConnection
+			    $warningCounter++
 	        }
+        } 
+    }
 
-        }
 
+	$sqlCommand.Dispose()
+    $sqlCommand2.Dispose()
+
+    ############################################################################################################
+    # IF FULL SYNC, INACTIVATE OBJECTS THAT WERE NOT UPDATED
+    ############################################################################################################
+    If($syncType -eq "Full"){
         Try {
-            ############################################################################################################
-            # INACTIVATE ROWS IN OBJECTALERTRELATIONSHIP
-            ############################################################################################################
+	        $sqlCommand = GetStoredProc $sqlConnection "scom.spObjectHealthStateInactivateByDate"
+            [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
+            [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
+
+            $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
+            $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
+            [void]$sqlCommand.ExecuteNonQuery()
             $sqlCommand.Dispose()
 
-            $sqlCommand = GetStoredProc $sqlConnection "scom.spObjectHealthStateAlertRelationshipInactivate"
-
-            [void]$sqlCommand.ExecuteNonQuery() 
-            $sqlCommand.Dispose()
         }
         Catch [System.Exception] {
-            $msg=$_.Exception.Message
-            AddLogEntry $ManagementGroup "Warning" $moduleName "Object Alert Relationship Inactivate : $msg" $sqlConnection
-            $errorCounter++
-        }                     
-	
-	    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $objectCounter $objectClass from $ManagementGroup" $sqlConnection
+			$msg=$_.Exception.Message
+			AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $msg" $sqlConnection
+			$errorCounter++
+	    }
 
-        # Determine Exit status
-	    If($errorCounter -gt 0) {$syncStatus = "Error"}
-	    ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
-	    Else {$syncStatus = "Success"}
-	
-	    Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $objectCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
-    } Else {
-        Return New-Object psobject -Property @{Status = "Error"; ObjectCount = $objectCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
     }
+
+    Try {
+        ############################################################################################################
+        # INACTIVATE ROWS IN OBJECTALERTRELATIONSHIP
+        ############################################################################################################
+        $sqlCommand.Dispose()
+
+        $sqlCommand = GetStoredProc $sqlConnection "scom.spObjectHealthStateAlertRelationshipInactivate"
+
+        [void]$sqlCommand.ExecuteNonQuery() 
+        $sqlCommand.Dispose()
+    }
+    Catch [System.Exception] {
+        $msg=$_.Exception.Message
+        AddLogEntry $ManagementGroup "Warning" $moduleName "Object Alert Relationship Inactivate : $msg" $sqlConnection
+        $errorCounter++
+    }                     
+	
+	AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $objectCounter $objectClass from $ManagementGroup" $sqlConnection
+
+    # Determine Exit status
+	If($errorCounter -gt 0) {$syncStatus = "Error"}
+	ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
+	Else {$syncStatus = "Success"}
+	
+	Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $objectCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
+
 }
 
 
@@ -1736,197 +1662,182 @@ Param (
 
 	AddLogEntry $ManagementGroup "Info" $moduleName "Starting $syncType check for Groups..." $sqlConnection
 
+    $lastUpdate = $lastUpdate.ToUniversalTime()
+
     ################################################################################
-    # CONNECT TO SCOM
-    ################################################################################  
+    # GET SCOM GROUP
+    ################################################################################
     Try {
-        $connect = New-SCOMManagementGroupConnection -ComputerName $managementServer -PassThru
+        If($syncType -eq "Full"){
+            $Group = Get-SCOMGroup | Where-Object {$_.DisplayName -eq $groupName}
+        } Else {
+            $Group = Get-SCOMGroup | Where-Object {($_.DisplayName -eq $groupName) -and (($_.LastModified -gt $lastUpdate) -or ($_.StateLastModified -gt $lastUpdate) -or ($_.AvailabilityLastModified -gt $lastUpdate))}
+        }
     } 
     Catch [System.Exception] {
-		$msg=$_.Exception.Message
-		AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
-		$errorCounter++
+			$msg="$groupName : " + $_.Exception.Message
+			AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
+			$errorCounter++
 	}
 
-    If($connect.IsActive){
-        $lastUpdate = $lastUpdate.ToUniversalTime()
+    ################################################################################
+    # TEST IF THE RESULT IS NULL (NO GROUP WITH THAT NAME)
+    ################################################################################        
+	    
+    If($Group){
+        [datetime]$startTime = (Get-Date)
 
-        ################################################################################
-        # GET SCOM GROUP
-        ################################################################################
+	    $sqlCommand = GetStoredProc $sqlConnection "scom.spGroupHealthStateUpsert"
+        [Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
+        [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@FullName", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@Path", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@MonitoringClassIds", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@HealthState", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
+        [Void]$sqlCommand.Parameters.Add("@IsAvailable", [system.data.SqlDbType]::bit)
+        [Void]$sqlCommand.Parameters.Add("@AvailabilityLastModified", [system.data.SqlDbType]::datetime2)
+        [Void]$sqlCommand.Parameters.Add("@InMaintenanceMode", [system.data.SqlDbType]::bit)
+        [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
+        [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@Availability", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@Configuration", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@Performance", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@Security", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@Other", [system.data.SqlDbType]::nvarchar)
+
+        [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+        [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+
+
+	    $sqlCommand2 = GetStoredProc $sqlConnection "scom.spGroupHealthStateAlertRelationshipUpsert"
+        [Void]$sqlCommand2.Parameters.Add("@GroupID", [system.data.SqlDbType]::uniqueidentifier)
+        [Void]$sqlCommand2.Parameters.Add("@AlertID", [system.data.SqlDbType]::uniqueidentifier)
+	
         Try {
-            If($syncType -eq "Full"){
-                $Group = Get-SCOMGroup | Where-Object {$_.DisplayName -eq $groupName}
-            } Else {
-                $Group = Get-SCOMGroup | Where-Object {($_.DisplayName -eq $groupName) -and (($_.LastModified -gt $lastUpdate) -or ($_.StateLastModified -gt $lastUpdate) -or ($_.AvailabilityLastModified -gt $lastUpdate))}
+
+			# Set Current Timestamp
+            [datetime]$timeNow = (Get-Date)
+
+			# Handle null value for MaintenModeLastModified
+            Try {
+                If($Group.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Group.MaintenanceModeLastModified}
+            }
+            Catch {
+                $MaintenanceModeLastModified = [System.DBNull]::Value
+            }
+			# Handle ReadOnlyCollection for MonitoringClassIds
+			[string]$tmpValue=""
+            ForEach($value in $Group.MonitoringClassIds){
+                $tmpValue = $value.guid + ", "
+            }
+            $tmpValue = $tmpValue.Substring(0,$tmpValue.Length -2)
+                    
+            $GroupState = GetObjectState -MonitoringHierarchy $Group.GetMonitoringStateHierarchy() 
+
+            $sqlCommand.Parameters["@ID"].Value = $Group.Id
+            $sqlCommand.Parameters["@Name"].Value = NullToString $Group.Name ""
+            $sqlCommand.Parameters["@DisplayName"].Value = NullToString $Group.DisplayName ""
+            $sqlCommand.Parameters["@FullName"].Value = NullToString $Group.FullName ""
+            $sqlCommand.Parameters["@Path"].Value = NullToString $Group.Path ""
+            $sqlCommand.Parameters["@MonitoringClassIds"].Value = $tmpValue
+            $sqlCommand.Parameters["@HealthState"].Value = $Group.HealthState.ToString()
+            $sqlCommand.Parameters["@StateLastModified"].Value = $Group.StateLastModified
+            $sqlCommand.Parameters["@IsAvailable"].Value = $Group.IsAvailable
+            $sqlCommand.Parameters["@AvailabilityLastModified"].Value = $Group.AvailabilityLastModified
+            $sqlCommand.Parameters["@InMaintenanceMode"].Value = $Group.InMaintenanceMode
+            $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $MaintenanceModeLastModified
+            $sqlCommand.Parameters["@ManagementGroup"].Value = $Group.ManagementGroup.ToString()
+            $sqlCommand.Parameters["@Availability"].Value = $GroupState.Availability
+            $sqlCommand.Parameters["@Configuration"].Value = $GroupState.Configuration
+            $sqlCommand.Parameters["@Performance"].Value = $GroupState.Performance
+            $sqlCommand.Parameters["@Security"].Value = $GroupState.Security
+            $sqlCommand.Parameters["@Other"].Value = $GroupState.Other
+
+            $sqlCommand.Parameters["@Active"].Value = $True
+            $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+
+	        [void]$sqlCommand.ExecuteNonQuery()
+            $groupCounter++
+
+            #### GET RELATED ALERTS FOR OBJECT ####
+            If($Group.HealthState.ToString() -ne "Success") {
+                $relatedAlerts = $Group.GetMonitoringAlerts(1)
+                foreach($relatedAlert in $relatedAlerts){
+                    # $sqlCommand2.Parameters["@ObjectId"].Value = $relatedAlert.MonitoringObjectID
+                    $sqlCommand2.Parameters["@GroupId"].Value = $Group.Id
+                    $sqlCommand2.Parameters["@AlertID"].Value = $relatedAlert.Id
+
+                    [void]$sqlCommand2.ExecuteNonQuery()
+                }
             }
         } 
         Catch [System.Exception] {
-			    $msg="$groupName : " + $_.Exception.Message
-			    AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
-			    $errorCounter++
+			$msg=$_.Exception.Message
+			AddLogEntry $ManagementGroup "Warning" $moduleName "($groupName) : $msg" $sqlConnection
+			$warningCounter++
 	    }
 
-        ################################################################################
-        # TEST IF THE RESULT IS NULL (NO GROUP WITH THAT NAME)
-        ################################################################################        
-	    
-        If($Group){
-            [datetime]$startTime = (Get-Date)
+	    $sqlCommand.Dispose()
+        $sqlCommand2.Dispose()
+    } 
+    Else
+    {
+        $msg = "Group $GroupName does not exist."
+	    AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
+        $errorCounter++
+    }
 
-	        $sqlCommand = GetStoredProc $sqlConnection "scom.spGroupHealthStateUpsert"
-            [Void]$sqlCommand.Parameters.Add("@ID", [system.data.SqlDbType]::uniqueidentifier)
-            [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@DisplayName", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@FullName", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@Path", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@MonitoringClassIds", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@HealthState", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
-            [Void]$sqlCommand.Parameters.Add("@IsAvailable", [system.data.SqlDbType]::bit)
-            [Void]$sqlCommand.Parameters.Add("@AvailabilityLastModified", [system.data.SqlDbType]::datetime2)
-            [Void]$sqlCommand.Parameters.Add("@InMaintenanceMode", [system.data.SqlDbType]::bit)
-            [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
-            [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@Availability", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@Configuration", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@Performance", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@Security", [system.data.SqlDbType]::nvarchar)
-            [Void]$sqlCommand.Parameters.Add("@Other", [system.data.SqlDbType]::nvarchar)
-
-            [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
-            [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
-
-
-	        $sqlCommand2 = GetStoredProc $sqlConnection "scom.spGroupHealthStateAlertRelationshipUpsert"
-            [Void]$sqlCommand2.Parameters.Add("@GroupID", [system.data.SqlDbType]::uniqueidentifier)
-            [Void]$sqlCommand2.Parameters.Add("@AlertID", [system.data.SqlDbType]::uniqueidentifier)
-	
-            Try {
-
-			    # Set Current Timestamp
-                [datetime]$timeNow = (Get-Date)
-
-			    # Handle null value for MaintenModeLastModified
-                Try {
-                    If($Group.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $Group.MaintenanceModeLastModified}
-                }
-                Catch {
-                    $MaintenanceModeLastModified = [System.DBNull]::Value
-                }
-			    # Handle ReadOnlyCollection for MonitoringClassIds
-			    [string]$tmpValue=""
-                ForEach($value in $Group.MonitoringClassIds){
-                    $tmpValue = $value.guid + ", "
-                }
-                $tmpValue = $tmpValue.Substring(0,$tmpValue.Length -2)
-                    
-                $GroupState = GetObjectState -MonitoringHierarchy $Group.GetMonitoringStateHierarchy() 
-
-                $sqlCommand.Parameters["@ID"].Value = $Group.Id
-                $sqlCommand.Parameters["@Name"].Value = NullToString $Group.Name ""
-                $sqlCommand.Parameters["@DisplayName"].Value = NullToString $Group.DisplayName ""
-                $sqlCommand.Parameters["@FullName"].Value = NullToString $Group.FullName ""
-                $sqlCommand.Parameters["@Path"].Value = NullToString $Group.Path ""
-                $sqlCommand.Parameters["@MonitoringClassIds"].Value = $tmpValue
-                $sqlCommand.Parameters["@HealthState"].Value = $Group.HealthState.ToString()
-                $sqlCommand.Parameters["@StateLastModified"].Value = $Group.StateLastModified
-                $sqlCommand.Parameters["@IsAvailable"].Value = $Group.IsAvailable
-                $sqlCommand.Parameters["@AvailabilityLastModified"].Value = $Group.AvailabilityLastModified
-                $sqlCommand.Parameters["@InMaintenanceMode"].Value = $Group.InMaintenanceMode
-                $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $MaintenanceModeLastModified
-                $sqlCommand.Parameters["@ManagementGroup"].Value = $Group.ManagementGroup.ToString()
-                $sqlCommand.Parameters["@Availability"].Value = $GroupState.Availability
-                $sqlCommand.Parameters["@Configuration"].Value = $GroupState.Configuration
-                $sqlCommand.Parameters["@Performance"].Value = $GroupState.Performance
-                $sqlCommand.Parameters["@Security"].Value = $GroupState.Security
-                $sqlCommand.Parameters["@Other"].Value = $GroupState.Other
-
-                $sqlCommand.Parameters["@Active"].Value = $True
-                $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
-
-	            [void]$sqlCommand.ExecuteNonQuery()
-                $groupCounter++
-
-                #### GET RELATED ALERTS FOR OBJECT ####
-                If($Group.HealthState.ToString() -ne "Success") {
-                    $relatedAlerts = $Group.GetMonitoringAlerts(1)
-                    foreach($relatedAlert in $relatedAlerts){
-                        # $sqlCommand2.Parameters["@ObjectId"].Value = $relatedAlert.MonitoringObjectID
-                        $sqlCommand2.Parameters["@GroupId"].Value = $Group.Id
-                        $sqlCommand2.Parameters["@AlertID"].Value = $relatedAlert.Id
-
-                        [void]$sqlCommand2.ExecuteNonQuery()
-                    }
-                }
-            } 
-            Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Warning" $moduleName "($groupName) : $msg" $sqlConnection
-			    $warningCounter++
-	        }
-
-	        $sqlCommand.Dispose()
-            $sqlCommand2.Dispose()
-        } 
-        Else
-        {
-            $msg = "Group $GroupName does not exist."
-	        AddLogEntry $ManagementGroup "Error" $moduleName $msg $sqlConnection
-            $errorCounter++
-        }
-
-        ############################################################################################################
-        # IF FULL SYNC, INACTIVATE GROUP THAT WERE NOT UPDATED
-        ############################################################################################################
-        If($syncType -eq "Full"){
-            Try {
-	            $sqlCommand = GetStoredProc $sqlConnection "scom.spGroupHealthStateInactivateByDate"
-                [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
-                # [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
-
-                $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
-                # $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
-                [void]$sqlCommand.ExecuteNonQuery()
-                $sqlCommand.Dispose()
-
-            }
-            Catch [System.Exception] {
-			    $msg=$_.Exception.Message
-			    AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $msg" $sqlConnection
-			    $errorCounter++
-	        }
-
-        }
-
+    ############################################################################################################
+    # IF FULL SYNC, INACTIVATE GROUP THAT WERE NOT UPDATED
+    ############################################################################################################
+    If($syncType -eq "Full"){
         Try {
-            ############################################################################################################
-            # INACTIVATE ROWS IN GROUPALERTRELATIONSHIP
-            ############################################################################################################
+	        $sqlCommand = GetStoredProc $sqlConnection "scom.spGroupHealthStateInactivateByDate"
+            [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
+            # [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
+
+            $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
+            # $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
+            [void]$sqlCommand.ExecuteNonQuery()
             $sqlCommand.Dispose()
 
-            $sqlCommand = GetStoredProc $sqlConnection "scom.spGroupHealthStateAlertRelationshipInactivate"
-
-            [void]$sqlCommand.ExecuteNonQuery() 
-            $sqlCommand.Dispose()
         }
         Catch [System.Exception] {
-            $msg=$_.Exception.Message
-            AddLogEntry $ManagementGroup "Warning" $moduleName "Group Alert Relationship Inactivate : $msg" $sqlConnection
-            $errorCounter++
-        }                     
-	
-	    AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $groupCounter groups from $ManagementGroup" $sqlConnection
+			$msg=$_.Exception.Message
+			AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $msg" $sqlConnection
+			$errorCounter++
+	    }
 
-        # Determine Exit status
-	    If($errorCounter -gt 0) {$syncStatus = "Error"}
-	    ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
-	    Else {$syncStatus = "Success"}
-	
-	    Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $groupCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
-    } Else {
-        Return New-Object psobject -Property @{Status = "Error"; ObjectCount = $groupCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
     }
+
+    Try {
+        ############################################################################################################
+        # INACTIVATE ROWS IN GROUPALERTRELATIONSHIP
+        ############################################################################################################
+        $sqlCommand.Dispose()
+
+        $sqlCommand = GetStoredProc $sqlConnection "scom.spGroupHealthStateAlertRelationshipInactivate"
+
+        [void]$sqlCommand.ExecuteNonQuery() 
+        $sqlCommand.Dispose()
+    }
+    Catch [System.Exception] {
+        $msg=$_.Exception.Message
+        AddLogEntry $ManagementGroup "Warning" $moduleName "Group Alert Relationship Inactivate : $msg" $sqlConnection
+        $errorCounter++
+    }                     
+	
+	AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $groupCounter groups from $ManagementGroup" $sqlConnection
+
+    # Determine Exit status
+	If($errorCounter -gt 0) {$syncStatus = "Error"}
+	ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
+	Else {$syncStatus = "Success"}
+	
+	Return New-Object psobject -Property @{Status = $syncStatus; ObjectCount = $groupCounter; ErrorCount = $errorCounter; WarningCount = $warningCounter}
+
 }
 
 ################################################################################
