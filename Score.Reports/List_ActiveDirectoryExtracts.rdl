@@ -1384,6 +1384,9 @@ ORDER BY DNSRoot</CommandText>
           <Value>site</Value>
           <Value>subnet</Value>
           <Value>forest</Value>
+          <Value>user</Value>
+          <Value>group</Value>
+          <Value>groupmember</Value>
         </Values>
       </DefaultValue>
       <Prompt>ObjectClass</Prompt>
@@ -1408,6 +1411,18 @@ ORDER BY DNSRoot</CommandText>
           <ParameterValue>
             <Value>subnet</Value>
             <Label>subnet</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>user</Value>
+            <Label>user</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>group</Value>
+            <Label>group</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>groupmember</Value>
+            <Label>groupmember</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>

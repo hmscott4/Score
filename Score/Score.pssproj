@@ -54,7 +54,8 @@ Set-Content -Path ..\Score.Release\Score\Score.Reports\SCORE.rds -Value $SCORE
 Get-Item -Path ..\Score.MP\bin\Debug\*.mp | Copy-Item -Destination ..\Score.Release\Score\Score.MP
 
 # COPY DATABASE SCRIPTS
-get-item -Path ..\Score.Database\_Deployment\*.sql | Copy-Item -Destination ..\Score.Release\Score\Score.Database\</PostBuildScript>
+get-item -Path ..\Score.Database\_Deployment\*.sql | Copy-Item -Destination ..\Score.Release\Score\Score.Database\
+</PostBuildScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

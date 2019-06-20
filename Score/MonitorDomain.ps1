@@ -617,6 +617,40 @@ param(
 		}
  		$sqlCommand.Dispose()
 
+		# This section added to deal with MS Cluster Virtual Computer Objects
+		# These objects exist in Active Directory, but will never receive an agent
+		# These records are added to the scom.AgentExclusions table. 
+		$PropList = @("DNSHostName")
+        If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    		$exclusions = Get-ADObject -Server $adDomain -searchBase $adDomainSearchRoot -LDAPFilter '(ServicePrincipalName=MSClusterVirtual*)' -Properties $PropList -Credential $Credential
+        } Else {
+            $exclusions = Get-ADObject -Server $adDomain -searchBase $adDomainSearchRoot -LDAPFilter '(ServicePrincipalName=MSClusterVirtual*)' -Properties $PropList
+        }
+
+    	$sqlCommand = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "scom.spAgentExclusionsUpsert"
+		[Void]$sqlCommand.Parameters.Add("@Domain", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@DNSHostName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Reason", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
+		
+	    foreach($exclusion in $exclusions)
+	    {
+			try {
+				
+				$sqlCommand.Parameters["@Domain"].value = $adDomain
+				$sqlCommand.Parameters["@DNSHostName"].value = $exclusion.DNSHostName
+				$sqlCommand.Parameters["@Reason"].value = "MS Cluster Virtual Object"
+				$sqlCommand.Parameters["@dbLastUpdate"].value = (Get-Date)
+				[Void]$sqlCommand.ExecuteNonQuery()
+				
+			} Catch [System.Exception] {
+				$msg = $_.Exception.Message
+			    AddLogEntry $adDomain "Warning" "WriteComputerInfo" "$computer : $msg" $sqlConnection
+				$warningCounter++
+			}
+		}
+
+
 		# If this sync is full, then inactivate any object (for this domain) that wasn't touched
 		if($syncType -eq "Full"){
 			$sqlCommand = GetStoredProc $sqlConnection "ad.spComputerInactivateByDate"

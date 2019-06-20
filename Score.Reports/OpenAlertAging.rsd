@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>SCORE</DataSourceReference>
+      <CommandText>SELECT
+	0 as [Count]
+	, 'DummyValue' as [Owner]
+	, severity.value as [Severity]
+	, priority.value as [Priority]
+	, aab.LowValue as [AgeHours]
+	, ars.[ResolutionState]
+	, ars.[Name]
+	, aab.[SortOrder]
+	, aab.[Label]
+	, aab.[LowValue]
+	, aab.[HighValue]
+FROM
+	scom.AlertAgingBuckets aab cross join scom.AlertResolutionState ars
+	cross join (	select value from string_split('0,1,2',',')) severity
+	cross join (	select value from string_split('0,1,2',',')) [priority]
+WHERE 
+	aab.Active = 1
+	AND ars.Active = 1
+
+UNION ALL
+
+SELECT
+	1 as [Count]
+	, Alerts.[Owner]
+	, Alerts.[Severity]
+	, Alerts.[Priority]
+	, Alerts.[AgeHours]
+	, Alerts.[ResolutionState]
+	, Alerts.[ResolutionStateName]
+	, AlertAging.[SortOrder]
+	, AlertAging.[Label]
+	, AlertAging.[LowValue]
+	, AlertAging.[HighValue]
+FROM
+	(	SELECT	SortOrder, Label, LowValue, HighValue
+		FROM	scom.AlertAgingBuckets
+		WHERE	Active = 1
+	) AlertAging  INNER JOIN
+
+	(
+		SELECT	ISNULL(a.[Owner], 'Unassigned') as [Owner], a.[Severity], a.[Priority], DATEDIFF(HOUR, a.[TimeRaised], GetDate()) [AgeHours], a.[ResolutionState], ars.[Name] as [ResolutionStateName]
+		FROM	scom.Alert a INNER JOIN scom.AlertResolutionState ars
+			ON a.ResolutionState = ars.ResolutionState
+		WHERE	
+			a.[Active] = 1
+
+	) Alerts
+
+	ON Alerts.AgeHours BETWEEN AlertAging.LowValue AND AlertAging.HighValue</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="Count">
+        <DataField>Count</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Owner">
+        <DataField>Owner</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Severity">
+        <DataField>Severity</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="Priority">
+        <DataField>Priority</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="AgeHours">
+        <DataField>AgeHours</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="ResolutionState">
+        <DataField>ResolutionState</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="Name">
+        <DataField>Name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SortOrder">
+        <DataField>SortOrder</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Label">
+        <DataField>Label</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="LowValue">
+        <DataField>LowValue</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="HighValue">
+        <DataField>HighValue</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

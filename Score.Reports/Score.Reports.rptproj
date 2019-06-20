@@ -50,6 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <DataSet Include="LinuxComputerTopPerformance.rsd" />
+    <DataSet Include="OpenAlertAging.rsd" />
     <DataSet Include="SQLServerSpaceUtilizationTrend.rsd" />
     <DataSet Include="WindowsComputers.rsd" />
     <DataSet Include="WindowsComputerTopPerformance.rsd" />
