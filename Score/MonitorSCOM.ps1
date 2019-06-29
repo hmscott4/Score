@@ -23,6 +23,7 @@
 	"alert" - All alerts (both open and closed0
 	"WindowsComputer" - Information about Windows Computer objects that are monitored by SCOM
 	"Generic" - This class is linked to the list of Object Classes in the config file (in the ObjectClasses stanza)
+	"DistApp" - This class is linked to the list of Distributed Applications in the config file (in the DistributedApplications stanza)
 	"Group" - Information about groups that have health states defined
 	"TimeZone" - Used to retrieve current time zone information from server
 
@@ -77,7 +78,7 @@ Param(
 	[Parameter(Mandatory=$True,Position=1)]
 	[string]$managementGroup,
 	[Parameter(Mandatory=$True,Position=2)]
-	[ValidateSet("agent","alert","config","WindowsComputer","TimeZone","Generic","Group")]
+	[ValidateSet("agent","alert","config","WindowsComputer","TimeZone","Generic","DistApp","Group")]
 	[string[]]$ObjectClasses,
 	[Parameter(Mandatory=$False,Position=3)]
 	[ValidateSet("Full","Incremental")]
@@ -1912,10 +1913,10 @@ Param (
 
 
         $sqlCommand.Parameters["@ID"].Value = $distApplication.Id
-        $sqlCommand.Parameters["@Name"].Value = NullToString $distApplication.Name ""
+        $sqlCommand.Parameters["@Name"].Value = $displayName + ":" + $objectID
         $sqlCommand.Parameters["@DisplayName"].Value = NullToString $distApplication.DisplayName ""
         $sqlCommand.Parameters["@GenericName"].Value = $genericClass
-        $sqlCommand.Parameters["@ManagementPackName"].Value = NullToString $distApplication.ManagementPackName ""
+        $sqlCommand.Parameters["@ManagementPackName"].Value = NullToString $displayName ""
         $sqlCommand.Parameters["@Description"].Value = NullToString $distApplication.DisplayName ""
         $sqlCommand.Parameters["@DistributedApplication"].Value = 1
 
@@ -1978,11 +1979,12 @@ Param (
         $ObjectState = GetObjectState -MonitoringHierarchy $distApplication.GetMonitoringStateHierarchy() 
 
         $sqlCommand.Parameters["@ID"].Value = $distApplication.Id
-        $sqlCommand.Parameters["@Name"].Value = NullToString $distApplication.Name ""
+        $sqlCommand.Parameters["@Name"].Value = NullToString $distApplication.Name $distApplication.DisplayName
         $sqlCommand.Parameters["@DisplayName"].Value = NullToString $distApplication.DisplayName ""
         $sqlCommand.Parameters["@FullName"].Value = NullToString $distApplication.FullName ""
         $sqlCommand.Parameters["@Path"].Value = NullToString $distApplication.Path ""
-        $sqlCommand.Parameters["@ObjectClass"].Value = $distApplication.LeastDerivedNonAbstractManagementPackClassId
+        # $sqlCommand.Parameters["@ObjectClass"].Value = $distApplication.LeastDerivedNonAbstractManagementPackClassId
+        $sqlCommand.Parameters["@ObjectClass"].Value = $displayName + ":" + $objectID
         $sqlCommand.Parameters["@HealthState"].Value = $distApplication.HealthState.ToString()
         $sqlCommand.Parameters["@StateLastModified"].Value = $distApplication.StateLastModified
         $sqlCommand.Parameters["@IsAvailable"].Value = $distApplication.IsAvailable
@@ -2004,7 +2006,7 @@ Param (
 
         #### GET RELATED ALERTS FOR OBJECT ####
         If($distApplication.HealthState.ToString() -ne "Success") {
-            $relatedAlerts = $Object.GetMonitoringAlerts(1)
+            $relatedAlerts = $distApplication.GetMonitoringAlerts(1)
             foreach($relatedAlert in $relatedAlerts){
                 # $sqlCommand2.Parameters["@ObjectId"].Value = $relatedAlert.MonitoringObjectID
                 $sqlCommand2.Parameters["@ObjectId"].Value = $distApplication.Id
@@ -2282,7 +2284,6 @@ foreach ($objectClass in $ObjectClasses){
                             $Classes=$appConfig.SelectNodes("/configuration/ObjectClasses/ObjectClass[@active='True']")
                             foreach($Class in $Classes){
                                 $className = $class.name
-								$distributedApplication = $class.DistributedApplication
 								$genericClass = $class.genericClass
 
 	                            $lastSyncStatus = GetSyncStatus -scomManagementGroup $scomManagementGroup -ObjectClass $className -sqlConnection $sqlConnection
@@ -2292,11 +2293,39 @@ foreach ($objectClass in $ObjectClasses){
 	                            [datetime]$startDate = (Get-Date)
                                 SetSyncStatus -scomManagementGroup $scomManagementGroup -ObjectClass $className -SyncType $thisSyncType.SyncType -startDate $startDate -syncStatus "Starting..." -sqlConnection $sqlConnection
 
-							    $result = WriteSCOMObjects -scomManagementGroup $scomManagementGroup -objectClass $className -genericClass $genericClass -distributedApplication $distributedApplication -syncType $thisSyncType.syncType -lastUpdate $thisSyncType.lastUpdate -sqlConnection $sqlConnection
+							    $result = WriteSCOMObjects -scomManagementGroup $scomManagementGroup -objectClass $className -genericClass $genericClass -syncType $thisSyncType.syncType -lastUpdate $thisSyncType.lastUpdate -sqlConnection $sqlConnection
                                 $scomObjects = $result.ObjectCount
 							    $errorCounter += $result.ErrorCount
 							    $warningCounter += $result.WarningCount
                                 Write-Host "$scomObjects objects of $className processed."
+
+	                            # Update scom.SyncStatus to indicate a sync is completed
+                                [datetime]$endDate = (Get-Date)
+                                [string]$syncStatus = "{0} : {1} object(s) : {2} error(s); {3} warning(s)" -f $result.Status, $result.ObjectCount, $result.ErrorCount, $result.WarningCount
+	                            SetSyncStatus -scomManagementGroup $scomManagementGroup -ObjectClass $className -SyncType $thisSyncType.syncType -startDate $startDate -endDate $endDate -objectCount $result.ObjectCount -syncStatus $syncStatus -sqlConnection $sqlConnection
+
+                            }
+						}
+		"DistApp" 	{
+                            $distApplications = $appConfig.SelectNodes("/configuration/DistributedApplications/DistributedApplication[@active='True']")
+                            foreach($distApplication in $distApplications){
+                                $objectID = $distApplication.ObjectId
+								$displayName = $distApplication.DisplayName
+								$genericClass = $distApplication.genericClass
+                                $className = $displayName + ":" + $objectID
+
+	                            $lastSyncStatus = GetSyncStatus -scomManagementGroup $scomManagementGroup -ObjectClass $className -sqlConnection $sqlConnection
+                                $thisSyncType = GetSyncType $lastSyncStatus $syncType
+
+                                # Update scom.SyncStatus to indicate a sync is starting
+	                            [datetime]$startDate = (Get-Date)
+                                SetSyncStatus -scomManagementGroup $scomManagementGroup -ObjectClass $className -SyncType $thisSyncType.SyncType -startDate $startDate -syncStatus "Starting..." -sqlConnection $sqlConnection
+
+							    $result = WriteSCOMDistributedApplications -scomManagementGroup $scomManagementGroup -ObjectID $objectID -displayName $displayName -genericClass $genericClass -syncType $thisSyncType.syncType -lastUpdate $thisSyncType.lastUpdate -sqlConnection $sqlConnection
+                                $scomObjects = $result.ObjectCount
+							    $errorCounter += $result.ErrorCount
+							    $warningCounter += $result.WarningCount
+                                Write-Host "$scomObjects instances of $displayName {ID=$objectID} processed."
 
 	                            # Update scom.SyncStatus to indicate a sync is completed
                                 [datetime]$endDate = (Get-Date)
