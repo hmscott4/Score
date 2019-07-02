@@ -17351,7 +17351,8 @@ BEGIN
 END
 
 
-grant exec on scom.spAgentExclusionsUpsert to scomUpdate
+GRANT EXEC ON scom.spAgentExclusionsUpsert TO scomUpdate
+GO
 
 
 /****************************************************************
