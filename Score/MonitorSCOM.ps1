@@ -836,8 +836,10 @@ Param (
 	AddLogEntry "TimeZone" "Info" $moduleName "Retrieved $zoneCounter Time Zones from system." $sqlConnection
 
 	# UPDATE Default Configured Time Zone in dbo.Config
-	$sqlCommand = GetStoredProc $sqlConnection "dbo.spSystemTimeZoneUpsert"
-	$sqlCommand.ExecuteNonQuery()
+	$sqlCommand = GetStoredProc $sqlConnection "dbo.spCurrentTimeZoneOffsetUpdate"
+	[void]$sqlCommand.ExecuteNonQuery()
+
+	$sqlCommand.Dispose()
 
 	AddLogEntry "TimeZone" "Info" $moduleName "Updated default configured Time Zone." $sqlConnection
 
