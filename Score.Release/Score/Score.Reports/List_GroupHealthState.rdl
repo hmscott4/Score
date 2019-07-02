@@ -399,13 +399,10 @@ WHERE
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>5.7in</Width>
+                  <Width>5.17152in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.56181in</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>0.7in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.7in</Width>
@@ -487,41 +484,6 @@ WHERE
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox3</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox2">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Maint.</Value>
-                                  <Style>
-                                    <FontWeight>Bold</FontWeight>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox2</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -807,35 +769,6 @@ WHERE
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Rectangle Name="Rectangle17">
-                          <ReportItems>
-                            <Rectangle Name="Rectangle20">
-                              <KeepTogether>true</KeepTogether>
-                              <Top>0.06042in</Top>
-                              <Left>0.27528in</Left>
-                              <Height>0.15in</Height>
-                              <Width>0.15in</Width>
-                              <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=True,"Blue","White")</BackgroundColor>
-                              </Style>
-                            </Rectangle>
-                          </ReportItems>
-                          <KeepTogether>true</KeepTogether>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=Iif(RowNumber(Nothing) Mod 2 = 0, "LightSteelBlue", "White")</BackgroundColor>
-                          </Style>
-                        </Rectangle>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
                         <Rectangle Name="Rectangle4">
                           <ReportItems>
                             <Rectangle Name="Rectangle16">
@@ -848,7 +781,7 @@ WHERE
                                 <Border>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=1, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!HealthState.Value="Success","Green",Iif(Fields!HealthState.Value="Warning","Gold",Iif(Fields!HealthState.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=True, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!HealthState.Value="Success","Green",Iif(Fields!HealthState.Value="Warning","Gold",Iif(Fields!HealthState.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
                               </Style>
                             </Rectangle>
                           </ReportItems>
@@ -877,7 +810,7 @@ WHERE
                                 <Border>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=1,"Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Availability.Value="Success","Green",Iif(Fields!Availability.Value="Warning","Gold",Iif(Fields!Availability.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=True,"Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Availability.Value="Success","Green",Iif(Fields!Availability.Value="Warning","Gold",Iif(Fields!Availability.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
                               </Style>
                             </Rectangle>
                           </ReportItems>
@@ -906,7 +839,7 @@ WHERE
                                 <Border>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=1, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Configuration.Value="Success","Green",Iif(Fields!Configuration.Value="Warning","Gold",Iif(Fields!Configuration.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=True, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Configuration.Value="Success","Green",Iif(Fields!Configuration.Value="Warning","Gold",Iif(Fields!Configuration.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
                               </Style>
                             </Rectangle>
                           </ReportItems>
@@ -935,7 +868,7 @@ WHERE
                                 <Border>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=1, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Performance.Value="Success","Green",Iif(Fields!Performance.Value="Warning","Gold",Iif(Fields!Performance.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=True, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Performance.Value="Success","Green",Iif(Fields!Performance.Value="Warning","Gold",Iif(Fields!Performance.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
                               </Style>
                             </Rectangle>
                           </ReportItems>
@@ -964,7 +897,7 @@ WHERE
                                 <Border>
                                   <Style>Solid</Style>
                                 </Border>
-                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=1, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Security.Value="Success","Green",Iif(Fields!Security.Value="Warning","Gold",Iif(Fields!Security.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
+                                <BackgroundColor>=Iif(Fields!InMaintenanceMode.Value=True, "Blue", Iif(Fields!IsAvailable.Value=0, "Black", Iif(Fields!Security.Value="Success","Green",Iif(Fields!Security.Value="Warning","Gold",Iif(Fields!Security.Value="Error","FireBrick","LightGray")))))</BackgroundColor>
                               </Style>
                             </Rectangle>
                           </ReportItems>
@@ -1017,7 +950,6 @@ WHERE
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1039,37 +971,6 @@ WHERE
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox7</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox8">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1252,7 +1153,6 @@ WHERE
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
-                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -1277,7 +1177,7 @@ WHERE
             </SortExpressions>
             <Top>1.87375in</Top>
             <Height>0.78125in</Height>
-            <Width>10.46181in</Width>
+            <Width>9.23333in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>

@@ -32,6 +32,7 @@ SELECT N'2ef81f28-684e-4afa-b548-c7af441dce18', 7, N'#FFFFFF', N'Arial', N'10', 
 SELECT N'2ef81f28-684e-4afa-b548-c7af441dce18', 8, N'#FFFFFF', N'Arial', N'10', N'#000000', N'Unassigned', N'Unassigned', '03/11/2019', '03/11/2019'
 
 COMMIT;
+GO
 
 /****************************************************************
 * Name: scom.spAgentExclusionsUpsert
@@ -69,10 +70,11 @@ BEGIN
 	INSERT INTO scom.AgentExclusions (Domain, DNSHostName, Reason, dbAddDate, dbLastUpdate)
 	VALUES (@Domain, @DNSHostName, @Reason, @dbLastUpdate, @dbLastUpdate)
 END
+GO
 
 
 GRANT EXEC ON scom.spAgentExclusionsUpsert TO scomUpdate
-
+GO
 
 /*###########################################################################
 # Script: dbo Permissions for scomRead
@@ -85,3 +87,33 @@ GRANT EXEC ON scom.spAgentExclusionsUpsert TO scomUpdate
 GRANT SELECT ON SCHEMA::dbo TO scomRead
 GO
 
+/****************************************************************
+* Name: dbo.spCurrentTimeZoneOffsetUpdate
+* Author: huscott
+* Date: 2019-07-02
+*
+* Description:
+*
+****************************************************************/
+ALTER PROCEDURE dbo.spCurrentTimeZoneOffsetUpdate
+
+AS
+
+SET NOCOUNT ON
+SET XACT_ABORT ON
+
+BEGIN TRAN
+
+UPDATE dbo.Config
+SET ConfigValue = (
+	SELECT CurrentUTCOffset 
+	FROM dbo.SystemTimeZone
+	WHERE DisplayName = (SELECT ConfigValue FROM dbo.Config WHERE ConfigName = N'DefaultTimeZoneDisplayName')
+)
+WHERE ConfigName = N'DefaultTimeZoneCurrentOffset'
+
+COMMIT
+GO
+
+GRANT EXEC ON dbo.spCurrentTimeZoneOffsetUpdate TO scomUpdate
+GO

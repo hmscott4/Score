@@ -2126,8 +2126,7 @@ ORDER BY ResolutionState</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!Context.Value</Value>
-                                      <MarkupType>HTML</MarkupType>
+                                      <Value>=Code.FormatXml(Fields!Context.Value)</Value>
                                       <Style />
                                     </TextRun>
                                   </TextRuns>
@@ -2417,6 +2416,24 @@ ORDER BY ResolutionState</CommandText>
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
+  <Code>Public Function FormatXml(input As String) As String
+  Dim doc As New System.Xml.XmlDocument()
+  doc.LoadXml(input)
+  Dim sb As New System.Text.StringBuilder()
+  Dim settings As New System.Xml.XmlWriterSettings()
+  settings.Indent = True
+  settings.IndentChars = "    "      ' This includes 4 non-breaking spaces: ALT+0160
+  settings.NewLineChars = System.Environment.NewLine
+  settings.NewLineHandling = System.Xml.NewLineHandling.Replace
+  settings.OmitXmlDeclaration = True
+  Using writer As System.Xml.XmlWriter = System.Xml.XmlWriter.Create(sb, settings)
+    doc.Save(writer)
+  End Using
+  Return sb.ToString()
+End Function</Code>
+  <CodeModules>
+    <CodeModule>System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</CodeModule>
+  </CodeModules>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>https://scomscore.dir.ad.dla.mil/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>c7223731-c649-4410-bc28-a78e8b73faf8</rd:ReportID>
