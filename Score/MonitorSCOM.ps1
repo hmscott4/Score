@@ -900,9 +900,6 @@ Param (
             $Alerts = Get-SCOMAlert -Criteria $criteria
             AddLogEntry $ManagementGroup "Info" $moduleName "Getting SCOM alerts last modified since UTC $lastUpdate" $sqlConnection
         }
-        [int]$alertCount = $alerts.Count
-		AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $alertCount alerts from $ManagementGroup" $sqlConnection
-
     }
     Catch [System.Exception] {
 		$msg=$_.Exception.Message
@@ -910,201 +907,192 @@ Param (
 		$errorCounter++
 	}
 
+	If($Alerts){
+		[int]$alertCount = $alerts.Count
+		AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved $alertCount alerts from $ManagementGroup" $sqlConnection
 
-	$sqlCommand = GetStoredProc $sqlConnection "scom.spAlertUpsert"
-    [Void]$sqlCommand.Parameters.Add("@AlertId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringClassId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectDisplayName", [system.data.SqlDbType]::ntext)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectName", [system.data.SqlDbType]::ntext)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectPath", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectFullName", [system.data.SqlDbType]::ntext)
-    [Void]$sqlCommand.Parameters.Add("@IsMonitorAlert", [system.data.SqlDbType]::bit)
-    [Void]$sqlCommand.Parameters.Add("@ProblemId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringRuleId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@ResolutionState", [system.data.SqlDbType]::tinyint)
-    [Void]$sqlCommand.Parameters.Add("@ResolutionStateName", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@Priority", [system.data.SqlDbType]::tinyint)
-    [Void]$sqlCommand.Parameters.Add("@Severity", [system.data.SqlDbType]::tinyint)
-    [Void]$sqlCommand.Parameters.Add("@Category", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@Owner", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@ResolvedBy", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@TimeRaised", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@TimeAdded", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@LastModified", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@LastModifiedBy", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@TimeResolved", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@TimeResolutionStateLastModified", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@CustomField1", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField2", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField3", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField4", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField5", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField6", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField7", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField8", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField9", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@CustomField10", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@TicketId", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@Context", [system.data.SqlDbType]::ntext)
-    [Void]$sqlCommand.Parameters.Add("@ConnectorId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@LastModifiedByNonConnector", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectInMaintenanceMode", [system.data.SqlDbType]::bit)
-    [Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@MonitoringObjectHealthState", [system.data.SqlDbType]::tinyint)
-    [Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
-    [Void]$sqlCommand.Parameters.Add("@ConnectorStatus", [system.data.SqlDbType]::int)
-    [Void]$sqlCommand.Parameters.Add("@TopLevelHostEntityId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@RepeatCount", [system.data.SqlDbType]::int)
-    [Void]$sqlCommand.Parameters.Add("@AlertStringId", [system.data.SqlDbType]::uniqueidentifier)
-    [Void]$sqlCommand.Parameters.Add("@AlertStringName", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@LanguageCode", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@AlertStringDescription", [system.data.SqlDbType]::ntext)
-    [Void]$sqlCommand.Parameters.Add("@AlertParams", [system.data.SqlDbType]::ntext)
-    [Void]$sqlCommand.Parameters.Add("@SiteName", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@TfsWorkItemId", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@TfsWorkItemOwner", [system.data.SqlDbType]::nvarchar)
-    [Void]$sqlCommand.Parameters.Add("@HostID", [system.data.SqlDbType]::int)
+		$sqlCommand = GetStoredProc $sqlConnection "scom.spAlertUpsert"
+		[Void]$sqlCommand.Parameters.Add("@AlertId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringObjectId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringClassId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringObjectDisplayName", [system.data.SqlDbType]::ntext)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringObjectName", [system.data.SqlDbType]::ntext)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringObjectPath", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringObjectFullName", [system.data.SqlDbType]::ntext)
+		[Void]$sqlCommand.Parameters.Add("@IsMonitorAlert", [system.data.SqlDbType]::bit)
+		[Void]$sqlCommand.Parameters.Add("@ProblemId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringRuleId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@ResolutionState", [system.data.SqlDbType]::tinyint)
+		[Void]$sqlCommand.Parameters.Add("@ResolutionStateName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Priority", [system.data.SqlDbType]::tinyint)
+		[Void]$sqlCommand.Parameters.Add("@Severity", [system.data.SqlDbType]::tinyint)
+		[Void]$sqlCommand.Parameters.Add("@Category", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Owner", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@ResolvedBy", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@TimeRaised", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@TimeAdded", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@LastModified", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@LastModifiedBy", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@TimeResolved", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@TimeResolutionStateLastModified", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@CustomField1", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField2", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField3", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField4", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField5", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField6", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField7", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField8", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField9", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@CustomField10", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@TicketId", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Context", [system.data.SqlDbType]::ntext)
+		[Void]$sqlCommand.Parameters.Add("@ConnectorId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@LastModifiedByNonConnector", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringObjectInMaintenanceMode", [system.data.SqlDbType]::bit)
+		[Void]$sqlCommand.Parameters.Add("@MaintenanceModeLastModified", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@MonitoringObjectHealthState", [system.data.SqlDbType]::tinyint)
+		[Void]$sqlCommand.Parameters.Add("@StateLastModified", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@ConnectorStatus", [system.data.SqlDbType]::int)
+		[Void]$sqlCommand.Parameters.Add("@TopLevelHostEntityId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@RepeatCount", [system.data.SqlDbType]::int)
+		[Void]$sqlCommand.Parameters.Add("@AlertStringId", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@AlertStringName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@LanguageCode", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@AlertStringDescription", [system.data.SqlDbType]::ntext)
+		[Void]$sqlCommand.Parameters.Add("@AlertParams", [system.data.SqlDbType]::ntext)
+		[Void]$sqlCommand.Parameters.Add("@SiteName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@TfsWorkItemId", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@TfsWorkItemOwner", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@HostID", [system.data.SqlDbType]::int)
 
-    [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
-    [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
+		[Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
 	
-    foreach($Alert in $Alerts){
-        Try {
-	        [datetime]$timeNow = (Get-Date)
-            If($Alert.MonitoringObjectName -eq $null){$MonitoringObjectName = [System.DBNull]::Value} Else {$MonitoringObjectName = $Alert.MonitoringObjectName}
-            If($Alert.MonitoringObjectPath -eq $null){$MonitoringObjectPath = [System.DBNull]::Value} Else {$MonitoringObjectPath = $Alert.MonitoringObjectPath}
-            If($Alert.Owner -eq $null){$Owner = [System.DBNull]::Value} Else {$Owner = $Alert.Owner}
-            If($Alert.ResolvedBy -eq $null){$ResolvedBy = [System.DBNull]::Value} Else {$ResolvedBy = $Alert.ResolvedBy}
-            If($Alert.TimeResolved -eq $null){$TimeResolved = [System.DBNull]::Value} Else {$TimeResolved = $Alert.TimeResolved }
-            If($Alert.Context -eq $null){$Context = [System.DBNull]::Value} Else {$Context = $Alert.Context }
+		foreach($Alert in $Alerts){
+			Try {
+				[datetime]$timeNow = (Get-Date)
+				If($Alert.MonitoringObjectName -eq $null){$MonitoringObjectName = [System.DBNull]::Value} Else {$MonitoringObjectName = $Alert.MonitoringObjectName}
+				If($Alert.MonitoringObjectPath -eq $null){$MonitoringObjectPath = [System.DBNull]::Value} Else {$MonitoringObjectPath = $Alert.MonitoringObjectPath}
+				If($Alert.Owner -eq $null){$Owner = [System.DBNull]::Value} Else {$Owner = $Alert.Owner}
+				If($Alert.ResolvedBy -eq $null){$ResolvedBy = [System.DBNull]::Value} Else {$ResolvedBy = $Alert.ResolvedBy}
+				If($Alert.TimeResolved -eq $null){$TimeResolved = [System.DBNull]::Value} Else {$TimeResolved = $Alert.TimeResolved }
+				If($Alert.Context -eq $null){$Context = [System.DBNull]::Value} Else {$Context = $Alert.Context }
             
-            If($Alert.CustomField1 -eq $null){$CustomField1 = [System.DBNull]::Value} Else {$CustomField1 = $Alert.CustomField1}
-            If($Alert.CustomField2 -eq $null){$CustomField2 = [System.DBNull]::Value} Else {$CustomField2 = $Alert.CustomField2}
-            If($Alert.CustomField3 -eq $null){$CustomField3 = [System.DBNull]::Value} Else {$CustomField3 = $Alert.CustomField3}
-            If($Alert.CustomField4 -eq $null){$CustomField4 = [System.DBNull]::Value} Else {$CustomField4 = $Alert.CustomField4}
-            If($Alert.CustomField5 -eq $null){$CustomField5 = [System.DBNull]::Value} Else {$CustomField5 = $Alert.CustomField5}
-            If($Alert.CustomField6 -eq $null){$CustomField6 = [System.DBNull]::Value} Else {$CustomField6 = $Alert.CustomField6}
-            If($Alert.CustomField7 -eq $null){$CustomField7 = [System.DBNull]::Value} Else {$CustomField7 = $Alert.CustomField7}
-            If($Alert.CustomField8 -eq $null){$CustomField8 = [System.DBNull]::Value} Else {$CustomField8 = $Alert.CustomField8}
-            If($Alert.CustomField9 -eq $null){$CustomField9 = [System.DBNull]::Value} Else {$CustomField9 = $Alert.CustomField9}
-            If($Alert.CustomField10 -eq $null){$CustomField10 = [System.DBNull]::Value} Else {$CustomField10 = $Alert.CustomField10}
+				If($Alert.CustomField1 -eq $null){$CustomField1 = [System.DBNull]::Value} Else {$CustomField1 = $Alert.CustomField1}
+				If($Alert.CustomField2 -eq $null){$CustomField2 = [System.DBNull]::Value} Else {$CustomField2 = $Alert.CustomField2}
+				If($Alert.CustomField3 -eq $null){$CustomField3 = [System.DBNull]::Value} Else {$CustomField3 = $Alert.CustomField3}
+				If($Alert.CustomField4 -eq $null){$CustomField4 = [System.DBNull]::Value} Else {$CustomField4 = $Alert.CustomField4}
+				If($Alert.CustomField5 -eq $null){$CustomField5 = [System.DBNull]::Value} Else {$CustomField5 = $Alert.CustomField5}
+				If($Alert.CustomField6 -eq $null){$CustomField6 = [System.DBNull]::Value} Else {$CustomField6 = $Alert.CustomField6}
+				If($Alert.CustomField7 -eq $null){$CustomField7 = [System.DBNull]::Value} Else {$CustomField7 = $Alert.CustomField7}
+				If($Alert.CustomField8 -eq $null){$CustomField8 = [System.DBNull]::Value} Else {$CustomField8 = $Alert.CustomField8}
+				If($Alert.CustomField9 -eq $null){$CustomField9 = [System.DBNull]::Value} Else {$CustomField9 = $Alert.CustomField9}
+				If($Alert.CustomField10 -eq $null){$CustomField10 = [System.DBNull]::Value} Else {$CustomField10 = $Alert.CustomField10}
 
-            If($Alert.TicketID -eq $null){$TicketID = [System.DBNull]::Value} Else {$TicketID = $Alert.TicketID}
-            If($Alert.ConnectorID -eq $null){$ConnectorID = [System.DBNull]::Value} Else {$ConnectorID = $Alert.ConnectorID}
-            If($Alert.TfsWorkItemId -eq $null){$TfsWorkItemId = [System.DBNull]::Value} Else {$TfsWorkItemId = $Alert.TfsWorkItemId}
-            If($Alert.TfsWorkItemOwner -eq $null){$TfsWorkItemOwner = [System.DBNull]::Value} Else {$TfsWorkItemOwner = $Alert.TfsWorkItemOwner}
+				If($Alert.TicketID -eq $null){$TicketID = [System.DBNull]::Value} Else {$TicketID = $Alert.TicketID}
+				If($Alert.ConnectorID -eq $null){$ConnectorID = [System.DBNull]::Value} Else {$ConnectorID = $Alert.ConnectorID}
+				If($Alert.TfsWorkItemId -eq $null){$TfsWorkItemId = [System.DBNull]::Value} Else {$TfsWorkItemId = $Alert.TfsWorkItemId}
+				If($Alert.TfsWorkItemOwner -eq $null){$TfsWorkItemOwner = [System.DBNull]::Value} Else {$TfsWorkItemOwner = $Alert.TfsWorkItemOwner}
 
 
-		    $sqlCommand.Parameters["@AlertId"].Value = $Alert.Id
-		    $sqlCommand.Parameters["@Name"].Value = $Alert.Name
-		    $sqlCommand.Parameters["@Description"].Value = $Alert.Description
-		    $sqlCommand.Parameters["@MonitoringObjectId"].Value = $Alert.MonitoringObjectId
-		    $sqlCommand.Parameters["@MonitoringClassId"].Value = $Alert.MonitoringClassId
-		    $sqlCommand.Parameters["@MonitoringObjectDisplayName"].Value = $Alert.MonitoringObjectDisplayName
-		    $sqlCommand.Parameters["@MonitoringObjectName"].Value = $MonitoringObjectName
-		    $sqlCommand.Parameters["@MonitoringObjectPath"].Value = $MonitoringObjectPath
-		    $sqlCommand.Parameters["@MonitoringObjectFullName"].Value = $Alert.MonitoringObjectFullName
-		    $sqlCommand.Parameters["@IsMonitorAlert"].Value = $Alert.IsMonitorAlert
-		    $sqlCommand.Parameters["@ProblemId"].Value = $Alert.ProblemId
-		    $sqlCommand.Parameters["@MonitoringRuleId"].Value = $Alert.MonitoringRuleId
-		    $sqlCommand.Parameters["@ResolutionState"].Value = $Alert.ResolutionState
-		    $sqlCommand.Parameters["@ResolutionStateName"].Value = ""
-		    $sqlCommand.Parameters["@Priority"].Value = $Alert.Priority
-		    $sqlCommand.Parameters["@Severity"].Value = $Alert.Severity
-		    $sqlCommand.Parameters["@Category"].Value = $Alert.Category
-		    $sqlCommand.Parameters["@Owner"].Value = $Owner
-		    $sqlCommand.Parameters["@ResolvedBy"].Value = $ResolvedBy
-		    $sqlCommand.Parameters["@TimeRaised"].Value = $Alert.TimeRaised
-		    $sqlCommand.Parameters["@TimeAdded"].Value = $Alert.TimeAdded
-		    $sqlCommand.Parameters["@LastModified"].Value = $Alert.LastModified
-		    $sqlCommand.Parameters["@LastModifiedBy"].Value = $Alert.LastModifiedBy
-		    $sqlCommand.Parameters["@TimeResolved"].Value = $TimeResolved
-		    $sqlCommand.Parameters["@TimeResolutionStateLastModified"].Value = $Alert.TimeResolutionStateLastModified
-		    $sqlCommand.Parameters["@CustomField1"].Value = $CustomField1
-		    $sqlCommand.Parameters["@CustomField2"].Value = $CustomField2
-		    $sqlCommand.Parameters["@CustomField3"].Value = $CustomField3
-		    $sqlCommand.Parameters["@CustomField4"].Value = $CustomField4
-		    $sqlCommand.Parameters["@CustomField5"].Value = $CustomField5
-		    $sqlCommand.Parameters["@CustomField6"].Value = $CustomField6
-		    $sqlCommand.Parameters["@CustomField7"].Value = $CustomField7
-		    $sqlCommand.Parameters["@CustomField8"].Value = $CustomField8
-		    $sqlCommand.Parameters["@CustomField9"].Value = $CustomField9
-		    $sqlCommand.Parameters["@CustomField10"].Value = $CustomField10
-		    $sqlCommand.Parameters["@TicketId"].Value = $TicketID
-		    $sqlCommand.Parameters["@Context"].Value = $Context
-		    $sqlCommand.Parameters["@ConnectorId"].Value = $ConnectorID
-		    $sqlCommand.Parameters["@LastModifiedByNonConnector"].Value = $Alert.LastModifiedByNonConnector
-		    $sqlCommand.Parameters["@MonitoringObjectInMaintenanceMode"].Value = $Alert.MonitoringObjectInMaintenanceMode
-		    $sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $Alert.MaintenanceModeLastModified
-		    $sqlCommand.Parameters["@MonitoringObjectHealthState"].Value = $Alert.MonitoringObjectHealthState
-		    $sqlCommand.Parameters["@StateLastModified"].Value = $Alert.StateLastModified
-		    $sqlCommand.Parameters["@ConnectorStatus"].Value = $Alert.ConnectorStatus
-		    $sqlCommand.Parameters["@TopLevelHostEntityId"].Value = [System.DBNull]::Value
-		    $sqlCommand.Parameters["@RepeatCount"].Value = $Alert.RepeatCount
-		    $sqlCommand.Parameters["@AlertStringId"].Value = [System.DBNull]::Value
-		    $sqlCommand.Parameters["@AlertStringName"].Value = [System.DBNull]::Value
-		    $sqlCommand.Parameters["@LanguageCode"].Value = [System.DBNull]::Value
-		    $sqlCommand.Parameters["@AlertStringDescription"].Value = [System.DBNull]::Value
-		    $sqlCommand.Parameters["@AlertParams"].Value = $Alert.Parameters.ToString()
-		    $sqlCommand.Parameters["@SiteName"].Value = [System.DBNull]::Value
-		    $sqlCommand.Parameters["@TfsWorkItemId"].Value = $TfsWorkItemId
-		    $sqlCommand.Parameters["@TfsWorkItemOwner"].Value = $TfsWorkItemOwner
-		    $sqlCommand.Parameters["@HostID"].Value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@AlertId"].Value = $Alert.Id
+				$sqlCommand.Parameters["@Name"].Value = $Alert.Name
+				$sqlCommand.Parameters["@Description"].Value = $Alert.Description
+				$sqlCommand.Parameters["@MonitoringObjectId"].Value = $Alert.MonitoringObjectId
+				$sqlCommand.Parameters["@MonitoringClassId"].Value = $Alert.MonitoringClassId
+				$sqlCommand.Parameters["@MonitoringObjectDisplayName"].Value = $Alert.MonitoringObjectDisplayName
+				$sqlCommand.Parameters["@MonitoringObjectName"].Value = $MonitoringObjectName
+				$sqlCommand.Parameters["@MonitoringObjectPath"].Value = $MonitoringObjectPath
+				$sqlCommand.Parameters["@MonitoringObjectFullName"].Value = $Alert.MonitoringObjectFullName
+				$sqlCommand.Parameters["@IsMonitorAlert"].Value = $Alert.IsMonitorAlert
+				$sqlCommand.Parameters["@ProblemId"].Value = $Alert.ProblemId
+				$sqlCommand.Parameters["@MonitoringRuleId"].Value = $Alert.MonitoringRuleId
+				$sqlCommand.Parameters["@ResolutionState"].Value = $Alert.ResolutionState
+				$sqlCommand.Parameters["@ResolutionStateName"].Value = ""
+				$sqlCommand.Parameters["@Priority"].Value = $Alert.Priority
+				$sqlCommand.Parameters["@Severity"].Value = $Alert.Severity
+				$sqlCommand.Parameters["@Category"].Value = $Alert.Category
+				$sqlCommand.Parameters["@Owner"].Value = $Owner
+				$sqlCommand.Parameters["@ResolvedBy"].Value = $ResolvedBy
+				$sqlCommand.Parameters["@TimeRaised"].Value = $Alert.TimeRaised
+				$sqlCommand.Parameters["@TimeAdded"].Value = $Alert.TimeAdded
+				$sqlCommand.Parameters["@LastModified"].Value = $Alert.LastModified
+				$sqlCommand.Parameters["@LastModifiedBy"].Value = $Alert.LastModifiedBy
+				$sqlCommand.Parameters["@TimeResolved"].Value = $TimeResolved
+				$sqlCommand.Parameters["@TimeResolutionStateLastModified"].Value = $Alert.TimeResolutionStateLastModified
+				$sqlCommand.Parameters["@CustomField1"].Value = $CustomField1
+				$sqlCommand.Parameters["@CustomField2"].Value = $CustomField2
+				$sqlCommand.Parameters["@CustomField3"].Value = $CustomField3
+				$sqlCommand.Parameters["@CustomField4"].Value = $CustomField4
+				$sqlCommand.Parameters["@CustomField5"].Value = $CustomField5
+				$sqlCommand.Parameters["@CustomField6"].Value = $CustomField6
+				$sqlCommand.Parameters["@CustomField7"].Value = $CustomField7
+				$sqlCommand.Parameters["@CustomField8"].Value = $CustomField8
+				$sqlCommand.Parameters["@CustomField9"].Value = $CustomField9
+				$sqlCommand.Parameters["@CustomField10"].Value = $CustomField10
+				$sqlCommand.Parameters["@TicketId"].Value = $TicketID
+				$sqlCommand.Parameters["@Context"].Value = $Context
+				$sqlCommand.Parameters["@ConnectorId"].Value = $ConnectorID
+				$sqlCommand.Parameters["@LastModifiedByNonConnector"].Value = $Alert.LastModifiedByNonConnector
+				$sqlCommand.Parameters["@MonitoringObjectInMaintenanceMode"].Value = $Alert.MonitoringObjectInMaintenanceMode
+				$sqlCommand.Parameters["@MaintenanceModeLastModified"].Value = $Alert.MaintenanceModeLastModified
+				$sqlCommand.Parameters["@MonitoringObjectHealthState"].Value = $Alert.MonitoringObjectHealthState
+				$sqlCommand.Parameters["@StateLastModified"].Value = $Alert.StateLastModified
+				$sqlCommand.Parameters["@ConnectorStatus"].Value = $Alert.ConnectorStatus
+				$sqlCommand.Parameters["@TopLevelHostEntityId"].Value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@RepeatCount"].Value = $Alert.RepeatCount
+				$sqlCommand.Parameters["@AlertStringId"].Value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@AlertStringName"].Value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@LanguageCode"].Value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@AlertStringDescription"].Value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@AlertParams"].Value = $Alert.Parameters.ToString()
+				$sqlCommand.Parameters["@SiteName"].Value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@TfsWorkItemId"].Value = $TfsWorkItemId
+				$sqlCommand.Parameters["@TfsWorkItemOwner"].Value = $TfsWorkItemOwner
+				$sqlCommand.Parameters["@HostID"].Value = [System.DBNull]::Value
 
-	        $sqlCommand.Parameters["@Active"].Value = $true
-	        $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
-	        [void]$sqlCommand.ExecuteNonQuery()
-            $alertCounter++
-        }
-        Catch [System.Exception] {
-			$msg=$_.Exception.Message
-			AddLogEntry $ManagementGroup "Warning" $moduleName "Update SCOM Alert : $msg" $sqlConnection
-			$warningCounter++
-	    }
-    }
+				$sqlCommand.Parameters["@Active"].Value = $true
+				$sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+				[void]$sqlCommand.ExecuteNonQuery()
+				$alertCounter++
+			}
+			Catch [System.Exception] {
+				$msg=$_.Exception.Message
+				AddLogEntry $ManagementGroup "Warning" $moduleName "Update SCOM Alert : $msg" $sqlConnection
+				$warningCounter++
+			}
+		}
 	
-	$sqlCommand.Dispose()
+		$sqlCommand.Dispose()
 
-    ################################################################################
-    # SET ALERTS IN DATABASE TO INACTIVE
-    ################################################################################
-    If($syncType -eq "Full" -and $errorCounter -eq 0){
-        Try {
-	        $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertInactivateByDate"
-            [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
+		################################################################################
+		# SET ALERTS IN DATABASE TO INACTIVE
+		################################################################################
+		If($syncType -eq "Full" -and $errorCounter -eq 0){
+			Try {
+				$sqlCommand = GetStoredProc $sqlConnection "scom.spAlertInactivateByDate"
+				[Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
 
-		    $sqlCommand.Parameters["@BeforeDate"].Value = $timeStart
+				$sqlCommand.Parameters["@BeforeDate"].Value = $timeStart
 
-	        [void]$sqlCommand.ExecuteNonQuery()
-            $sqlCommand.Dispose()
-        }
-        Catch [System.Exception] {
-			$msg=$_.Exception.Message
-			AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
-			$warningCounter++
-	    }
-    }
-
-    ################################################################################
-    # DELETE ALERTS FROM DATABASE THAT ARE NO LONGER ACTIVE
-    ################################################################################
-    #If($syncType -eq "Full") {
-    #    Try {
-	#        $sqlCommand = GetStoredProc $sqlConnection "scom.spAlertDeleteInactive"
-	#        [void]$sqlCommand.ExecuteNonQuery()
-    #        $sqlCommand.Dispose()
-    #    }
-    #    Catch [System.Exception] {
-	#	    $msg=$_.Exception.Message
-	#	    AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
-	#	    $warningCounter++
-	#    }
-    #}
+				[void]$sqlCommand.ExecuteNonQuery()
+				$sqlCommand.Dispose()
+			}
+			Catch [System.Exception] {
+				$msg=$_.Exception.Message
+				AddLogEntry $ManagementGroup "Warning" $moduleName $msg $sqlConnection
+				$warningCounter++
+			}
+		}
 	
-	AddLogEntry $ManagementGroup "Info" $moduleName "Processed $alertCounter alerts from $ManagementGroup" $sqlConnection
+		AddLogEntry $ManagementGroup "Info" $moduleName "Processed $alertCounter alerts from $ManagementGroup" $sqlConnection
+
+	} Else {
+		AddLogEntry $ManagementGroup "Info" $moduleName "Retrieved 0 alerts from $ManagementGroup" $sqlConnection
+	}
 
     # Determine Exit status
 	If($errorCounter -gt 0) {$syncStatus = "Error"}
