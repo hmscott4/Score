@@ -835,6 +835,12 @@ Param (
 	
 	AddLogEntry "TimeZone" "Info" $moduleName "Retrieved $zoneCounter Time Zones from system." $sqlConnection
 
+	# UPDATE Default Configured Time Zone in dbo.Config
+	$sqlCommand = GetStoredProc $sqlConnection "dbo.spSystemTimeZoneUpsert"
+	$sqlCommand.ExecuteNonQuery()
+
+	AddLogEntry "TimeZone" "Info" $moduleName "Updated default configured Time Zone." $sqlConnection
+
     # Determine Exit status
 	If($errorCounter -gt 0) {$syncStatus = "Error"}
 	ElseIf($warningCounter -gt 0) {$syncStatus = "Warning"}
