@@ -41,7 +41,7 @@ WHERE
 	AND oc.Active = 1) tmp
 WHERE
 	tmp.HealthState IN (N'Success',N'Warning',N'Error',N'MaintenanceMode',N'NotAvailable')) tmp
-WHERE tmp.HealthState = @HealthState
+WHERE tmp.HealthState IN (@HealthState)
 GROUP BY GenericName
 ORDER BY [ObjectCount] DESC</CommandText>
       </Query>
@@ -1093,15 +1093,6 @@ ORDER BY [ObjectCount] DESC</CommandText>
   <ReportParameters>
     <ReportParameter Name="HealthState">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>Success</Value>
-          <Value>Warning</Value>
-          <Value>Error</Value>
-          <Value>MaintenanceMode</Value>
-          <Value>NotAvailable</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>Health State</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -1127,7 +1118,6 @@ ORDER BY [ObjectCount] DESC</CommandText>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>

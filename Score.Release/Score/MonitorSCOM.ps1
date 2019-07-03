@@ -1797,7 +1797,7 @@ Param (
         }
         Catch [System.Exception] {
 			$msg=$_.Exception.Message
-			AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $msg" $sqlConnection
+			AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $objectClass : $msg" $sqlConnection
 			$errorCounter++
 	    }
 
@@ -2022,7 +2022,6 @@ Param (
 	$sqlCommand.Dispose()
     $sqlCommand2.Dispose()
 
-	# TODO : ADD A PARAMETER TO scom.spObjectHealthStateInactivateByDate FOR DISTRIBUTED APPLICATION (BIT)
     ############################################################################################################
     # IF FULL SYNC, INACTIVATE OBJECTS THAT WERE NOT UPDATED
     ############################################################################################################
@@ -2033,14 +2032,14 @@ Param (
             [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
 
             $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
-            $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
+            $sqlCommand.Parameters["@ObjectClass"].Value = $displayName + ":" + $objectID
             [void]$sqlCommand.ExecuteNonQuery()
             $sqlCommand.Dispose()
 
         }
         Catch [System.Exception] {
 			$msg=$_.Exception.Message
-			AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $msg" $sqlConnection
+			AddLogEntry $ManagementGroup "Warning" $moduleName "Inactivate Object : $displayName {ID=$objectID} : $msg" $sqlConnection
 			$errorCounter++
 	    }
 

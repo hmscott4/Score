@@ -862,15 +862,6 @@ WHERE
                       <VerticalAlign>Top</VerticalAlign>
                     </Style>
                     <DockOutsideChartArea>true</DockOutsideChartArea>
-                    <ActionInfo>
-                      <Actions>
-                        <Action>
-                          <Drillthrough>
-                            <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
-                          </Drillthrough>
-                        </Action>
-                      </Actions>
-                    </ActionInfo>
                   </ChartTitle>
                 </ChartTitles>
                 <Palette>Pacific</Palette>
@@ -892,7 +883,7 @@ WHERE
                 </ChartNoDataMessage>
                 <DataSetName>ObjectStateSummary</DataSetName>
                 <Left>1.19445in</Left>
-                <Height>2.92833in</Height>
+                <Height>2.5188in</Height>
                 <Width>2.87653in</Width>
                 <Style>
                   <Border>
@@ -987,7 +978,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>1.06349in</Top>
+                <Top>0.87599in</Top>
                 <Left>4.14896in</Left>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
@@ -1039,7 +1030,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>2.0813in</Top>
+                <Top>1.7188in</Top>
                 <Left>4.14043in</Left>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
@@ -1090,7 +1081,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>2.0813in</Top>
+                <Top>1.7188in</Top>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
                 <ZIndex>4</ZIndex>
@@ -1141,7 +1132,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>1.06349in</Top>
+                <Top>0.87599in</Top>
                 <Left>0.00001in</Left>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
@@ -1214,9 +1205,9 @@ WHERE
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>1.3754in</Top>
+            <Top>1.1254in</Top>
             <Left>0.05802in</Left>
-            <Height>3.07266in</Height>
+            <Height>2.59349in</Height>
             <Width>5.401in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -1232,11 +1223,58 @@ WHERE
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Organization Health Summary</Value>
+                    <Value>Organization Health Summary  </Value>
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
                       <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>(Group)</Value>
+                    <ActionInfo>
+                      <Actions>
+                        <Action>
+                          <Drillthrough>
+                            <ReportName>Dash_OrganizationSummaryByGroup</ReportName>
+                          </Drillthrough>
+                        </Action>
+                      </Actions>
+                    </ActionInfo>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>Underline</TextDecoration>
+                      <Color>Blue</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve">  </Value>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>Blue</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>(Area)</Value>
+                    <ActionInfo>
+                      <Actions>
+                        <Action>
+                          <Drillthrough>
+                            <ReportName>Dash_OrganizationSummaryByArea</ReportName>
+                          </Drillthrough>
+                        </Action>
+                      </Actions>
+                    </ActionInfo>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>Underline</TextDecoration>
+                      <Color>Blue</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1244,16 +1282,7 @@ WHERE
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <ActionInfo>
-              <Actions>
-                <Action>
-                  <Drillthrough>
-                    <ReportName>Dash_OrganizationSummaryByArea</ReportName>
-                  </Drillthrough>
-                </Action>
-              </Actions>
-            </ActionInfo>
-            <Top>0.80691in</Top>
+            <Top>0.55691in</Top>
             <Left>0.05803in</Left>
             <Height>0.45325in</Height>
             <Width>5.40099in</Width>
@@ -1300,7 +1329,7 @@ WHERE
                 </Action>
               </Actions>
             </ActionInfo>
-            <Top>0.80691in</Top>
+            <Top>0.55691in</Top>
             <Left>5.59198in</Left>
             <Height>0.45325in</Height>
             <Width>4.30642in</Width>
@@ -1516,7 +1545,7 @@ WHERE
                 <Value>=Fields!genericname.Value</Value>
               </SortExpression>
             </SortExpressions>
-            <Top>1.3754in</Top>
+            <Top>1.1254in</Top>
             <Left>5.59198in</Left>
             <Height>0.5in</Height>
             <Width>4.30642in</Width>
@@ -1654,7 +1683,7 @@ WHERE
                 <Value>=Fields!SortSequence.Value</Value>
               </SortExpression>
             </SortExpressions>
-            <Top>4.56707in</Top>
+            <Top>4.31707in</Top>
             <Left>0.05803in</Left>
             <Height>0.5in</Height>
             <Width>5.27395in</Width>
@@ -1794,7 +1823,7 @@ WHERE
                 <Value>=Fields!SortSequence.Value</Value>
               </SortExpression>
             </SortExpressions>
-            <Top>4.56707in</Top>
+            <Top>4.31707in</Top>
             <Left>5.59198in</Left>
             <Height>0.5in</Height>
             <Width>4.30642in</Width>
@@ -1805,8 +1834,38 @@ WHERE
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="Textbox28">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>="Windows Servers : " &amp; Format(Sum(IIf(Fields!genericname.Value = "Windows Server", 1, 0), "ObjectStateSummary") , "#,##0") &amp; Environment.NewLine() &amp; "Agents : " &amp; Format(Sum(IIf(Fields!genericname.Value = "Health Service", 1, 0), "ObjectStateSummary") , "#,##0")  &amp; Environment.NewLine() &amp; "Objects : " &amp; Format(Count(Fields!genericname.Value, "ObjectStateSummary") , "#,##0")</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox28</rd:DefaultName>
+            <Top>3.78834in</Top>
+            <Left>0.05803in</Left>
+            <Height>0.25in</Height>
+            <Width>5.40099in</Width>
+            <ZIndex>7</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
-        <Height>5.28206in</Height>
+        <Height>4.88623in</Height>
         <Style>
           <Border>
             <Style>None</Style>
