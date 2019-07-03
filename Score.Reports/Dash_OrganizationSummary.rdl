@@ -249,12 +249,23 @@ WHERE
     <DataSet Name="OpenAlerts">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@AlertSeverity">
+            <Value>=Parameters!AlertSeverity.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@AlertPriority">
+            <Value>=Parameters!AlertPriority.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>SELECT
 COUNT(*) as OpenAlerts
 FROM
 scom.Alert
-WHERE ResolutionState &lt; 255 AND Active = 1
-AND Severity &gt; 0</CommandText>
+WHERE 
+ResolutionState &lt; 255 
+AND Active = 1
+AND Severity IN (@AlertSeverity)
+AND Priority IN (@AlertPriority)</CommandText>
       </Query>
       <Fields>
         <Field Name="OpenAlerts">
@@ -1173,6 +1184,14 @@ WHERE
                     <Action>
                       <Drillthrough>
                         <ReportName>Dash_AlertSummaryByOwner</ReportName>
+                        <Parameters>
+                          <Parameter Name="Severity">
+                            <Value>=Split(Join(Parameters!AlertSeverity.Value, ","), ",")</Value>
+                          </Parameter>
+                          <Parameter Name="Priority">
+                            <Value>=Split(Join(Parameters!AlertPriority.Value, ","), ",")</Value>
+                          </Parameter>
+                        </Parameters>
                       </Drillthrough>
                     </Action>
                   </Actions>
@@ -1858,7 +1877,6 @@ WHERE
         </DataSetReference>
       </DefaultValue>
       <Prompt>Time Zone</Prompt>
-      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>SystemTimeZone</DataSetName>
@@ -1866,6 +1884,61 @@ WHERE
           <LabelField>DisplayName</LabelField>
         </DataSetReference>
       </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="AlertSeverity">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>AlertSeverity</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Critical</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Warning</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Info</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="AlertPriority">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>AlertPriority</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>High</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Medium</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Low</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
@@ -1877,6 +1950,16 @@ WHERE
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>UTCOffset</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AlertSeverity</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AlertPriority</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
