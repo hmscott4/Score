@@ -1093,6 +1093,32 @@ ORDER BY
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Drillthrough>
+                              <ReportName>List_AlertDetails</ReportName>
+                              <Parameters>
+                                <Parameter Name="Severity">
+                                  <Value>=Fields!Severity.Value</Value>
+                                </Parameter>
+                                <Parameter Name="OnlyOpenAlerts">
+                                  <Value>True</Value>
+                                </Parameter>
+                                <Parameter Name="StartDate">
+                                  <Value>=DateAdd(DateInterval.Hour, -Fields!HighValue.Value, Now)</Value>
+                                </Parameter>
+                                <Parameter Name="EndDate">
+                                  <Value>=DateAdd(DateInterval.Hour, -Fields!LowValue.Value, Now)</Value>
+                                </Parameter>
+                                <Parameter Name="Owner">
+                                  <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
+                                </Parameter>
+                              </Parameters>
+                            </Drillthrough>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
                       <Style>
                         <Color>=iif(Fields!Severity.Value = 2, "Firebrick", iif(Fields!Severity.Value = 1, "Gold", "CornFlowerBlue"))</Color>
                       </Style>

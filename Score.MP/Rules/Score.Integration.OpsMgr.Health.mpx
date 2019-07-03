@@ -149,7 +149,7 @@
         <WriteActions>
           <WriteAction ID="WA" TypeID="Microsoft.SCORE.SCOM.Health.Integration.TimedPowerShell.Rule.WA" RunAs="SCORE.IntegrationServer.OpsMgr.RunasProfile">
             <managementGroup>$Target/ManagementGroup/Name$</managementGroup>
-            <objectClasses>generic,group</objectClasses>
+            <objectClasses>generic,group,distapp</objectClasses>
             <ScriptLocation>$Target/Property[Type='Microsoft.SCORE.IntegrationServer.Class']/ScriptLocation$</ScriptLocation>
             <TimeoutSeconds>900</TimeoutSeconds>
           </WriteAction>

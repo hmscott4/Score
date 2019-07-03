@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Report MustUnderstand="df" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:df="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition/defaultfontfamily">
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
-  <AutoRefresh>90</AutoRefresh>
+  <AutoRefresh>300</AutoRefresh>
   <DataSources>
     <DataSource Name="SCORE">
       <DataSourceReference>SCORE</DataSourceReference>
@@ -249,12 +249,23 @@ WHERE
     <DataSet Name="OpenAlerts">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@AlertSeverity">
+            <Value>=Parameters!AlertSeverity.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@AlertPriority">
+            <Value>=Parameters!AlertPriority.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>SELECT
 COUNT(*) as OpenAlerts
 FROM
 scom.Alert
-WHERE ResolutionState &lt; 255 AND Active = 1
-AND Severity &gt; 0</CommandText>
+WHERE 
+ResolutionState &lt; 255 
+AND Active = 1
+AND Severity IN (@AlertSeverity)
+AND Priority IN (@AlertPriority)</CommandText>
       </Query>
       <Fields>
         <Field Name="OpenAlerts">
@@ -851,15 +862,6 @@ WHERE
                       <VerticalAlign>Top</VerticalAlign>
                     </Style>
                     <DockOutsideChartArea>true</DockOutsideChartArea>
-                    <ActionInfo>
-                      <Actions>
-                        <Action>
-                          <Drillthrough>
-                            <ReportName>Dash_OrganizationSummaryByHealth</ReportName>
-                          </Drillthrough>
-                        </Action>
-                      </Actions>
-                    </ActionInfo>
                   </ChartTitle>
                 </ChartTitles>
                 <Palette>Pacific</Palette>
@@ -881,7 +883,7 @@ WHERE
                 </ChartNoDataMessage>
                 <DataSetName>ObjectStateSummary</DataSetName>
                 <Left>1.19445in</Left>
-                <Height>2.92833in</Height>
+                <Height>2.5188in</Height>
                 <Width>2.87653in</Width>
                 <Style>
                   <Border>
@@ -976,7 +978,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>1.06349in</Top>
+                <Top>0.87599in</Top>
                 <Left>4.14896in</Left>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
@@ -1028,7 +1030,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>2.0813in</Top>
+                <Top>1.7188in</Top>
                 <Left>4.14043in</Left>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
@@ -1079,7 +1081,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>2.0813in</Top>
+                <Top>1.7188in</Top>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
                 <ZIndex>4</ZIndex>
@@ -1130,7 +1132,7 @@ WHERE
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Top>1.06349in</Top>
+                <Top>0.87599in</Top>
                 <Left>0.00001in</Left>
                 <Height>0.8in</Height>
                 <Width>1.125in</Width>
@@ -1173,6 +1175,14 @@ WHERE
                     <Action>
                       <Drillthrough>
                         <ReportName>Dash_AlertSummaryByOwner</ReportName>
+                        <Parameters>
+                          <Parameter Name="Severity">
+                            <Value>=Split(Join(Parameters!AlertSeverity.Value, ","), ",")</Value>
+                          </Parameter>
+                          <Parameter Name="Priority">
+                            <Value>=Split(Join(Parameters!AlertPriority.Value, ","), ",")</Value>
+                          </Parameter>
+                        </Parameters>
                       </Drillthrough>
                     </Action>
                   </Actions>
@@ -1195,9 +1205,9 @@ WHERE
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>1.3754in</Top>
+            <Top>1.1254in</Top>
             <Left>0.05802in</Left>
-            <Height>3.07266in</Height>
+            <Height>2.59349in</Height>
             <Width>5.401in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -1213,11 +1223,58 @@ WHERE
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Organization Health Summary</Value>
+                    <Value>Organization Health Summary  </Value>
                     <Style>
                       <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
                       <FontSize>=First(Fields!SubTitleFontSize.Value, "ReportHeaderSettings")</FontSize>
                       <Color>=First(Fields!SubTitleFontColor.Value, "ReportHeaderSettings")</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>(Group)</Value>
+                    <ActionInfo>
+                      <Actions>
+                        <Action>
+                          <Drillthrough>
+                            <ReportName>Dash_OrganizationSummaryByGroup</ReportName>
+                          </Drillthrough>
+                        </Action>
+                      </Actions>
+                    </ActionInfo>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>Underline</TextDecoration>
+                      <Color>Blue</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve">  </Value>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>Blue</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>(Area)</Value>
+                    <ActionInfo>
+                      <Actions>
+                        <Action>
+                          <Drillthrough>
+                            <ReportName>Dash_OrganizationSummaryByArea</ReportName>
+                          </Drillthrough>
+                        </Action>
+                      </Actions>
+                    </ActionInfo>
+                    <Style>
+                      <FontFamily>=First(Fields!TitleFont.Value, "ReportHeaderSettings")</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>Underline</TextDecoration>
+                      <Color>Blue</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1225,16 +1282,7 @@ WHERE
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <ActionInfo>
-              <Actions>
-                <Action>
-                  <Drillthrough>
-                    <ReportName>Dash_OrganizationSummaryByArea</ReportName>
-                  </Drillthrough>
-                </Action>
-              </Actions>
-            </ActionInfo>
-            <Top>0.80691in</Top>
+            <Top>0.55691in</Top>
             <Left>0.05803in</Left>
             <Height>0.45325in</Height>
             <Width>5.40099in</Width>
@@ -1281,7 +1329,7 @@ WHERE
                 </Action>
               </Actions>
             </ActionInfo>
-            <Top>0.80691in</Top>
+            <Top>0.55691in</Top>
             <Left>5.59198in</Left>
             <Height>0.45325in</Height>
             <Width>4.30642in</Width>
@@ -1497,7 +1545,7 @@ WHERE
                 <Value>=Fields!genericname.Value</Value>
               </SortExpression>
             </SortExpressions>
-            <Top>1.3754in</Top>
+            <Top>1.1254in</Top>
             <Left>5.59198in</Left>
             <Height>0.5in</Height>
             <Width>4.30642in</Width>
@@ -1635,7 +1683,7 @@ WHERE
                 <Value>=Fields!SortSequence.Value</Value>
               </SortExpression>
             </SortExpressions>
-            <Top>4.56707in</Top>
+            <Top>4.31707in</Top>
             <Left>0.05803in</Left>
             <Height>0.5in</Height>
             <Width>5.27395in</Width>
@@ -1775,7 +1823,7 @@ WHERE
                 <Value>=Fields!SortSequence.Value</Value>
               </SortExpression>
             </SortExpressions>
-            <Top>4.56707in</Top>
+            <Top>4.31707in</Top>
             <Left>5.59198in</Left>
             <Height>0.5in</Height>
             <Width>4.30642in</Width>
@@ -1786,8 +1834,38 @@ WHERE
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="Textbox28">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>="Windows Servers : " &amp; Format(Sum(IIf(Fields!genericname.Value = "Windows Server", 1, 0), "ObjectStateSummary") , "#,##0") &amp; Environment.NewLine() &amp; "Agents : " &amp; Format(Sum(IIf(Fields!genericname.Value = "Health Service", 1, 0), "ObjectStateSummary") , "#,##0")  &amp; Environment.NewLine() &amp; "Objects : " &amp; Format(Count(Fields!genericname.Value, "ObjectStateSummary") , "#,##0")</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox28</rd:DefaultName>
+            <Top>3.78834in</Top>
+            <Left>0.05803in</Left>
+            <Height>0.25in</Height>
+            <Width>5.40099in</Width>
+            <ZIndex>7</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
-        <Height>5.28206in</Height>
+        <Height>4.88623in</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1809,17 +1887,18 @@ WHERE
                   <TextRuns>
                     <TextRun>
                       <Value>="Last refresh: " &amp; Now()</Value>
-                      <Style />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
                     </TextRun>
                   </TextRuns>
                   <Style />
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox6</rd:DefaultName>
-              <Top>0.11252in</Top>
-              <Left>0.05802in</Left>
+              <Top>0.06944in</Top>
               <Height>0.25in</Height>
-              <Width>5.401in</Width>
+              <Width>10.00002in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -1857,7 +1936,6 @@ WHERE
         </DataSetReference>
       </DefaultValue>
       <Prompt>Time Zone</Prompt>
-      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>SystemTimeZone</DataSetName>
@@ -1865,6 +1943,61 @@ WHERE
           <LabelField>DisplayName</LabelField>
         </DataSetReference>
       </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="AlertSeverity">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>AlertSeverity</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Critical</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Warning</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Info</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="AlertPriority">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+          <Value>1</Value>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>AlertPriority</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>High</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Medium</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Low</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
@@ -1876,6 +2009,16 @@ WHERE
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>UTCOffset</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AlertSeverity</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AlertPriority</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

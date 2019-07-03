@@ -67,6 +67,7 @@
     <Report Include="Chart_DailyAvailability.rdl" />
     <Report Include="Chart_DatabasePerf.rdl" />
     <Report Include="Chart_DatabasePerfDetail.rdl" />
+    <Report Include="Chart_DatabasePerf_ForGroup.rdl" />
     <Report Include="Chart_GroupHealthSummary.rdl" />
     <Report Include="Chart_HostPerf.rdl" />
     <Report Include="Chart_HostPerf_ForGroup.rdl" />

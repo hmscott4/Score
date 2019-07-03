@@ -17158,25 +17158,25 @@ GO
 *
 ****************************************************************/
 CREATE PROC [scom].[spWindowsComputerUpsert]
-	@ID uniqueidentifier,
-	@DNSHostName nvarchar(255),
-	@IPAddress nvarchar(255) = N'',
-	@ObjectSID nvarchar(255) = N'',
-	@NetBIOSDomainName nvarchar(255) = N'',
-	@DomainDNSName nvarchar(255) = N'',
-	@OrganizationalUnit nvarchar(2048) = N'',
-	@ForestDNSName nvarchar(255) = N'',
-	@ActiveDirectorySite nvarchar(255) = N'',
-	@IsVirtualMachine bit = Null,
-	@HealthState nvarchar(255) = N'',
-	@StateLastModified datetime2(3) = Null,
-	@IsAvailable bit = Null,
-	@AvailabilityLastModified datetime2(3) = Null,
-	@InMaintenanceMode bit = Null,
-	@MaintenanceModeLastModified datetime2(3) = Null,
-	@ManagementGroup nvarchar(255) = Null,
-	@Active bit,
-	@dbLastUpdate datetime2(3)
+	@ID UNIQUEIDENTIFIER,
+	@DNSHostName NVARCHAR(255),
+	@IPAddress NVARCHAR(255) = N'',
+	@ObjectSID NVARCHAR(255) = N'',
+	@NetBIOSDomainName NVARCHAR(255) = N'',
+	@DomainDNSName NVARCHAR(255) = N'',
+	@OrganizationalUnit NVARCHAR(2048) = N'',
+	@ForestDNSName NVARCHAR(255) = N'',
+	@ActiveDirectorySite NVARCHAR(255) = N'',
+	@IsVirtualMachine BIT = NULL,
+	@HealthState NVARCHAR(255) = N'',
+	@StateLastModified DATETIME2(3) = NULL,
+	@IsAvailable BIT = NULL,
+	@AvailabilityLastModified DATETIME2(3) = NULL,
+	@InMaintenanceMode BIT = NULL,
+	@MaintenanceModeLastModified DATETIME2(3) = NULL,
+	@ManagementGroup NVARCHAR(255) = NULL,
+	@Active BIT,
+	@dbLastUpdate DATETIME2(3)
 
 AS
 
@@ -17192,7 +17192,7 @@ END
 
 BEGIN TRAN
 
-	MERGE [scom].[WindowsComputer] as [target]
+	MERGE [scom].[WindowsComputer] AS [target]
 	USING (SELECT 	
 		@ID ,
 		@DNSHostName,
@@ -17213,7 +17213,7 @@ BEGIN TRAN
 		@ManagementGroup,
 		@Active ,
 		@dbLastUpdate ,
-		@dbLastUpdate ) as [Source]
+		@dbLastUpdate ) AS [Source]
 
 		(ID,
 		DNSHostName,
@@ -17234,7 +17234,7 @@ BEGIN TRAN
 		ManagementGroup,
 		Active,
 		dbAddDate,
-		dbLastUpdate) on ([target].ID = @ID)
+		dbLastUpdate) ON ([target].ID = @ID)
 
 
 	WHEN MATCHED 
@@ -17311,4 +17311,77 @@ GO
 USE [master]
 GO
 ALTER DATABASE [SCORE] SET  READ_WRITE 
+GO
+
+/****************************************************************
+* Name: scom.spAgentExclusionsUpsert
+* Author: huscott
+* Date: 2019-06-20
+*
+* Description:
+* Insert entries into scom.AgentExlusions table
+* Used to exclude selected computer objects (like Cluster named objects) from Agent deployment count
+*
+****************************************************************/
+CREATE PROC scom.spAgentExclusionsUpsert
+(@Domain nvarchar(128),
+ @DNSHostName nvarchar(255),
+ @Reason nvarchar(1024),
+ @dbLastUpdate datetime2(3)
+ )
+
+ AS
+
+ SET NOCOUNT ON
+ SET XACT_ABORT ON
+
+ IF EXISTS (SELECT DNSHostName FROM scom.AgentExclusions WHERE (Domain = @Domain AND [DNSHostName] = @DNSHostName))
+BEGIN
+	UPDATE scom.AgentExclusions
+	SET dbLastUpdate = @dbLastUpdate
+	WHERE Domain = @Domain 
+		AND DNSHostName = @DNSHostName
+END
+
+ELSE
+
+BEGIN
+	INSERT INTO scom.AgentExclusions (Domain, DNSHostName, Reason, dbAddDate, dbLastUpdate)
+	VALUES (@Domain, @DNSHostName, @Reason, @dbLastUpdate, @dbLastUpdate)
+END
+
+
+GRANT EXEC ON scom.spAgentExclusionsUpsert TO scomUpdate
+GO
+
+
+/****************************************************************
+* Name: dbo.spCurrentTimeZoneOffsetUpdate
+* Author: huscott
+* Date: 2019-07-02
+*
+* Description:
+*
+****************************************************************/
+ALTER PROCEDURE dbo.spCurrentTimeZoneOffsetUpdate
+
+AS
+
+SET NOCOUNT ON
+SET XACT_ABORT ON
+
+BEGIN TRAN
+
+UPDATE dbo.Config
+SET ConfigValue = (
+	SELECT CurrentUTCOffset 
+	FROM dbo.SystemTimeZone
+	WHERE DisplayName = (SELECT ConfigValue FROM dbo.Config WHERE ConfigName = N'DefaultTimeZoneDisplayName')
+)
+WHERE ConfigName = N'DefaultTimeZoneCurrentOffset'
+
+COMMIT
+GO
+
+GRANT EXEC ON dbo.spCurrentTimeZoneOffsetUpdate TO scomUpdate
 GO
