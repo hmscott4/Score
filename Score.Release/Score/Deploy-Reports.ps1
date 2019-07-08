@@ -147,6 +147,46 @@ If($IsOverwriteDataSource -eq $true)
     [string]$dbInstanceSCORE = Read-Host "SCORE DB Instance"
 }
 
+####################################################################################
+# GET SCOM CONNECTION DATA
+####################################################################################
+If($IsInitialDeployment)
+{
+	$managementGroup = Read-Host -Prompt 'Enter Management Group Name'
+
+	$managementServer = Read-Host -Prompt 'Enter Primary Management Server'
+
+	Import-Module OperationsManager
+	$mgmtConnection = New-SCManagementGroupConnection $managementServer -passthru
+
+	If($mgmtConnection.IsActive)
+	{
+		$testGroup = Get-SCOMManagementGroup
+
+		If($testGroup.Name -eq $managementGroup)
+		{
+			[string]$appConfig = Get-Content .\app.monitor.config
+			$appConfig = $appConfig.Replace("__MGMT_GROUP__",$managementGroup)
+			$appConfig = $appConfig.Replace("__MGMT_SVR1__", $managementServer)
+			Set-Content -Path .\app.monitor.config -Value $appConfig
+		}
+		Else
+		{
+			Write-Error "Please check the name of the management group used: $managementGroup."
+			Exit
+		}
+	}
+	Else
+	{
+		Write-Error "Unable to connect to Management Group $managementGroup using management server $managementServer."
+		Exit
+	}
+
+}
+
+###################################################################################
+# CONNECT TO SSRS
+###################################################################################
 
 $rootPath ="/" # Rool Level
 $rsReportFolder = $rootPath + $reportFolder
@@ -220,6 +260,10 @@ If($IsOverwriteDataSource)
     {
         Write-Verbose "Connection successful!"
         $sqlConnection.Close()
+
+		[string]$appConfig = Get-Content .\app.monitor.config
+		$appConfig = $appConfig.Replace("__SCORE__",$managementGroup)
+		Set-Content -Path .\app.monitor.config -Value $appConfig
     }
 
     Write-Host ""

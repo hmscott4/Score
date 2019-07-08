@@ -17,8 +17,14 @@
             <Value>=Parameters!UTCOffset.Value</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
+          <QueryParameter Name="@Severity">
+            <Value>=Parameters!Severity.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@Owner">
             <Value>=Parameters!Owner.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Priority">
+            <Value>=Parameters!Priority.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT a.Name, 
@@ -63,7 +69,8 @@ FROM
 		(DATEDIFF(MINUTE, [TimeRaised], GETUTCDATE()) / 60.0) BETWEEN b.LowValue and b.HighValue
 WHERE 
     a.Active = 1
-    AND a.Severity &gt; 0
+    AND a.Severity IN (@Severity)
+    AND a.Priority IN (@Priority)
    AND IsNull(Owner, 'Unassigned') IN (@Owner)
 
 -- ORDER BY CAST([TimeRaised] as [date]) ASC</CommandText>
@@ -790,7 +797,10 @@ ORDER BY
                                   <Value>=Fields!SeverityID.Value</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>=Fields!Owner.Value</Value>
+                                  <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
+                                </Parameter>
+                                <Parameter Name="Priority">
+                                  <Value>=Split(Join(Parameters!Priority.Value, ","), ",")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1093,6 +1103,7 @@ ORDER BY
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!Count.Value)</ToolTip>
                       <ActionInfo>
                         <Actions>
                           <Action>
@@ -1113,6 +1124,9 @@ ORDER BY
                                 </Parameter>
                                 <Parameter Name="Owner">
                                   <Value>=Split(Join(Parameters!Owner.Value, ","), ",")</Value>
+                                </Parameter>
+                                <Parameter Name="Priority">
+                                  <Value>=Split(Join(Parameters!Priority.Value, ","), ",")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -3085,8 +3099,8 @@ ORDER BY
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>1</Value>
           <Value>2</Value>
+          <Value>1</Value>
         </Values>
       </DefaultValue>
       <Prompt>Severity</Prompt>
@@ -3098,7 +3112,7 @@ ORDER BY
           </ParameterValue>
           <ParameterValue>
             <Value>1</Value>
-            <Label>Warn</Label>
+            <Label>Warning</Label>
           </ParameterValue>
           <ParameterValue>
             <Value>0</Value>
@@ -3112,9 +3126,9 @@ ORDER BY
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>0</Value>
-          <Value>1</Value>
           <Value>2</Value>
+          <Value>1</Value>
+          <Value>0</Value>
         </Values>
       </DefaultValue>
       <Prompt>Priority</Prompt>

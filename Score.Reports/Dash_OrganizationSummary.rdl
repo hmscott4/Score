@@ -1320,15 +1320,6 @@ WHERE
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <ActionInfo>
-              <Actions>
-                <Action>
-                  <Drillthrough>
-                    <ReportName>Dash_AlertSummary</ReportName>
-                  </Drillthrough>
-                </Action>
-              </Actions>
-            </ActionInfo>
             <Top>0.55691in</Top>
             <Left>5.59198in</Left>
             <Height>0.45325in</Height>
