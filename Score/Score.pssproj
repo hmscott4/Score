@@ -23,8 +23,9 @@ get-childitem -Filter *.ps1 -Path .\Modules\ | Copy-Item -Destination ..\Score.R
 
 # UPDATE APP CONFIG CONTENTS
 $config = Get-Content ..\Score.Release\Score\app.monitor.config
-$config = $config.Replace("ABCD_OM","MGMT_GROUP")
-$config = $config.Replace("MGR31.ABCD.LCL","MGMT_SERVER")
+$config = $config.Replace("ABCD_OM","__MGMT_GROUP__")
+$config = $config.Replace("MGR31.ABCD.LCL","__MGMT_SVR1__")
+$config = $config.Replace("MGR93.ABCD.LCL","__MGMT_SVR1__")
 $config = $config.Replace("sqlag2.abcd.lcl","__SCORE__")
 Set-Content ..\Score.Release\Score\app.monitor.config -Value $config
 

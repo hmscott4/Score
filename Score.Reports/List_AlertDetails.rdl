@@ -19,6 +19,9 @@
           <QueryParameter Name="@UTCOffset">
             <Value>=Parameters!UTCOffset.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@Priority">
+            <Value>=Parameters!Priority.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@ResolutionState">
             <Value>=Parameters!ResolutionState.Value</Value>
           </QueryParameter>
@@ -62,9 +65,10 @@ FROM
 	scom.Alert a inner join scom.AlertResolutionState r
 		on a.ResolutionState = r.ResolutionState
 WHERE
-	a.Severity IN (@Severity) AND
-	a.ResolutionState in (@ResolutionState) AND
-	DATEADD(Minute, @UTCOffset, [TimeRaised]) BETWEEN @StartDate AND @EndDate
+	a.Severity IN (@Severity) 
+                  AND a.Priority IN (@Priority)
+	AND a.ResolutionState in (@ResolutionState) 
+	AND DATEADD(Minute, @UTCOffset, [TimeRaised]) BETWEEN @StartDate AND @EndDate
 	AND a.Active = 1</CommandText>
       </Query>
       <Fields>
@@ -1923,8 +1927,40 @@ ORDER BY Owner</CommandText>
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="Severity">
+    <ReportParameter Name="StartDate">
+      <DataType>DateTime</DataType>
+      <Prompt>StartDate</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="OnlyOpenAlerts">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=False</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Open Alerts Only</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ObjectName">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>*</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>ObjectName</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="EndDate">
+      <DataType>DateTime</DataType>
+      <Prompt>EndDate</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Severity">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2</Value>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Severity</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -1944,14 +1980,14 @@ ORDER BY Owner</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="OnlyOpenAlerts">
-      <DataType>Boolean</DataType>
+    <ReportParameter Name="ObjectPath">
+      <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>=False</Value>
+          <Value>*</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Open Alerts Only</Prompt>
+      <Prompt>ObjectPath</Prompt>
     </ReportParameter>
     <ReportParameter Name="ResolutionState">
       <DataType>String</DataType>
@@ -1971,13 +2007,33 @@ ORDER BY Owner</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="StartDate">
-      <DataType>DateTime</DataType>
-      <Prompt>StartDate</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="EndDate">
-      <DataType>DateTime</DataType>
-      <Prompt>EndDate</Prompt>
+    <ReportParameter Name="Priority">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2</Value>
+          <Value>1</Value>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Priority</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>High</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Medium</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>Low</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="AlertName">
       <DataType>String</DataType>
@@ -1987,41 +2043,6 @@ ORDER BY Owner</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>Alert Name</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ObjectName">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>*</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>ObjectName</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ObjectPath">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>*</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>ObjectPath</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="UTCOffset">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>DefaultSystemTimeZoneOffset</DataSetName>
-          <ValueField>ConfigValue</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>Time Zone</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>SystemTimeZone</DataSetName>
-          <ValueField>CurrentUTCOffset</ValueField>
-          <LabelField>DisplayName</LabelField>
-        </DataSetReference>
-      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="Owner">
       <DataType>String</DataType>
@@ -2041,15 +2062,32 @@ ORDER BY Owner</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="UTCOffset">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DefaultSystemTimeZoneOffset</DataSetName>
+          <ValueField>ConfigValue</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Time Zone</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>SystemTimeZone</DataSetName>
+          <ValueField>CurrentUTCOffset</ValueField>
+          <LabelField>DisplayName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>6</NumberOfRows>
+      <NumberOfColumns>3</NumberOfColumns>
+      <NumberOfRows>4</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
           <ParameterName>Severity</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -2059,43 +2097,48 @@ ORDER BY Owner</CommandText>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>ResolutionState</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
           <ParameterName>StartDate</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
+          <RowIndex>1</RowIndex>
           <ParameterName>EndDate</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
+          <ColumnIndex>2</ColumnIndex>
           <RowIndex>2</RowIndex>
           <ParameterName>AlertName</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>0</RowIndex>
           <ParameterName>ObjectName</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>3</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>1</RowIndex>
           <ParameterName>ObjectPath</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>4</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>UTCOffset</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>Owner</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>Priority</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

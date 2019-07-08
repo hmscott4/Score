@@ -95,7 +95,7 @@ GO
 * Description:
 *
 ****************************************************************/
-ALTER PROCEDURE dbo.spCurrentTimeZoneOffsetUpdate
+CREATE PROCEDURE dbo.spCurrentTimeZoneOffsetUpdate
 
 AS
 
