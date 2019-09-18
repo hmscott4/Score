@@ -266,6 +266,13 @@
             <FilterValue>=Parameters!Priority.Value</FilterValue>
           </FilterValues>
         </Filter>
+        <Filter>
+          <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!AlertResolutionStates.Value</FilterValue>
+          </FilterValues>
+        </Filter>
       </Filters>
     </DataSet>
     <DataSet Name="ReportContentSettings">
@@ -323,6 +330,45 @@
         <Field Name="dbModDate">
           <DataField>dbModDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="OpenAlertResolutionStates">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@IsOpen">
+            <Value>1</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>scom.spAlertResolutionStateGet</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AlertResolutionStates">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>scom.spAlertResolutionStateGet</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -3606,11 +3652,29 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="AlertResolutionStates">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>OpenAlertResolutionStates</DataSetName>
+          <ValueField>ResolutionState</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Alert Resolution States</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AlertResolutionStates</DataSetName>
+          <ValueField>ResolutionState</ValueField>
+          <LabelField>Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>1</NumberOfRows>
+      <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -3621,6 +3685,11 @@
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>Priority</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>AlertResolutionStates</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

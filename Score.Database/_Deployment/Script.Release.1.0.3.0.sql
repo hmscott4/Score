@@ -34,3 +34,32 @@ GO
 -- Set Column to NOT NULL
 ALTER TABLE scom.AlertResolutionState ALTER COLUMN [IsOpen] BIT NOT NULL
 GO
+
+/****************************************************************
+* Name: scom.spAlertResolutionStateGet
+* Author: huscott
+* Date: 2019/09/18
+*
+* Description:
+* Retrieve Alert resolution states
+*
+****************************************************************/
+ALTER PROC [scom].[spAlertResolutionStateGet]
+	@ResolutionState INT = NULL,
+	@IsOpen BIT = NULL
+
+AS
+
+SET NOCOUNT ON
+SET XACT_ABORT OFF
+
+SELECT 
+	ResolutionState, [Name]
+FROM 
+	scom.AlertResolutionState
+WHERE
+	Active = 1
+	AND (@ResolutionState IS NULL OR ResolutionState = @ResolutionState)
+	AND (@IsOpen IS NULL OR IsOpen = @IsOpen)
+ORDER BY
+	ResolutionState
