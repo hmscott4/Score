@@ -1990,6 +1990,11 @@ WHERE
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="AlertResolutionState">
+      <DataType>Integer</DataType>
+      <Prompt>Alert Resolution State</Prompt>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -2010,6 +2015,11 @@ WHERE
           <ColumnIndex>2</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>AlertPriority</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AlertResolutionState</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

@@ -73,6 +73,7 @@
     <Report Include="Chart_HostPerf_ForGroup.rdl" />
     <Report Include="Chart_HostPerf_Linux.rdl" />
     <Report Include="Chart_HourlyMetrics.rdl" />
+    <Report Include="Chart_ObjectAvailabilityHistory.rdl" />
     <Report Include="Chart_ObjectHealthSummary.rdl" />
     <Report Include="Chart_RawMetrics.rdl" />
     <Report Include="Chart_RawMetrics_ForGroup.rdl" />

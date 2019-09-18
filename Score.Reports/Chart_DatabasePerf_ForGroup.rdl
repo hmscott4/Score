@@ -194,6 +194,9 @@ ORDER BY DisplayName</CommandText>
                                     <Parameter Name="UTCOffset">
                                       <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
+                                    <Parameter Name="IncludeDBDetail">
+                                      <Value>=Parameters!ShowDbDetail.Value</Value>
+                                    </Parameter>
                                   </Parameters>
                                   <Height>8in</Height>
                                   <Width>10.5in</Width>
@@ -333,11 +336,20 @@ ORDER BY DisplayName</CommandText>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="IncludeDbDetail">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>false</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Include Database Detail</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfRows>3</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -358,6 +370,11 @@ ORDER BY DisplayName</CommandText>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>UTCOffset</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>IncludeDbDetail</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
