@@ -26,7 +26,9 @@ CREATE PROC [scom].[spObjectHealthStateUpsert]
 	@Configuration NVARCHAR(255),
 	@Performance NVARCHAR(255),
 	@Security NVARCHAR(255),
-	@Other NVARCHAR(255)
+	@Other NVARCHAR(255),
+	@AssetStatus nvarchar(255) = NULL,
+	@Notes nvarchar(4000) = NULL
 
 AS
 
@@ -64,7 +66,9 @@ BEGIN TRAN
 		@Configuration ,
 		@Performance , 
 		@Security ,
-		@Other	 ) AS [Source]
+		@Other ,
+		@AssetStatus ,
+		@Notes ) AS [Source]
 
 		(ID,
 		Name,
@@ -86,7 +90,9 @@ BEGIN TRAN
 		[Configuration],
 		[Performance],
 		[Security] ,
-		[Other]) ON ([target].ID = @ID)
+		[Other] ,
+		[AssetStatus] , 
+		[Notes] ) ON ([target].ID = @ID)
 
 
 	WHEN MATCHED 
@@ -111,6 +117,8 @@ BEGIN TRAN
 		  ,[Performance] = @Performance
 		  ,[Security] = @Security
 		  ,[Other] = @Other
+		  ,[AssetStatus] = @AssetStatus
+		  ,[Notes] = @Notes
 
 	WHEN NOT MATCHED
 	THEN INSERT (
@@ -134,7 +142,9 @@ BEGIN TRAN
 			[Configuration],
 			[Performance],
 			[Security] ,
-			[Other])
+			[Other] ,
+			[AssetStatus],
+			[Notes])
 		VALUES (
 			@ID ,
 			@Name,
@@ -156,7 +166,9 @@ BEGIN TRAN
 			@Configuration ,
 			@Performance , 
 			@Security ,
-			@other
+			@Other ,
+			@AssetStatus ,
+			@Notes
 		)
 	;
 COMMIT

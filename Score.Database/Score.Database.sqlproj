@@ -1666,7 +1666,10 @@
     <Build Include="dbo\Stored Procedures\spSystemTimeZoneSelect.sql" />
     <Build Include="scom\Stored Procedures\spAgentExclusionsInsert.sql" />
     <Build Include="scom\Stored Procedures\spAgentInactivate.sql" />
-    <Build Include="scom\Stored Procedures\spObjectHealthStateInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spObjectHealthStateInactivateByDate.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="scom\Stored Procedures\spSyncHistoryInsert.sql" />
     <Build Include="scom\Stored Procedures\spWindowsComputerSelectByDNSHostName.sql" />
     <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql" />

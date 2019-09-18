@@ -1,6 +1,14 @@
-﻿CREATE PROC [scom].[spAlertResolutionStateGet]
+﻿/****************************************************************
+* Name: scom.spAlertResolutionStateGet
+* Author: huscott
+* Date: 2015-02-24
+*
+* Description:
+*
+****************************************************************/
+CREATE PROC [scom].[spAlertResolutionStateGet]
 	@ResolutionState INT = NULL,
-	@IsOpen BIT = 1
+	@IsOpen BIT = NULL
 
 AS
 
