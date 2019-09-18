@@ -250,6 +250,9 @@ WHERE
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
+          <QueryParameter Name="@AlertResolutionState">
+            <Value>=Parameters!AlertResolutionState.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@AlertSeverity">
             <Value>=Parameters!AlertSeverity.Value</Value>
           </QueryParameter>
@@ -262,7 +265,7 @@ COUNT(*) as OpenAlerts
 FROM
 scom.Alert
 WHERE 
-ResolutionState &lt; 255 
+ResolutionState IN (@AlertResolutionState)
 AND Active = 1
 AND Severity IN (@AlertSeverity)
 AND Priority IN (@AlertPriority)</CommandText>
@@ -478,6 +481,45 @@ WHERE
         <Field Name="dbModDate">
           <DataField>dbModDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="OpenAlertResolutionStates">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@IsOpen">
+            <Value>1</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>scom.spAlertResolutionStateGet</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AlertResolutionStates">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>scom.spAlertResolutionStateGet</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -1990,6 +2032,24 @@ WHERE
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="AlertResolutionState">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>OpenAlertResolutionStates</DataSetName>
+          <ValueField>ResolutionState</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Alert Resolution State</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AlertResolutionStates</DataSetName>
+          <ValueField>ResolutionState</ValueField>
+          <LabelField>Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -2010,6 +2070,11 @@ WHERE
           <ColumnIndex>2</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>AlertPriority</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AlertResolutionState</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

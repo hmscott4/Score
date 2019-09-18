@@ -56,7 +56,7 @@
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ReportName">
-            <Value>=Globals!ReportName</Value>
+            <Value>=IIF(IsNothing(Globals!ReportServerUrl),Globals!ReportName,Replace(Globals!ReportName,".rdl",""))</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
@@ -266,6 +266,13 @@
             <FilterValue>=Parameters!Priority.Value</FilterValue>
           </FilterValues>
         </Filter>
+        <Filter>
+          <FilterExpression>=Fields!ResolutionState.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!AlertResolutionStates.Value</FilterValue>
+          </FilterValues>
+        </Filter>
       </Filters>
     </DataSet>
     <DataSet Name="ReportContentSettings">
@@ -273,7 +280,7 @@
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ReportName">
-            <Value>=Globals!ReportName</Value>
+            <Value>=IIF(IsNothing(Globals!ReportServerUrl),Globals!ReportName,Replace(Globals!ReportName,".rdl",""))</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
@@ -323,6 +330,45 @@
         <Field Name="dbModDate">
           <DataField>dbModDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="OpenAlertResolutionStates">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@IsOpen">
+            <Value>1</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>scom.spAlertResolutionStateGet</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AlertResolutionStates">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>scom.spAlertResolutionStateGet</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ResolutionState">
+          <DataField>ResolutionState</DataField>
+          <rd:TypeName>System.Byte</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -665,9 +711,9 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>1.46389in</Top>
+            <Top>1.25in</Top>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -696,8 +742,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
-            <Top>0.53208in</Top>
-            <Height>0.33333in</Height>
+            <Top>0.5in</Top>
+            <Height>0.5in</Height>
             <Width>10.5in</Width>
             <ZIndex>2</ZIndex>
             <Style>
@@ -728,7 +774,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.92167in</Top>
+            <Top>1in</Top>
             <Height>0.25in</Height>
             <Width>10.5in</Width>
             <ZIndex>3</ZIndex>
@@ -808,7 +854,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Active Directory Team</Value>
+                                  <Value>=Lookup( 1, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1051,11 +1097,14 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>1.46667in</Top>
-            <Left>3.40275in</Left>
+            <Top>1.25in</Top>
+            <Left>3.5in</Left>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>4</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 1, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1130,7 +1179,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Windows Team</Value>
+                                  <Value>=Lookup( 2, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1373,11 +1422,14 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>1.46389in</Top>
-            <Left>6.80549in</Left>
+            <Top>1.25in</Top>
+            <Left>7in</Left>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>5</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 2, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1452,7 +1504,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>DBA Team</Value>
+                                  <Value>=Lookup( 3, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -1695,10 +1747,13 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>3.32778in</Top>
+            <Top>3.05in</Top>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>6</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 3, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1773,7 +1828,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Web Team</Value>
+                                  <Value>=Lookup( 4, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -2016,11 +2071,14 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>3.32222in</Top>
-            <Left>3.40275in</Left>
+            <Top>3.05in</Top>
+            <Left>3.5in</Left>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>7</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 4, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2095,7 +2153,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Config Mgmt Team</Value>
+                                  <Value>=Lookup( 5, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -2289,7 +2347,7 @@
             </ChartAreas>
             <ChartTitles>
               <ChartTitle Name="Default">
-                <Caption>=Lookup( 2, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
+                <Caption>=Lookup( 5, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Caption>
                 <Style>
                   <BackgroundGradientType>None</BackgroundGradientType>
                   <FontWeight>Bold</FontWeight>
@@ -2338,11 +2396,14 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>3.32778in</Top>
-            <Left>6.80549in</Left>
+            <Top>3.05in</Top>
+            <Left>7in</Left>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>8</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 5, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2417,7 +2478,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Network Team</Value>
+                                  <Value>=Lookup( 6, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -2660,10 +2721,13 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>5.19202in</Top>
+            <Top>4.85in</Top>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>9</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 6, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2738,7 +2802,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Monitoring Team</Value>
+                                  <Value>=Lookup( 7, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -2981,11 +3045,14 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>5.19202in</Top>
-            <Left>3.40275in</Left>
+            <Top>4.85in</Top>
+            <Left>3.5in</Left>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>10</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 7, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3060,7 +3127,7 @@
                                   <Value>True</Value>
                                 </Parameter>
                                 <Parameter Name="Owner">
-                                  <Value>Unassigned</Value>
+                                  <Value>=Lookup( 8, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")</Value>
                                 </Parameter>
                               </Parameters>
                             </Drillthrough>
@@ -3303,11 +3370,14 @@
                 </FilterValues>
               </Filter>
             </Filters>
-            <Top>5.19202in</Top>
-            <Left>6.80549in</Left>
+            <Top>4.85in</Top>
+            <Left>7in</Left>
             <Height>1.8in</Height>
-            <Width>3.3333in</Width>
+            <Width>3.5in</Width>
             <ZIndex>11</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(IsNothing(Lookup( 8, Fields!SortSequence.Value, Fields!ItemParameters.Value, "ReportContentSettings")), true, false)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3317,7 +3387,7 @@
             </Style>
           </Chart>
         </ReportItems>
-        <Height>6.99723in</Height>
+        <Height>6.65in</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3327,16 +3397,50 @@
       <Width>10.5in</Width>
       <Page>
         <PageFooter>
-          <Height>0.2625in</Height>
+          <Height>0.3in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
+            <Textbox Name="Textbox18">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Legend:</Value>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox14</rd:DefaultName>
+              <Top>0.05in</Top>
+              <Left>0.1in</Left>
+              <Height>0.2in</Height>
+              <Width>0.6in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <VerticalAlign>Middle</VerticalAlign>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
             <Rectangle Name="Rectangle5">
               <KeepTogether>true</KeepTogether>
-              <Top>0.05035in</Top>
-              <Left>0.28125in</Left>
-              <Height>0.15625in</Height>
-              <Width>0.32292in</Width>
+              <Top>0.075in</Top>
+              <Left>0.8in</Left>
+              <Height>0.15in</Height>
+              <Width>0.3in</Width>
+              <ZIndex>1</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -3361,15 +3465,16 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.03472in</Top>
-              <Left>0.72918in</Left>
-              <Height>0.1875in</Height>
-              <Width>1.02083in</Width>
-              <ZIndex>1</ZIndex>
+              <Top>0.04167in</Top>
+              <Left>1.2in</Left>
+              <Height>0.2in</Height>
+              <Width>0.7in</Width>
+              <ZIndex>2</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
+                <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -3378,11 +3483,11 @@
             </Textbox>
             <Rectangle Name="Rectangle4">
               <KeepTogether>true</KeepTogether>
-              <Top>0.05556in</Top>
-              <Left>1.9486in</Left>
+              <Top>0.075in</Top>
+              <Left>2in</Left>
               <Height>0.14583in</Height>
-              <Width>0.32292in</Width>
-              <ZIndex>2</ZIndex>
+              <Width>0.3in</Width>
+              <ZIndex>3</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -3407,15 +3512,16 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.03993in</Top>
-              <Left>2.39653in</Left>
-              <Height>0.17708in</Height>
-              <Width>1.02083in</Width>
-              <ZIndex>3</ZIndex>
+              <Top>0.05in</Top>
+              <Left>2.4in</Left>
+              <Height>0.2in</Height>
+              <Width>0.7in</Width>
+              <ZIndex>4</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
+                <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -3439,15 +3545,16 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox14</rd:DefaultName>
-              <Top>0.04271in</Top>
-              <Left>4.10417in</Left>
-              <Height>0.17708in</Height>
-              <Width>1.02083in</Width>
-              <ZIndex>4</ZIndex>
+              <Top>0.05in</Top>
+              <Left>3.6in</Left>
+              <Height>0.2in</Height>
+              <Width>0.7in</Width>
+              <ZIndex>5</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
+                <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -3456,11 +3563,11 @@
             </Textbox>
             <Rectangle Name="Rectangle6">
               <KeepTogether>true</KeepTogether>
-              <Top>0.05556in</Top>
-              <Left>3.62568in</Left>
+              <Top>0.075in</Top>
+              <Left>3.2in</Left>
               <Height>0.14583in</Height>
-              <Width>0.32292in</Width>
-              <ZIndex>5</ZIndex>
+              <Width>0.3in</Width>
+              <ZIndex>6</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -3471,8 +3578,12 @@
           </ReportItems>
           <Style>
             <Border>
+              <Color>LightGrey</Color>
               <Style>None</Style>
             </Border>
+            <TopBorder>
+              <Style>Solid</Style>
+            </TopBorder>
           </Style>
         </PageFooter>
         <PageHeight>8.5in</PageHeight>
@@ -3541,11 +3652,29 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="AlertResolutionStates">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>OpenAlertResolutionStates</DataSetName>
+          <ValueField>ResolutionState</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Alert Resolution States</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AlertResolutionStates</DataSetName>
+          <ValueField>ResolutionState</ValueField>
+          <LabelField>Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>1</NumberOfRows>
+      <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -3556,6 +3685,11 @@
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>Priority</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>AlertResolutionStates</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

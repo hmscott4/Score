@@ -5,7 +5,7 @@
     <RootNamespace>Score.MP</RootNamespace>
     <Name>System Center Operational Reporting Environment</Name>
     <ManagementPackName>Score.MP</ManagementPackName>
-    <Version>1.0.0.0</Version>
+    <Version>1.0.2.2</Version>
     <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>
