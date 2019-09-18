@@ -195,7 +195,7 @@ ORDER BY DisplayName</CommandText>
                                       <Value>=Parameters!UTCOffset.Value</Value>
                                     </Parameter>
                                     <Parameter Name="IncludeDBDetail">
-                                      <Value>=Parameters!ShowDbDetail.Value</Value>
+                                      <Value>=Parameters!IncludeDbDetail.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                   <Height>8in</Height>

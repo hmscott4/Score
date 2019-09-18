@@ -1746,6 +1746,10 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="scom\Stored Procedures\spAlertResolutionStateGet.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="_Compare\SQLAG2.SCORE_Project.scmp" />
@@ -1754,10 +1758,11 @@
   <ItemGroup>
     <PreDeploy Include="_Deployment\Script.Deployment.sql" />
     <None Include="_Deployment\Script.RolePermissions.sql" />
-    <None Include="_Deployment\Script.Release.2019.06.20.sql" />
+    <None Include="_Deployment\Script.Release.1.0.2.0.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="_Deployment\Script.DefaultData.sql" />
+    <None Include="_Deployment\Script.Release.1.0.3.0.sql" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
