@@ -1541,7 +1541,8 @@ Param (
 				{
 					If($Null -eq $Object.'[System.ConfigItem].AssetStatus'.Value)
 					{
-						$sqlCommand.Parameters["@AssetStatus"].Value = [System.DBNull]::Value
+						# This object supports ConfigItem AssetStatus, but the value is empty
+						$sqlCommand.Parameters["@AssetStatus"].Value = "[None]"
 					}
 					Else
 					{
@@ -1550,7 +1551,8 @@ Param (
 
 					If($Null -eq $Object.'[System.ConfigItem].Notes'.Value)
 					{
-						$sqlCommand.Parameters["@Notes"].Value = [System.DBNull]::Value
+						# This object supports ConfigItem Notes, but the value is empty
+						$sqlCommand.Parameters["@Notes"].Value = "[None]"
 					}
 					Else
 					{
@@ -1559,8 +1561,9 @@ Param (
 				}
 				Else
 				{
-					$sqlCommand.Parameters["@AssetStatus"].Value = [System.DBNull]::Value
-					$sqlCommand.Parameters["@Notes"].Value = [System.DBNull]::Value
+					# This Object does not support The configItem attributes AssetStatus or Notes
+					$sqlCommand.Parameters["@AssetStatus"].Value = "[Not Available]"
+					$sqlCommand.Parameters["@Notes"].Value = "[Not Available]"
 				}
 
 	            [void]$sqlCommand.ExecuteNonQuery()

@@ -14,6 +14,9 @@
       <Query>
         <DataSourceName>SCORE</DataSourceName>
         <QueryParameters>
+          <QueryParameter Name="@AssetStatus">
+            <Value>=Parameters!AssetStatus.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@HealthState">
             <Value>=Parameters!HealthState.Value</Value>
           </QueryParameter>
@@ -38,7 +41,9 @@ FROM
 		on o.ObjectClass = oc.Name
 WHERE
 	o.Active = 1
-	AND oc.Active = 1) tmp
+	AND oc.Active = 1
+                   AND IsNull(o.AssetStatus, '[None]') IN (@AssetStatus)
+) tmp
 WHERE
 	tmp.HealthState IN (N'Success',N'Warning',N'Error',N'MaintenanceMode',N'NotAvailable')) tmp
 WHERE tmp.HealthState IN (@HealthState)
@@ -244,6 +249,25 @@ ORDER BY [ObjectCount] DESC</CommandText>
         </Field>
         <Field Name="FooterFontSize">
           <DataField>FooterFontSize</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AssetStatus">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT
+    DISTINCT IsNull([AssetStatus], '[None]') AS AssetStatus
+FROM
+    scom.ObjectHealthState
+WHERE
+    Active = 1
+ORDER BY
+    AssetStatus</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="AssetStatus">
+          <DataField>AssetStatus</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -1119,16 +1143,39 @@ ORDER BY [ObjectCount] DESC</CommandText>
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="AssetStatus">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>AssetStatus</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+          <LabelField>AssetStatus</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfColumns>1</NumberOfColumns>
       <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>HealthState</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>AssetStatus</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

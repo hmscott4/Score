@@ -13,6 +13,11 @@
     <DataSet Name="ObjectStateSummary">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@AssetStatus">
+            <Value>=Parameters!AssetStatus.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>SELECT GenericName, HealthState, IsAvailable, InMaintenanceMode
 FROM (
 SELECT
@@ -31,7 +36,9 @@ FROM
 		on o.ObjectClass = oc.Name
 WHERE
 	o.Active = 1
-	AND oc.Active = 1) tmp
+	AND oc.Active = 1
+                   AND IsNull(o.AssetStatus, '[None]') IN (@AssetStatus)
+) tmp
 WHERE
 	tmp.HealthState IN (N'Success',N'Warning',N'Error',N'MaintenanceMode',N'NotAvailable')</CommandText>
       </Query>
@@ -523,6 +530,25 @@ WHERE
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="AssetStatus">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT
+    DISTINCT IsNull([AssetStatus], '[None]') AS AssetStatus
+FROM
+    scom.ObjectHealthState
+WHERE
+    Active = 1
+ORDER BY 
+    AssetStatus</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="AssetStatus">
+          <DataField>AssetStatus</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -624,6 +650,9 @@ WHERE
                                   <Parameters>
                                     <Parameter Name="HealthState">
                                       <Value>=Fields!HealthState.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="AssetStatus">
+                                      <Value>=Parameters!AssetStatus.Value</Value>
                                     </Parameter>
                                   </Parameters>
                                 </Drillthrough>
@@ -2004,6 +2033,24 @@ WHERE
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="AssetStatus">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Asset Status</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+          <LabelField>AssetStatus</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
     <ReportParameter Name="AlertPriority">
       <DataType>Integer</DataType>
       <DefaultValue>
@@ -2053,8 +2100,8 @@ WHERE
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfColumns>3</NumberOfColumns>
+      <NumberOfRows>3</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2067,14 +2114,19 @@ WHERE
           <ParameterName>AlertSeverity</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>0</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
           <ParameterName>AlertPriority</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>3</ColumnIndex>
-          <RowIndex>0</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>AlertResolutionState</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AssetStatus</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
