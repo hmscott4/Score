@@ -1,3 +1,5 @@
+#Requires -Version 4.0
+#Requires -Modules OperationsManager
 <#
 
 .SYNOPSIS
@@ -978,6 +980,7 @@ Param (
 
 		[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
 		[Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+		[Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
 	
 		foreach($Alert in $Alerts){
 			Try {
@@ -1064,6 +1067,7 @@ Param (
 
 				$sqlCommand.Parameters["@Active"].Value = $true
 				$sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
+				$sqlCommand.Parameters["@ManagementGroup"].Value = $ManagementGroup
 				[void]$sqlCommand.ExecuteNonQuery()
 				$alertCounter++
 			}
@@ -1083,8 +1087,10 @@ Param (
 			Try {
 				$sqlCommand = GetStoredProc $sqlConnection "scom.spAlertInactivateByDate"
 				[Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
+				[Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::nvarchar)
 
 				$sqlCommand.Parameters["@BeforeDate"].Value = $timeStart
+				$sqlCommand.Parameters["@ManagementGroup"].Value = $ManagementGroup
 
 				[void]$sqlCommand.ExecuteNonQuery()
 				$sqlCommand.Dispose()
@@ -1194,9 +1200,9 @@ Param (
 
 	
     foreach($WindowsComputer in $WindowsComputers){
-        $IsVirtualNode = $WindowsComputer | select -ExpandProperty *.IsVirtualNode
-        # Write-Host $WindowsComputer.DisplayName : $IsVirtualNode.Value
-        If($IsVirtualNode.Value -eq $null){
+		$IsVirtualNode = $WindowsComputer | get-member -Name '*IsVirtualNode'
+        If($null -ne $IsVirtualNode){
+			$IsVirtualNode = $WindowsComputer | select -ExpandProperty *.IsVirtualNode
             Try {
 	            [datetime]$timeNow = (Get-Date)
                 If($WindowsComputer.MaintenanceModeLastModified -eq $null){$MaintenanceModeLastModified = [System.DBNull]::Value} Else {$MaintenanceModeLastModified = $WindowsComputer.MaintenanceModeLastModified}
@@ -1465,6 +1471,8 @@ Param (
 
     [Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::bit)
     [Void]$sqlCommand.Parameters.Add("@dbLastUpdate", [system.data.SqlDbType]::datetime2)
+    [Void]$sqlCommand.Parameters.Add("@AssetStatus", [system.data.SqlDbType]::nvarchar)
+    [Void]$sqlCommand.Parameters.Add("@Notes", [system.data.SqlDbType]::nvarchar)
 
 
 	$sqlCommand2 = GetStoredProc $sqlConnection "scom.spObjectHealthStateAlertRelationshipUpsert"
@@ -1472,10 +1480,9 @@ Param (
     [Void]$sqlCommand2.Parameters.Add("@AlertID", [system.data.SqlDbType]::uniqueidentifier)
 	
     foreach($Object in $Objects){
-        # If($Object.HealthState.ToString() -ne "Uninitialized" -and $Object.InMaintenanceMode -eq 0){
         # Try to skip over Windows Server Virtual Nodes
-        $IsVirtualNode = $null
-        [bool]$skipObject = $null
+        $IsVirtualNode = $false
+        [bool]$skipObject = $false
         Try{
             # Check to see if the Windows computer property *.IsVirtualNode exists
             $hasVirtualNodeMember = $Object | Get-Member -name *.IsVirtualNode
@@ -1529,6 +1536,36 @@ Param (
                 $sqlCommand.Parameters["@Active"].Value = $True
                 $sqlCommand.Parameters["@dbLastUpdate"].Value = $timeNow
 
+				$HasConfig = $Object | Get-Member -Name '*AssetStatus'
+				If($HasConfig)
+				{
+					If($Null -eq $Object.'[System.ConfigItem].AssetStatus'.Value)
+					{
+						# This object supports ConfigItem AssetStatus, but the value is empty
+						$sqlCommand.Parameters["@AssetStatus"].Value = "[None]"
+					}
+					Else
+					{
+						$sqlCommand.Parameters["@AssetStatus"].Value = $Object.'[System.ConfigItem].AssetStatus'.Value.DisplayName
+					}
+
+					If($Null -eq $Object.'[System.ConfigItem].Notes'.Value)
+					{
+						# This object supports ConfigItem Notes, but the value is empty
+						$sqlCommand.Parameters["@Notes"].Value = "[None]"
+					}
+					Else
+					{
+						$sqlCommand.Parameters["@Notes"].Value = $Object.'[System.ConfigItem].Notes'.Value
+					}
+				}
+				Else
+				{
+					# This Object does not support The configItem attributes AssetStatus or Notes
+					$sqlCommand.Parameters["@AssetStatus"].Value = "[Not Available]"
+					$sqlCommand.Parameters["@Notes"].Value = "[Not Available]"
+				}
+
 	            [void]$sqlCommand.ExecuteNonQuery()
                 $objectCounter++
 
@@ -1564,9 +1601,11 @@ Param (
 	        $sqlCommand = GetStoredProc $sqlConnection "scom.spObjectHealthStateInactivateByDate"
             [Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
             [Void]$sqlCommand.Parameters.Add("@ObjectClass", [system.data.SqlDbType]::nvarchar)
+            [Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
 
             $sqlCommand.Parameters["@BeforeDate"].Value = $startTime
             $sqlCommand.Parameters["@ObjectClass"].Value = $objectClass
+            $sqlCommand.Parameters["@ManagementGroup"].Value = $ManagementGroup
             [void]$sqlCommand.ExecuteNonQuery()
             $sqlCommand.Dispose()
 

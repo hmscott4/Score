@@ -58,6 +58,9 @@
           <QueryParameter Name="@ObjectGenericName">
             <Value>=Parameters!ObjectGenericName.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@AssetStatus">
+            <Value>=Parameters!AssetStatus.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT [o].[ID]
       ,[o].[Name]
@@ -84,6 +87,7 @@
       ,[o].[Performance]
       ,[o].[Security]
       ,[o].[Other]
+      ,IsNull([o].[AssetStatus], '[None]') AS AssetStatus
       ,ISNULL([oar].[Alerts], 0) as Alerts
 	  ,[oc].[GenericName]
   FROM 
@@ -99,7 +103,8 @@
 		ON [o].[ID] = [oar].ObjectID
   WHERE 
 	[o].Active = 1
-	AND [oc].[GenericName] LIKE REPLACE(@ObjectGenericName, '*', '%')</CommandText>
+	AND [oc].[GenericName] LIKE REPLACE(@ObjectGenericName, '*', '%')
+                   AND [o].[AssetStatus] IN (@AssetStatus)</CommandText>
       </Query>
       <Fields>
         <Field Name="ID">
@@ -184,6 +189,10 @@
         </Field>
         <Field Name="Other">
           <DataField>Other</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="AssetStatus">
+          <DataField>AssetStatus</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Alerts">
@@ -355,6 +364,25 @@
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="AssetStatus">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT
+    DISTINCT IsNull(AssetStatus, '[None]') AS AssetStatus
+FROM
+    scom.ObjectHealthState
+WHERE
+    Active = 1
+ORDER BY
+    AssetStatus</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="AssetStatus">
+          <DataField>AssetStatus</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -487,6 +515,9 @@
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.7in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -778,6 +809,41 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Asset Status</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -1053,6 +1119,37 @@
                         </Rectangle>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="AssetStatus">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!AssetStatus.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>AssetStatus</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=Iif(RowNumber("SCOMObjectDetail") Mod 2 = 0, "LightSteelBlue", "White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -1314,12 +1411,44 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox8">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox8</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -1347,7 +1476,7 @@
             <DataSetName>SCOMObjectDetail</DataSetName>
             <Top>2.12375in</Top>
             <Height>0.78125in</Height>
-            <Width>9.06181in</Width>
+            <Width>10.06181in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -1794,6 +1923,24 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="AssetStatus">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Asset Status</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+          <LabelField>AssetStatus</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -1814,6 +1961,11 @@
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>HealthState</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>AssetStatus</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

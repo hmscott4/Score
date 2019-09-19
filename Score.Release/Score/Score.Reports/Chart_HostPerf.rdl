@@ -330,6 +330,7 @@ ELSE
                         <Style />
                         <UseValueAsLabel>true</UseValueAsLabel>
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -617,6 +618,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -917,6 +919,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -1202,6 +1205,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -1592,6 +1596,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -1878,6 +1883,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -2186,6 +2192,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -2494,6 +2501,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>
@@ -2904,6 +2912,7 @@ ELSE
                       <ChartDataLabel>
                         <Style />
                       </ChartDataLabel>
+                      <ToolTip>=Format(Sum(Fields!AverageValue.Value), "#,##0.0") &amp; "; " &amp; Fields!LocalDateTime.Value</ToolTip>
                       <Style>
                         <Border>
                           <Width>1.5pt</Width>

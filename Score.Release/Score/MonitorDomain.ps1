@@ -1,4 +1,6 @@
-﻿<#
+﻿#Requires -Version 4.0
+#Requires -Modules ActiveDirectory
+<#
 
 .SYNOPSIS
 

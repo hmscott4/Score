@@ -13,6 +13,11 @@
     <DataSet Name="ObjectStateSummary">
       <Query>
         <DataSourceName>SCORE</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@AssetStatus">
+            <Value>=Parameters!AssetStatus.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>SELECT
 	oc.genericname, 
 	case 
@@ -29,7 +34,8 @@ FROM
 		on o.ObjectClass = oc.Name
 WHERE
 	o.Active = 1
-	AND oc.Active = 1</CommandText>
+	AND oc.Active = 1
+                   AND o.AssetStatus IN (@AssetStatus)</CommandText>
       </Query>
       <Fields>
         <Field Name="genericname">
@@ -58,6 +64,25 @@ WHERE
           </FilterValues>
         </Filter>
       </Filters>
+    </DataSet>
+    <DataSet Name="AssetStatus">
+      <Query>
+        <DataSourceName>SCORE</DataSourceName>
+        <CommandText>SELECT
+    DISTINCT IsNull(AssetStatus, '[None]') AS AssetStatus
+FROM
+    scom.ObjectHealthState
+WHERE
+    [Active] = 1
+ORDER BY
+    AssetStatus</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="AssetStatus">
+          <DataField>AssetStatus</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
     </DataSet>
   </DataSets>
   <ReportSections>
@@ -413,17 +438,42 @@ WHERE
     <ReportParameter Name="ObjectGenericName">
       <DataType>String</DataType>
       <Prompt>ObjectGenericName</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="AssetStatus">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>AssetStatus</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AssetStatus</DataSetName>
+          <ValueField>AssetStatus</ValueField>
+          <LabelField>AssetStatus</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfColumns>2</NumberOfColumns>
+      <NumberOfRows>1</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>ObjectGenericName</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AssetStatus</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
