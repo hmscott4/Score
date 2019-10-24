@@ -343,7 +343,7 @@ FROM
     scom.Alert
 WHERE 
     TimeRaised &gt; DateAdd(Hour, -24, GetUTCDate())
-    AND IsNull(Owner,'Unassiged') IN (@Owner)
+    AND IsNull(Owner,'Unassigned') IN (@Owner)
     AND Active = 1
     AND Severity IN (@Severity)
     AND Priority IN (@Priority)
