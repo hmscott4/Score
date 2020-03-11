@@ -1,6 +1,6 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Monitoring>
     <Discoveries>
-      <Discovery ID="Microsoft.SCORE.IntegrationServer.Domain.Class.Discovery" Enabled="true" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.SCORE.IntegrationServer.Domain.Class.Discovery" Enabled="true" Target="Microsoft.SCORE.IntegrationServer.Class" ConfirmDelivery="true" Remotable="false" Priority="Normal">
         <!-- We choose Microsoft.Windows.Server.OperatingSystem as the preferred target class to ensure this will run on all Windows Servers, but wont create duplicates on clusters -->
         <Category>Discovery</Category>
         <DiscoveryTypes>

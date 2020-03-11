@@ -25,7 +25,7 @@
   </SecureReferences>
   </TypeDefinitions><Monitoring>
     <Discoveries>
-      <Discovery ID="Microsoft.SCORE.IntegrationServer.Class.Discovery" Target="Windows!Microsoft.Windows.Server.OperatingSystem" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.SCORE.IntegrationServer.Class.Discovery" Target="Windows!Microsoft.Windows.Server.OperatingSystem" Enabled="true" ConfirmDelivery="false" Remotable="false" Priority="Normal">
         <!-- We choose Microsoft.Windows.Server.OperatingSystem as the preferred target class to ensure this will run on all Windows Servers, but wont create duplicates on clusters -->
         <Category>Discovery</Category>
         <DiscoveryTypes>
