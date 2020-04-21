@@ -76,6 +76,7 @@ get-item -Path ..\Score.Database\_Deployment\*.sql | Copy-Item -Destination ..\S
   <ItemGroup>
     <Compile Include="Deploy-Reports.ps1" />
     <Compile Include="MonitorDomain.ps1" />
+    <Compile Include="MonitorFunctions.ps1" />
     <Compile Include="MonitorSCOM.ps1" />
   </ItemGroup>
   <ItemGroup>
