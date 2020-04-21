@@ -1087,7 +1087,7 @@ Param (
 			Try {
 				$sqlCommand = GetStoredProc $sqlConnection "scom.spAlertInactivateByDate"
 				[Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::datetime)
-				[Void]$sqlCommand.Parameters.Add("@BeforeDate", [system.data.SqlDbType]::nvarchar)
+				[Void]$sqlCommand.Parameters.Add("@ManagementGroup", [system.data.SqlDbType]::nvarchar)
 
 				$sqlCommand.Parameters["@BeforeDate"].Value = $timeStart
 				$sqlCommand.Parameters["@ManagementGroup"].Value = $ManagementGroup
