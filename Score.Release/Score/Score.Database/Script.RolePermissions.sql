@@ -15,36 +15,11 @@ GO
 
 SET NOCOUNT ON
 
-SELECT 'GRANT SELECT, REFERENCES ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO cmRead;'
-FROM sys.objects where type in ('U','V') AND SCHEMA_NAME(schema_id) = 'cm'
-UNION ALL
-SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO cmUpdate;'
-FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'cm'
-UNION ALL
-SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO cmRead;'
-FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'cm' AND object_name(object_id) like '%select%'
-ORDER BY 1
-
-
 SELECT 'GRANT SELECT, REFERENCES ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO adRead;'
 FROM sys.objects where type in ('U','V') AND SCHEMA_NAME(schema_id) = 'ad'
 UNION ALL
 SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO adUpdate;'
 FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'ad'
-UNION ALL
-SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO adRead;'
-FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'cm' AND object_name(object_id) like '%select%'
-ORDER BY 1
-
-
-SELECT 'GRANT SELECT, REFERENCES ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO pmRead;'
-FROM sys.objects where type in ('U','V') AND SCHEMA_NAME(schema_id) = 'pm'
-UNION ALL
-SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO pmUpdate;'
-FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'pm'
-UNION ALL
-SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO pmRead;'
-FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'cm' AND object_name(object_id) like '%select%'
 ORDER BY 1
 
 SELECT 'GRANT SELECT, REFERENCES ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO scomRead;'

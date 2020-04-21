@@ -19,7 +19,6 @@
     <PostBuildScript># MOVE CORE PS FILES TO RELEASE FOLDER
 get-childitem -Filter *.ps1 | Copy-Item -Destination ..\Score.Release\Score
 get-childitem -Filter *.config | Copy-Item -Destination ..\Score.Release\Score
-get-childitem -Filter *.ps1 -Path .\Modules\ | Copy-Item -Destination ..\Score.Release\Score\Modules
 
 # UPDATE APP CONFIG CONTENTS
 $config = Get-Content ..\Score.Release\Score\app.monitor.config
@@ -76,33 +75,7 @@ get-item -Path ..\Score.Database\_Deployment\*.sql | Copy-Item -Destination ..\S
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Modules\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Deploy-Reports.ps1" />
-    <Compile Include="Modules\CheckCluster.ps1" />
-    <Compile Include="Modules\CheckComputer.ps1" />
-    <Compile Include="Modules\CheckComputerShare.ps1" />
-    <Compile Include="Modules\CheckDisk.ps1" />
-    <Compile Include="Modules\CheckDiskSpace.ps1" />
-    <Compile Include="Modules\CheckEvents.ps1" />
-    <Compile Include="Modules\CheckInstalledApplications.ps1" />
-    <Compile Include="Modules\CheckInstalledHotfix.ps1" />
-    <Compile Include="Modules\CheckNetwork.ps1" />
-    <Compile Include="Modules\CheckNLBCluster.ps1" />
-    <Compile Include="Modules\CheckOperatingSystem.ps1" />
-    <Compile Include="Modules\CheckServices.ps1" />
-    <Compile Include="Modules\CheckSQLAnalysisServer.ps1" />
-    <Compile Include="Modules\CheckSQLDatabaseSize.ps1" />
-    <Compile Include="Modules\CheckSQLEngine.ps1" />
-    <Compile Include="Modules\CheckSQLInstance.ps1" />
-    <Compile Include="Modules\CheckSQLJobs.ps1" />
-    <Compile Include="Modules\CheckSQLPermissions.ps1" />
-    <Compile Include="Modules\CheckSQLReportingServer.ps1" />
-    <Compile Include="Modules\CheckWebURL.ps1" />
-    <Compile Include="Modules\MonitorFunctions.ps1" />
-    <Compile Include="Monitor.ps1" />
-    <Compile Include="MonitorAdmin.ps1" />
     <Compile Include="MonitorDomain.ps1" />
     <Compile Include="MonitorSCOM.ps1" />
   </ItemGroup>
