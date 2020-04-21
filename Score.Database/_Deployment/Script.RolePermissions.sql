@@ -32,12 +32,6 @@ SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(ob
 FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'scom' AND object_name(object_id) like '%select%'
 ORDER BY 1
 
-SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO cmUpdate;'
-FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'dbo' AND OBJECTPROPERTY(object_id,'IsMSShipped') = 0
-UNION ALL
-SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO cmRead;'
-FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'dbo' AND object_name(object_id) like '%select%' AND OBJECTPROPERTY(object_id,'IsMSShipped') = 0
-UNION ALL
 SELECT 'GRANT EXEC ON ' + QUOTENAME(schema_name(schema_id)) + '.' + QUOTENAME(object_name(object_id)) + ' TO scomRead;'
 FROM sys.objects where type in ('P') AND SCHEMA_NAME(schema_id) = 'dbo' AND object_name(object_id) like '%select%' AND OBJECTPROPERTY(object_id,'IsMSShipped') = 0
 UNION ALL
