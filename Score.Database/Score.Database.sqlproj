@@ -667,7 +667,6 @@
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="_Deployment\Script.Deployment.sql" />
-    <None Include="_Deployment\Script.RolePermissions.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="_Deployment\Script.DefaultData.sql" />
