@@ -12,7 +12,7 @@
     <TargetDatasetFolder>Score</TargetDatasetFolder>
     <TargetDatasourceFolder>Score</TargetDatasourceFolder>
     <TargetReportPartFolder>Report Parts</TargetReportPartFolder>
-    <TargetServerURL>https://reports.abcd.lcl/reportserver</TargetServerURL>
+    <TargetServerURL>https://bi.abcd.lcl/reportserver</TargetServerURL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'DebugLocal' ">
     <FullPath>DebugLocal</FullPath>

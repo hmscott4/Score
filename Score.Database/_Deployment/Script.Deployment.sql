@@ -5856,6 +5856,9 @@ GO
 
 
 -- Permissions
+USE [SCORE]
+GO
+
 
 GRANT EXEC ON [ad].[spComputerDelete] TO adUpdate;
 GRANT EXEC ON [ad].[spComputerInactivate] TO adUpdate;

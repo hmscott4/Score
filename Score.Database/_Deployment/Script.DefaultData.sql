@@ -63,51 +63,52 @@ INSERT [dbo].[Config] ([ConfigName], [ConfigValue], [dbAddDate], [dbAddBy], [dbM
 VALUES (N'DefaultTimeZone', N'Eastern Time Zone', GETDATE(), SUSER_SNAME(), GETDATE(), SUSER_SNAME())
 GO
 
+
 /* Initialize scom.MaintenanceReasonCode
 * Hugh Scott
 * 2019/02/01
 */
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (0, N'Other (Planned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('C3E1B292-0A7F-48D0-BD05-8AC339615E0C', 0, N'Other (Planned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (1, N'Other (Unplanned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('81D56BE0-100A-4C8D-8341-8E2D21A697BD', 1, N'Other (Unplanned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (2, N'Hardware: Maintenance (Planned0', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('833B7664-4E2F-411C-8B95-6E466F34C5FC', 2, N'Hardware: Maintenance (Planned0', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (3, N'Hardware: Maintenance (Unplanned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('C74C2227-1C7F-40D1-A86B-19B799A32CEF', 3, N'Hardware: Maintenance (Unplanned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (4, N'Hardware: Installation (Planned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('D2EE2A3A-281F-42D1-A439-2629A001F07C', 4, N'Hardware: Installation (Planned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (5, N'Hardware: Installation (Unplanned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('98A0FD4E-B0EC-4BEB-82D0-F06155C95D3A', 5, N'Hardware: Installation (Unplanned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (6, N'Operating System: Reconfiguration (Planned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('7F8A7C22-D720-4396-A6B6-B6E9F05BB804', 6, N'Operating System: Reconfiguration (Planned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (7, N'Operating System: Reconfiguration (Unplanned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('A56B555D-6ECC-40A2-9935-EE71EA7300B4', 7, N'Operating System: Reconfiguration (Unplanned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (9, N'Application: Maintenance (Planned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('553807D6-79B6-474B-88A3-132687BDF16F', 9, N'Application: Maintenance (Planned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (10, N'Application: Installation (Planned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('0DDDE272-6A26-4139-AEE9-57ACAFBF1515', 10, N'Application: Installation (Planned)', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (11, N'Application: Unresponsive', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('B6726776-B95C-4CDF-8E0D-C14D8A7D011E', 11, N'Application: Unresponsive', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (12, N'Application: Unstable', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('A316AB85-D543-49E5-82DE-5D9F1F6BF8AF', 12, N'Application: Unstable', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (13, N'Security Issue', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('C8AE3FAC-BD14-4657-A713-DF95A291A060', 13, N'Security Issue', 1, GETDATE(), GETDATE())
 GO
-INSERT INTO [scom].[MaintenanceReasonCode] ([ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
-VALUES (14, N'Loss of network connectivity (Unplanned)', 1, GETDATE(), GETDATE())
+INSERT INTO [scom].[MaintenanceReasonCode] ([Id], [ReasonCode], [Reason], [Active], [dbAddDate], [dbModDate]) 
+VALUES ('33C0898A-7F11-401A-BBA0-772244739BAF', 14, N'Loss of network connectivity (Unplanned)', 1, GETDATE(), GETDATE())
 GO
 
 /* Initialize scom.ObjectClass

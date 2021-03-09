@@ -98,7 +98,7 @@ Set-StrictMode -Version Latest
 Set-Location $shellFolder	
 
 # Dot Source MonitorFunctions.ps1
-. ".\modules\MonitorFunctions.ps1"
+. ".\MonitorFunctions.ps1"
 
 #region GetSyncStatus
 #************************************************************************************************************************************
