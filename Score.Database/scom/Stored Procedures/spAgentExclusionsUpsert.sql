@@ -8,7 +8,7 @@
 * Used to exclude selected computer objects (like Cluster named objects) from Agent deployment count
 *
 ****************************************************************/
-CREATE PROC scom.spAgentExclusionsUpsert
+CREATE PROC [scom].[spAgentExclusionsUpsert]
 (@Domain nvarchar(128),
  @DNSHostName nvarchar(255),
  @Reason nvarchar(1024),
@@ -37,3 +37,9 @@ END
 
 
 grant exec on scom.spAgentExclusionsUpsert to scomUpdate
+
+GO
+GRANT EXECUTE
+    ON OBJECT::[scom].[spAgentExclusionsUpsert] TO [scomUpdate]
+    AS [dbo];
+

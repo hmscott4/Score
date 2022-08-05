@@ -25,5 +25,5 @@ COMMIT
 
 GO
 
-GRANT EXEC ON [scom].[spObjectHealthStateAlertRelationshipInactivate] TO [scomUpdate]
+
 GO

@@ -165,5 +165,5 @@ COMMIT
 
 GO
 
-GRANT EXEC ON [scom].[spGroupHealthStateUpsert] TO [scomUpdate]
+
 GO

@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[ReportHeader] (
-    [Id]                    UNIQUEIDENTIFIER CONSTRAINT [DF_ReportHeader__Id] DEFAULT (newid()) NOT NULL,
+    [Id]                    UNIQUEIDENTIFIER CONSTRAINT [DF_scom_ReportHeader_Id] DEFAULT (newid()) NOT NULL,
     [ReportName]            NVARCHAR (255)   NOT NULL,
     [ReportDisplayName]     NVARCHAR (255)   NOT NULL,
     [ReportBackground]      NVARCHAR (7)     NOT NULL,
@@ -35,6 +35,8 @@
     [dbModDate]             DATETIME2 (3)    NOT NULL,
     CONSTRAINT [PK_ReportHeader] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
 
 
 

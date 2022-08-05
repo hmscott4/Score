@@ -35,5 +35,5 @@ AS
 GO
 
 
-GRANT EXEC ON [scom].[spGroupHealthStateAlertRelationshipUpsert] TO [scomUpdate]
+
 GO

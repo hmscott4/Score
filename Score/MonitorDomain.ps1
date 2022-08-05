@@ -25,16 +25,31 @@
 	"domain" - Information about the Active Directory Domain
 	"site" - Information about Active Directory Sites; should only be used when pointed to the root Forest
 	"subnet" - Information about Active Directory Subnets; should only be used when pointed to the root Forest
-	"computer" - Information about Windows Server computer objects (workstations are currently ignored)
+	"computer" - Information about Windows computer objects (workstations and servers both)
+    "server" - Information about Windows Server computer objects only
 	"user" - Information about Active Directory Users
 	"group" - Information about Active Directory Groups
 	"groupmember" - Associates Groups and Group Members (users or computers)
+    "serviceaccount" - Information about Group Managed Service Accounts
+    "organizationalunit" - Information about Organizational Units
 
 .PARAMETER SyncType
 
 	Type of Synchronization to run
 	Full - Synchronize all objects
 	Incremental - Synchronize only those objects that have changed since the last synchronziation was executed
+
+.PARAMETER adSearchRoot
+
+	String value of OU (in DN Format) where the search will start from; can be used to narrow search criteria
+
+.PARAMETER Credential
+
+    An automation credential object used to access remote (untrusted) domains; this ONLY impacts AD queries, not database operations.
+
+.PARAMETER Force
+
+    A switch parameter used to override when the last synch was aborted.  Last Synch status will show "In Process".
 
 
 .INPUTS
@@ -78,15 +93,17 @@ Param(
 	[Parameter(Mandatory=$True,Position=1)]
 	[string]$adDomain,	
 	[Parameter(Mandatory=$True,Position=2)]
-	[ValidateSet("forest","domain","computer","user","site","group","groupmember","subnet")]
+	[ValidateSet("forest","domain","computer","user","site","group","groupmember","subnet","serviceaccount","server","organizationalunit")]
 	[string[]]$adObjectType,
 	[Parameter(Mandatory=$False,Position=3)]
 	[ValidateSet("Full","Incremental")]
 	[string]$syncType="Full",
-	[Parameter(Mandatory=$false,Position=4)]
+	[Parameter(Mandatory=$false)]
 	[string]$adSearchRoot=$null	,
-	[Parameter(Mandatory=$false,Position=5)]
-	[System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)	
+	[Parameter(Mandatory=$false)]
+	[System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty),
+	[Parameter(Mandatory=$false)]
+	[switch]$Force
 )
 
 Set-StrictMode -Version Latest
@@ -98,7 +115,7 @@ Set-StrictMode -Version Latest
 Set-Location $shellFolder	
 
 # Dot Source MonitorFunctions.ps1
-. ".\modules\MonitorFunctions.ps1"
+. ".\MonitorFunctions.ps1"
 
 #region GetSyncStatus
 #************************************************************************************************************************************
@@ -140,7 +157,6 @@ Param(
         } Else {
             $oDomain = Get-ADDomain -Server $adDomain
         }
-	    # $domainNetBIOSName = $oDomain.NetBIOSName
 	
         # Retrieve stored procedure
 	    $sqlCommand = GetStoredProc $sqlConnection "ad.spSyncStatusViewSelect"
@@ -160,14 +176,37 @@ Param(
 	    # IF
         #  - Requested synch does not exist, perform a full synch
 	    #  - Requested synch is incremental and no previous synch has been performed, perform a full synch
+        #  - Requested synch is already in progress, then return the start time of the last synch (logic elsewhere will stop the synch 
+        #    if it was started less than 90 minutes ago)
 	    if($dataTable.Rows.Count -gt 0) {
             # A record exists, we've checked this domain before
             if($dataTable.Rows[0]["LastStatus"] -eq "Starting...") {
 			    # If the status is "Starting...", then it means that a process is running or aborted the last run
 		        [string]$lastSyncType = "In process" 
-		        [datetime]$lastStartDate = "1/1/1970"
-		        [datetime]$lastFullSync = "1/1/1970"
-		        [datetime]$lastIncrementalSync = "1/1/1970"
+                If($dataTable.Rows[0]["lastStartDate"] -eq [System.DBNull]::Value)
+                {
+		            [datetime]$lastStartDate = "1/1/1970"
+                }
+                Else
+                {
+                    [datetime]$lastStartDate = $dataTable.Rows[0]["lastStartDate"]
+                }
+                If($dataTable.Rows[0]["lastFullSync"] -eq [System.DBNull]::Value)
+                {
+		            [datetime]$lastFullSync = "1/1/1970"
+                }
+                Else
+                {
+                    [datetime]$lastFullSync = $dataTable.Rows[0]["lastFullSync"]
+                }
+                If($dataTable.Rows[0]["lastIncrementalSync"] -eq [System.DBNull]::Value)
+                {
+		            [datetime]$lastIncrementalSync = "1/1/1970"
+                }
+                Else
+                {
+                    [datetime]$lastIncrementalSync = $dataTable.Rows[0]["lastIncrementalSync"]
+                }
             } elseif( $dataTable.Rows[0]["lastFullSync"] -eq [System.DBNull]::Value) {
                 # In theory, this should not happen, but it might if there was an error
 		        [string]$lastSyncType = $dataTable.Rows[0]["LastSyncType"]
@@ -233,7 +272,7 @@ Param(
 	[Parameter(Mandatory=$True,Position=1)]
 	[string]$adDomain,
 	[Parameter(Mandatory=$True,Position=2)]
-	[ValidateSet("domain","forest","site","computer","user","group","groupmember","subnet")]
+	[ValidateSet("domain","forest","site","computer","user","group","groupmember","subnet","serviceaccount","server","organizationalunit")]
 	[string]$adObjectType,
 	[Parameter(Mandatory=$True,Position=3)]
 	[ValidateSet("Full","Incremental","None")]
@@ -260,7 +299,6 @@ Param(
         } Else {
             $oDomain = Get-ADDomain -Server $adDomain
         }
-	    # $domainNetBIOSName = $oDomain.NetBIOSName
 	
 	    $sqlCommand = GetStoredProc $sqlConnection "ad.spSyncStatusUpsert"
 
@@ -430,6 +468,9 @@ param(
    	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteDomainInfo" "Starting Check..." $sqlConnection
 
+    # Set LastFullSync to current time stamp
+    [datetime]$LastFullSync = (Get-Date)
+
 	Try {
 		# Connect to Domain object
         If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
@@ -488,7 +529,54 @@ param(
 	    AddLogEntry $adDomain "Error" "WriteDomainInfo" $msg $sqlConnection
 		$errorCounter++
     }
-	
+
+    ## ADDED SECTION: ENUMERATE DOMAIN CONTROLLERS
+	Try {
+		$sqlCommand = GetStoredProc $sqlConnection "ad.spDomainControllerUpsert"
+	    [void]$sqlCommand.Parameters.Add("@Domain",  [System.Data.SqlDbType]::nvarchar)
+	    [void]$sqlCommand.Parameters.Add("@DNSHostName",  [System.Data.SqlDbType]::nvarchar)
+	    [void]$sqlCommand.Parameters.Add("@Type",  [System.Data.SqlDbType]::nvarchar)
+	    [void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::datetime)
+
+        foreach($dc in $Domain.ReplicaDirectoryServers)
+        {
+
+	        $sqlCommand.Parameters["@Domain"].Value = $Domain.DNSRoot
+	        $sqlCommand.Parameters["@DNSHostName"].Value = $dc
+	        $sqlCommand.Parameters["@Type"].Value = 'DomainController'
+	        $sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+	        [Void]$sqlCommand.ExecuteNonQuery()
+        }
+
+        foreach($dc in $Domain.ReadOnlyReplicaDirectoryServers)
+        {
+
+	        $sqlCommand.Parameters["@Domain"].Value = $Domain.DNSRoot
+	        $sqlCommand.Parameters["@DNSHostName"].Value = $dc
+	        $sqlCommand.Parameters["@Type"].Value = 'ReadOnlyDomainController'
+	        $sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+	        [Void]$sqlCommand.ExecuteNonQuery()
+        }
+
+    }
+    Catch {
+		$msg = $_.Exception.Message
+	    AddLogEntry $adDomain "Warning" "WriteDomainInfo" $msg $sqlConnection
+		$warningCounter++
+    }
+    $sqlCommand.Dispose()
+
+    ## ADDED SECTION: INACTIVATE DOMAIN CONTROLLERS
+	# Inactivate Domain Controllers that were not updated recently
+	$sqlCommand = GetStoredProc $sqlConnection "ad.spDomainControllerInactivateByDate"
+	[void]$sqlCommand.Parameters.Add("@Domain",  [System.Data.SqlDbType]::nvarchar)
+	[void]$sqlCommand.Parameters.Add("@BeforeDate",  [System.Data.SqlDbType]::datetime)
+	[void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::datetime)
+	$sqlCommand.Parameters["@Domain"].Value = $adDomain
+	$sqlCommand.Parameters["@BeforeDate"].Value = $lastFullSync
+	$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+	[Void]$sqlCommand.ExecuteNonQuery()	
+	$sqlCommand.Dispose()
 
 	if($errorCounter -gt 0) {$syncStatus = "Error"}
 	elseif($warningCounter -gt 0) {$syncStatus = "Warning"}
@@ -530,8 +618,12 @@ param(
 	[datetime]$lastFullSync,
   	[Parameter(Mandatory=$True,Position=6)]
    	[System.Data.SqlClient.SqlConnection]$sqlConnection,
-    [Parameter(Mandatory=$False,Position=7)]
-    [System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)
+    [Parameter(Mandatory=$False)]
+    [System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty),
+    [Parameter(Mandatory=$False)]
+	[ValidateSet("server","all")]
+    [string]$subClass="server"
+
 )
 
 	# Update Process log
@@ -543,26 +635,54 @@ param(
 	Try {
 		If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
             $oDomain = Get-ADDomain -Server $adDomain -Credential $Credential
+            $oRootDSE = Get-ADRootDSE -Server $adDomain -Credential $Credential
         } Else {
             $oDomain = Get-ADDomain -Server $adDomain
+            $oRootDSE = Get-ADRootDSE -Server $adDomain
         }
-		# $domainNetBIOSName = $oDomain.NetBIOSName
-		
-	    # Retrieve computers from AD where OSName is like *Server*
-		$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "OperatingSystem", "OperatingSystemServicePack", "OperatingSystemVersion", "Description", "TrustedForDelegation","IPv4Address","objectGUID","LastLogonTimeStamp")
-		if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
-            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-    			$computers = Get-ADComputer -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*" -and OperatingSystem -like "*Server*"' -Properties $PropList -Credential $Credential
-            } Else {
-            	$computers = Get-ADComputer -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*" -and OperatingSystem -like "*Server*"' -Properties $PropList
-            }
-		} else {
-            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-    			$computers = Get-ADComputer -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*" -and OperatingSystem -like "*Server*"' -Properties $PropList -Credential $Credential
-            } Else {
-            	$computers = Get-ADComputer -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*" -and OperatingSystem -like "*Server*"' -Properties $PropList
-            }
+
+		# Check for existence of LAPS attribute; if it exists, retrieve LAPS properties
+		# $lapsCN = "CN=ms-Mcs-AdmPwdExpirationTime,CN=Schema,CN=Configuration," + $oDomain.DistinguishedName
+        $lapsCN = "CN=ms-Mcs-AdmPwdExpirationTime," + $oRootDSE.schemaNamingContext
+		Try
+		{
+			$lapsObject = Get-ADObject -Identity $lapsCN -Server $oDomain.Forest
+            # $lapsObject = Get-ADObject -Identity $lapsCN -Server $adDomain
+            [bool]$bLAPS = $true
+			$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "OperatingSystem", "OperatingSystemServicePack", "OperatingSystemVersion", "Description", "TrustedForDelegation","IPv4Address","objectGUID","LastLogonTimeStamp","UserAccountControl","msDS-SupportedEncryptionTypes","ms-Mcs-AdmPwdExpirationTime","ms-Mcs-AdmPwd")
+
 		}
+		Catch
+		{
+			# Did not find LAPS 
+            $Error.Clear()
+            [bool]$bLAPS = $false
+			$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "OperatingSystem", "OperatingSystemServicePack", "OperatingSystemVersion", "Description", "TrustedForDelegation","IPv4Address","objectGUID","LastLogonTimeStamp","UserAccountControl","msDS-SupportedEncryptionTypes")
+		}
+
+        # Retrieving just servers? or servers and workstations?
+        if($subClass -eq 'all')
+        {
+            $operatingSystemFilter = "*Windows*"
+        }
+        Else
+        {
+            $operatingSystemFilter = "*Windows*Server*"
+        }
+		
+        # Set filter 
+        if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
+            [string]$sFilter = "whenChanged -ge '$lastUpdate' -and OperatingSystem -like '$operatingSystemFilter'"
+        } Else {
+            [string]$sFilter = "OperatingSystem -like '$operatingSystemFilter'"
+        }
+
+        # Query AD (with or without credential)
+        If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    		$computers = Get-ADComputer -Server $adDomain -searchBase $adDomainSearchRoot -Filter $sFilter -Properties $PropList -Credential $Credential
+        } Else {
+            $computers = Get-ADComputer -Server $adDomain -searchBase $adDomainSearchRoot -Filter $sFilter -Properties $PropList
+        }
 		
     	$sqlCommand = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "ad.spComputerUpsert"
 		[Void]$sqlCommand.Parameters.Add("@objectGUID", [system.data.SqlDbType]::uniqueidentifier)
@@ -577,18 +697,27 @@ param(
 		[Void]$sqlCommand.Parameters.Add("@OperatingSystemServicePack", [system.data.SqlDbType]::nvarchar)
 		[Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
 		[Void]$sqlCommand.Parameters.Add("@DistinguishedName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@UserAccountControl", [system.data.SqlDbType]::int)
+		[Void]$sqlCommand.Parameters.Add("@SupportedEncryptionTypes", [system.data.SqlDbType]::int)
 		[Void]$sqlCommand.Parameters.Add("@Enabled", [system.data.SqlDbType]::Bit)
 		[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::Bit)
 		[Void]$sqlCommand.Parameters.Add("@LastLogon", [system.data.SqlDbType]::DateTime)
 		[Void]$sqlCommand.Parameters.Add("@whenCreated", [system.data.SqlDbType]::DateTime)
 		[Void]$sqlCommand.Parameters.Add("@whenChanged", [system.data.SqlDbType]::DateTime)
         [Void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
+
+        # ADDED TO SUPPORT LAPS
+    	$sqlCommandLAPS = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "ad.spLocalAdminPasswordSolutionUpsert"
+		[Void]$sqlCommandLAPS.Parameters.Add("@objectGUID", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommandLAPS.Parameters.Add("@AdmPwdExpiration", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommandLAPS.Parameters.Add("@AdmPassword", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommandLAPS.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
 		
 	    foreach($computer in $computers)
 	    {
 			try {
 				if($null -eq $computer.LastLogonDate){$dLastLogon = [System.DBNull]::Value} else {$dLastLogon = [DateTime]::FromFileTime([Int64] $computer.lastlogontimestamp)}
-				
+
 				$sqlCommand.Parameters["@objectGUID"].value = $computer.objectGUID
 				$sqlCommand.Parameters["@SID"].value = $computer.SID.ToString()
 				$sqlCommand.Parameters["@Domain"].value = $oDomain.DNSRoot
@@ -601,6 +730,8 @@ param(
 				$sqlCommand.Parameters["@OperatingSystemServicePack"].value = $computer.OperatingSystemServicePack
 				$sqlCommand.Parameters["@Description"].value = $computer.Description
 				$sqlCommand.Parameters["@DistinguishedName"].value = $computer.DistinguishedName
+				$sqlCommand.Parameters["@UserAccountControl"].value = $computer.UserAccountControl
+				$sqlCommand.Parameters["@SupportedEncryptionTypes"].value = $computer.'msDS-SupportedEncryptionTypes'
 				$sqlCommand.Parameters["@Enabled"].value = $computer.Enabled
 				$sqlCommand.Parameters["@Active"].value = $true
 				$sqlCommand.Parameters["@LastLogon"].value = $dLastLogon
@@ -609,6 +740,32 @@ param(
 	            $sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
 			
 				[Void]$sqlCommand.ExecuteNonQuery()
+
+                # SECTION ADDED TO SUPPORT LAPS
+				if($bLAPS)
+                {
+                    If($null -eq $computer.'ms-Mcs-AdmPwdExpirationTime')
+                    { 
+                        $admPwdExpiration = [System.DBNull]::Value
+                    } Else 
+                    {
+                        $admPwdExpiration = [DateTime]::FromFileTime([Int64] $computer.'ms-Mcs-AdmPwdExpirationTime')
+                    }
+                    If($null -eq $computer.'ms-Mcs-AdmPwd')
+                    { 
+                        $admPassword = [System.DBNull]::Value
+                    } Else 
+                    {
+                        $admPassword = $computer.'ms-Mcs-AdmPwd'
+                    }
+
+				    $sqlCommandLAPS.Parameters["@ObjectGUID"].value = $computer.objectGUID
+				    $sqlCommandLAPS.Parameters["@AdmPwdExpiration"].value = $admPwdExpiration
+				    $sqlCommandLAPS.Parameters["@AdmPassword"].value = $admPassword
+	                $sqlCommandLAPS.Parameters["@dbLastUpdate"].Value = (Get-Date)
+			
+				    [Void]$sqlCommandLAPS.ExecuteNonQuery()
+                }
 				
 			} Catch [System.Exception] {
 				$msg = $_.Exception.Message
@@ -618,6 +775,7 @@ param(
 			$objectCounter++
 		}
  		$sqlCommand.Dispose()
+ 		$sqlCommandLAPS.Dispose()
 
 		# This section added to deal with MS Cluster Virtual Computer Objects
 		# These objects exist in Active Directory, but will never receive an agent
@@ -634,6 +792,13 @@ param(
 		[Void]$sqlCommand.Parameters.Add("@DNSHostName", [system.data.SqlDbType]::nvarchar)
 		[Void]$sqlCommand.Parameters.Add("@Reason", [system.data.SqlDbType]::nvarchar)
         [Void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
+
+    	$sqlCommandAD = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "ad.spClusterNamedObjectUpsert"
+		[Void]$sqlCommandAD.Parameters.Add("@ObjectGUID", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommandAD.Parameters.Add("@Domain", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommandAD.Parameters.Add("@DNSHostName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommandAD.Parameters.Add("@Comment", [system.data.SqlDbType]::nvarchar)
+        [Void]$sqlCommandAD.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
 		
 	    foreach($exclusion in $exclusions)
 	    {
@@ -644,6 +809,14 @@ param(
 				$sqlCommand.Parameters["@Reason"].value = "MS Cluster Virtual Object"
 				$sqlCommand.Parameters["@dbLastUpdate"].value = (Get-Date)
 				[Void]$sqlCommand.ExecuteNonQuery()
+
+
+				$sqlCommandAD.Parameters["@ObjectGUID"].value = $exclusion.objectGUID
+				$sqlCommandAD.Parameters["@Domain"].value = $adDomain
+				$sqlCommandAD.Parameters["@DNSHostName"].value = $exclusion.DNSHostName
+				$sqlCommandAD.Parameters["@Comment"].value = "MS Cluster Virtual Object"
+				$sqlCommandAD.Parameters["@dbLastUpdate"].value = (Get-Date)
+				[Void]$sqlCommandAD.ExecuteNonQuery()
 				
 			} Catch [System.Exception] {
 				$msg = $_.Exception.Message
@@ -651,6 +824,8 @@ param(
 				$warningCounter++
 			}
 		}
+        $sqlCommand.Dispose()
+        $sqlCommandAD.Dispose()
 
 
 		# If this sync is full, then inactivate any object (for this domain) that wasn't touched
@@ -711,7 +886,9 @@ param(
 	[Parameter(Mandatory=$True,Position=5)]
 	[datetime]$lastFullSync,
 	[Parameter(Mandatory=$True,Position=6)]
-	[System.Data.SqlClient.SqlConnection]$sqlConnection  
+	[System.Data.SqlClient.SqlConnection]$sqlConnection,
+    [Parameter(Mandatory=$False,Position=7)]
+    [System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)
 )
 	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteUserInfo" "Starting $syncType check..." $sqlConnection
@@ -721,14 +898,21 @@ param(
 	[Int32]$objectCounter = 0
 	Try {
 		$oDomain = Get-ADDomain -Server $adDomain
-		# $domainNetBIOSName = $oDomain.NetBIOSName
 	
 	    # Retrieve users from AD
-		$PropList = @("DisplayName","GivenName","Surname","Company","Title","EmployeeID","ProfilePath","HomeDirectory","LockedOut","PasswordExpired","PasswordLastSet","PasswordNeverExpires","PasswordNotRequired","TrustedForDelegation","TrustedToAuthForDelegation","Office","Department","Division","StreetAddress","City","State","PostalCode","ManagedBy","MobilePhone","telephoneNumber","Fax","Pager","mail","Enabled","LastLogonDate", "whenCreated","whenChanged","objectGUID","LastLogonTimeStamp")
-		if (($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
-			$users = Get-ADUser -SearchBase $adDomainSearchRoot -Server $adDomain -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList
+		$PropList = @("DisplayName","GivenName","Surname","Company","Title","EmployeeID","ProfilePath","HomeDirectory","LockedOut","PasswordExpired","PasswordLastSet","PasswordNeverExpires","PasswordNotRequired","TrustedForDelegation","TrustedToAuthForDelegation","Office","Department","Division","StreetAddress","City","State","PostalCode","ManagedBy","MobilePhone","telephoneNumber","Fax","Pager","mail","Enabled","LastLogonDate", "whenCreated","whenChanged","objectGUID","LastLogonTimeStamp","msDS-SupportedEncryptionTypes","UserAccountControl")
+		if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$users = Get-ADUser -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList -Credential $Credential
+            } Else {
+            	$users = Get-ADUser -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList
+            }
 		} else {
-			$users = Get-ADUser -SearchBase $adDomainSearchRoot -Server $adDomain -Filter 'Name -like "*"' -Properties $PropList
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$users = Get-ADUser -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList -Credential $Credential
+            } Else {
+            	$users = Get-ADUser -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList
+            }
 		}
 				
 	    $sqlCommand = GetStoredProc $sqlConnection "ad.spUserUpsert"
@@ -766,6 +950,8 @@ param(
 	    [void]$sqlCommand.Parameters.Add("@PasswordNotRequired",  [System.Data.SqlDbType]::bit)
 	    [void]$sqlCommand.Parameters.Add("@TrustedForDelegation",  [System.Data.SqlDbType]::bit)
 	    [void]$sqlCommand.Parameters.Add("@TrustedToAuthForDelegation",  [System.Data.SqlDbType]::bit)
+	    [void]$sqlCommand.Parameters.Add("@UserAccountControl",  [System.Data.SqlDbType]::int)
+	    [void]$sqlCommand.Parameters.Add("@SupportedEncryptionTypes",  [System.Data.SqlDbType]::int)
 	    [void]$sqlCommand.Parameters.Add("@DistinguishedName",  [System.Data.SqlDbType]::nvarchar)
 	    [void]$sqlCommand.Parameters.Add("@Enabled",  [System.Data.SqlDbType]::bit)
 	    [void]$sqlCommand.Parameters.Add("@Active",  [System.Data.SqlDbType]::bit)
@@ -782,7 +968,7 @@ param(
 		        $sqlCommand.Parameters["@objectGUID"].Value = $user.objectGUID
 		        $sqlCommand.Parameters["@SID"].Value = $user.SID.ToString()
 		        $sqlCommand.Parameters["@Domain"].Value = $oDomain.DNSRoot 
-		        $sqlCommand.Parameters["@Name"].Value = $user.Name
+		        $sqlCommand.Parameters["@Name"].Value = $user.SamAccountName
 		        $sqlCommand.Parameters["@FirstName"].Value = NullToDBNull -value1 $user.GivenName
 		        $sqlCommand.Parameters["@LastName"].Value = NullToDBNull -value1 $user.Surname
 		        $sqlCommand.Parameters["@DisplayName"].Value = $user.DisplayName
@@ -813,6 +999,8 @@ param(
 				$sqlCommand.Parameters["@TrustedForDelegation"].Value = $user.TrustedForDelegation
 				$sqlCommand.Parameters["@TrustedToAuthForDelegation"].Value = $user.TrustedToAuthForDelegation
 		        $sqlCommand.Parameters["@DistinguishedName"].Value = $user.DistinguishedName
+		        $sqlCommand.Parameters["@UserAccountControl"].Value = $user.UserAccountControl
+		        $sqlCommand.Parameters["@SupportedEncryptionTypes"].Value = $user.'msDS-SupportedEncryptionTypes'
 		        $sqlCommand.Parameters["@Enabled"].Value = $user.Enabled
 		        $sqlCommand.Parameters["@Active"].Value = $true
 		        $sqlCommand.Parameters["@LastLogon"].Value = $dLastLogon
@@ -887,13 +1075,14 @@ param(
 	[Parameter(Mandatory=$True,Position=5)]
 	[datetime]$lastFullSync,
 	[Parameter(Mandatory=$True,Position=6)]
-	[System.Data.SqlClient.SqlConnection]$sqlConnection  
+	[System.Data.SqlClient.SqlConnection]$sqlConnection,
+    [Parameter(Mandatory=$False,Position=7)]
+    [System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)
 )
 	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteGroupInfo" "Starting $syncType check..." $sqlConnection
 	
 	$oDomain = Get-ADDomain -Server $adDomain
-	# $domainNetBIOSName = $oDomain.NetBIOSName
 
 	[Int32]$warningCounter = 0
 	[Int32]$errorCounter = 0
@@ -901,10 +1090,18 @@ param(
 	Try {
 	    # Retrieve groups from AD
 		$PropList = @("whenCreated","whenChanged","mail","Description","objectGUID", "GroupScope", "GroupCategory")
-		if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")){
-			$groups = Get-ADGroup -SearchBase $adDomainSearchRoot -Server $adDomain -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList
+		if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList -Credential $Credential
+            } Else {
+            	$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList
+            }
 		} else {
-			$groups = Get-ADGroup -SearchBase $adDomainSearchRoot -Server $adDomain -Filter 'Name -like "*"' -Properties $PropList
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$users = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList -Credential $Credential
+            } Else {
+            	$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList
+            }
 		}
 	    		
         $sqlCommand = GetStoredProc $sqlConnection "ad.spGroupUpsert"
@@ -1009,7 +1206,9 @@ param(
 	[Parameter(Mandatory=$True,Position=5)]
 	[datetime]$lastFullSync,
 	[Parameter(Mandatory=$True,Position=6)]
-	[System.Data.SqlClient.SqlConnection]$sqlConnection  
+	[System.Data.SqlClient.SqlConnection]$sqlConnection,
+    [Parameter(Mandatory=$False,Position=7)]
+    [System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)
 )
 	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteGroupMemberInfo" "Starting $syncType check..." $sqlConnection
@@ -1019,14 +1218,21 @@ param(
 	[Int32]$objectCounter = 0
 	try {
 		$oDomain = Get-ADDomain -Server $adDomain
-		# $domainNetBIOSName = $oDomain.NetBIOSName	
 		
 	    # Retrieve Security groups from AD
 		$PropList = @("Members","objectGUID")
-		if (($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
-			$groups = Get-ADGroup -Server $adDomain -SearchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList
+		if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList -Credential $Credential
+            } Else {
+            	$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList
+            }
 		} else {
-			$groups = Get-ADGroup -Server $adDomain -SearchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList -Credential $Credential
+            } Else {
+            	$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList
+            }
 		}
 	    
         $sqlCommand = GetStoredProc $sqlConnection "ad.spGroupMemberUpsert"
@@ -1142,7 +1348,6 @@ param(
         } Else {
             $oDomain = Get-ADDomain -Server $adForest
         }
-		# $forestNetBIOSName = $oDomain.NetBIOSName	
 		
 		$sSearchBase = $rootConfigurationNamingContext
 		
@@ -1274,8 +1479,7 @@ param(
     		$oDomain = Get-ADDomain -Server $adForest -Credential $Credential
         } Else {
             $oDomain = Get-ADDomain -Server $adForest
-        }
-		# $forestNetBIOSName = $oDomain.NetBIOSName			
+        }		
 		$sSearchBase = $rootConfigurationNamingContext
 		
 		$Proplist = @("whenCreated","whenChanged","Description","objectGUID","Location","siteObject")
@@ -1361,6 +1565,297 @@ param(
 	return New-Object psobject -Property @{Status = $syncStatus; ErrorCount = $errorCounter; WarningCount = $warningCounter; ObjectCount = $objectCounter}	
 }
 #endregion
+
+
+
+#region WriteServiceAccountInfo
+#************************************************************************************************************************************
+# Function WriteServiceAccountInfo
+#
+# Parameters:
+# 	- Connection String
+#
+# Returns:
+#   - Nothing
+#
+# Writes AD information about servers to ad.ServiceAccount
+#
+#************************************************************************************************************************************
+Function WriteServiceAccountInfo {
+	[CmdletBinding()]
+	param(
+		  [Parameter(Mandatory=$True,Position=1)]
+		[string]$adDomain,
+		  [Parameter(Mandatory=$True,Position=2)]
+		[string]$adDomainSearchRoot,
+		  [Parameter(Mandatory=$True,Position=3)]
+		[string]$syncType,
+		  [Parameter(Mandatory=$True,Position=4)]
+		[datetime]$lastUpdate,
+		  [Parameter(Mandatory=$True,Position=5)]
+		[datetime]$lastFullSync,
+		  [Parameter(Mandatory=$True,Position=6)]
+		   [System.Data.SqlClient.SqlConnection]$sqlConnection,
+		[Parameter(Mandatory=$False,Position=7)]
+		[System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)
+	)
+	
+	# Update Process log
+	AddLogEntry $adDomain "Info" "WriteServiceAccountInfo" "Starting $syncType Check..." $sqlConnection
+		
+	[Int32]$warningCounter = 0
+	[Int32]$errorCounter = 0
+	[Int32]$objectCounter = 0
+	Try {
+		If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+			$oDomain = Get-ADDomain -Server $adDomain -Credential $Credential
+		} Else {
+			$oDomain = Get-ADDomain -Server $adDomain
+		}
+		# $domainNetBIOSName = $oDomain.NetBIOSName
+			
+		# Retrieve service accounts from AD where OSName is like *Server*
+		$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "Description", "TrustedForDelegation","objectGUID","dnsHostName","LastLogonTimeStamp","userAccountControl","msDS-SupportedEncryptionTypes","servicePrincipalName","msDS-GroupMSAMembership")
+		if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
+			If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+				$serviceAccounts = Get-ADServiceAccount -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList -Credential $Credential
+			} Else {
+				$serviceAccounts = Get-ADServiceAccount -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties $PropList
+			}
+		} else {
+			If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+				$serviceAccounts = Get-ADServiceAccount -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList -Credential $Credential
+			} Else {
+				$serviceAccounts = Get-ADServiceAccount -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList
+			}
+		}
+			
+		$sqlCommand = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "ad.spServiceAccountUpsert"
+		[Void]$sqlCommand.Parameters.Add("@objectGUID", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@SID", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Domain", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@dnsHostName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Trusted", [system.data.SqlDbType]::bit)
+		[Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@DistinguishedName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@PrincipalsAllowedToRetrievePassword", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@UserAccountControl", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@ServicePrincipalNames", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@SupportedEncryptionTypes", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Enabled", [system.data.SqlDbType]::Bit)
+		[Void]$sqlCommand.Parameters.Add("@Active", [system.data.SqlDbType]::Bit)
+		[Void]$sqlCommand.Parameters.Add("@LastLogon", [system.data.SqlDbType]::DateTime)
+		[Void]$sqlCommand.Parameters.Add("@whenCreated", [system.data.SqlDbType]::DateTime)
+		[Void]$sqlCommand.Parameters.Add("@whenChanged", [system.data.SqlDbType]::DateTime)
+		[Void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
+			
+		foreach($serviceAccount in $serviceAccounts)
+		{
+			try {
+				if($null -eq $serviceAccount.LastLogonDate){$dLastLogon = [System.DBNull]::Value} else {$dLastLogon = [DateTime]::FromFileTime([Int64] $serviceAccount.lastlogontimestamp)}
+				$passwordPrincipals = ""
+
+				$sqlCommand.Parameters["@objectGUID"].value = $serviceAccount.objectGUID
+				$sqlCommand.Parameters["@SID"].value = $serviceAccount.SID.ToString()
+				$sqlCommand.Parameters["@Domain"].value = $oDomain.DNSRoot
+				$sqlCommand.Parameters["@Name"].value = $serviceAccount.Name	
+				$sqlCommand.Parameters["@dnsHostName"].value = NullToString -value1 $serviceAccount.dnsHostName -value2 ""
+				$sqlCommand.Parameters["@Trusted"].value = $serviceAccount.TrustedForDelegation
+				$sqlCommand.Parameters["@Description"].value = NullToString -value1 $serviceAccount.Description -value2 ""
+				$sqlCommand.Parameters["@DistinguishedName"].value = $serviceAccount.DistinguishedName
+				$sqlCommand.Parameters["@PrincipalsAllowedToRetrievePassword"].value = $passwordPrincipals
+				$sqlCommand.Parameters["@UserAccountControl"].value = $serviceAccount.UserAccountControl
+				$sqlCommand.Parameters["@ServicePrincipalNames"].value = NullToString -value1 $serviceAccount.servicePrincipalName -value2 ""
+				$sqlCommand.Parameters["@SupportedEncryptionTypes"].value = NullToString -value1 $serviceAccount.'msDS-SupportedEncryptionTypes' -value2 ""
+				$sqlCommand.Parameters["@Enabled"].value = $serviceAccount.Enabled
+				$sqlCommand.Parameters["@Active"].value = $true
+				$sqlCommand.Parameters["@LastLogon"].value = $dLastLogon
+				$sqlCommand.Parameters["@whenCreated"].value = $serviceAccount.whenCreated
+				$sqlCommand.Parameters["@whenChanged"].value = $serviceAccount.whenChanged
+				$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+				
+				[Void]$sqlCommand.ExecuteNonQuery()
+					
+			} Catch [System.Exception] {
+				$msg = $_.Exception.Message
+				AddLogEntry $adDomain "Warning" "WriteServiceAccountInfo" "$serviceaccount : $msg" $sqlConnection
+				$warningCounter++
+			}
+			$objectCounter++
+		}
+		$sqlCommand.Dispose()
+	
+		# If this sync is full, then inactivate any object (for this domain) that wasn't touched
+		if($syncType -eq "Full"){
+			$sqlCommand = GetStoredProc $sqlConnection "ad.spServiceAccountInactivateByDate"
+			[void]$sqlCommand.Parameters.Add("@Domain",  [System.Data.SqlDbType]::nvarchar)
+			[void]$sqlCommand.Parameters.Add("@BeforeDate",  [System.Data.SqlDbType]::datetime)
+			[void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::datetime)
+			$sqlCommand.Parameters["@Domain"].Value = $adDomain
+			$sqlCommand.Parameters["@BeforeDate"].Value = $lastFullSync
+			$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+			[Void]$sqlCommand.ExecuteNonQuery()	
+			$sqlCommand.Dispose()
+		}		
+	}
+	Catch [System.Exception] {
+		$msg = $_.Exception.Message
+		AddLogEntry $adDomain "Error" "WriteServiceAccountInfo" "$msg" $sqlConnection
+		$errorCounter++
+	}
+	if($errorCounter -gt 0) {$syncStatus = "Error"}
+	elseif($warningCounter -gt 0) {$syncStatus = "Warning"}
+	else {$syncStatus = "Success"}
+	
+	# Write Log Entry
+	[string]$msg = "{0} : {1} object(s) : {2} error(s); {3} warning(s)" -f $syncStatus, $objectCounter, $errorCounter, $warningCounter
+	AddLogEntry $adDomain "Info" "WriteServiceAccountInfo" "$msg" $sqlConnection
+	
+	return New-Object psobject -Property @{Status = $syncStatus; ErrorCount = $errorCounter; WarningCount = $warningCounter; ObjectCount = $objectCounter}
+	
+}
+#endregion
+
+
+#region WriteOrganizationalUnitInfo
+#************************************************************************************************************************************
+# Function WriteOrganizationalUnitInfo
+#
+# Parameters:
+# 	- Connection String
+#
+# Returns:
+#   - Nothing
+#
+# Writes AD information about OrganizationalUnit to ad.OrganizationalUnit
+#
+#************************************************************************************************************************************
+Function WriteOrganizationalUnitInfo {
+	[CmdletBinding()]
+	param(
+		  [Parameter(Mandatory=$True,Position=1)]
+		[string]$adDomain,
+		  [Parameter(Mandatory=$True,Position=2)]
+		[string]$adDomainSearchRoot,
+		  [Parameter(Mandatory=$True,Position=3)]
+		[string]$syncType,
+		  [Parameter(Mandatory=$True,Position=4)]
+		[datetime]$lastUpdate,
+		  [Parameter(Mandatory=$True,Position=5)]
+		[datetime]$lastFullSync,
+		  [Parameter(Mandatory=$True,Position=6)]
+		   [System.Data.SqlClient.SqlConnection]$sqlConnection,
+		[Parameter(Mandatory=$False,Position=7)]
+		[System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty)
+	)
+	
+	# Update Process log
+	AddLogEntry $adDomain "Info" "WriteOrganizationalUnitInfo" "Starting $syncType Check..." $sqlConnection
+		
+	[Int32]$warningCounter = 0
+	[Int32]$errorCounter = 0
+	[Int32]$objectCounter = 0
+	Try {
+		If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+			$oDomain = Get-ADDomain -Server $adDomain -Credential $Credential
+		} Else {
+			$oDomain = Get-ADDomain -Server $adDomain
+		}
+			
+		# Retrieve service accounts from AD where OSName is like *Server*
+		# $PropList = @("LastLogonDate", "whenCreated", "whenChanged", "Description", "TrustedForDelegation","objectGUID","dnsHostName","LastLogonTimeStamp","userAccountControl","msDS-SupportedEncryptionTypes","servicePrincipalName","msDS-GroupMSAMembership")
+		if(($syncType -eq "Incremental") -and ($lastUpdate -gt "01/01/1970")) {
+			If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties * -Credential $Credential
+			} Else {
+				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'whenChanged -ge $lastUpdate -and Name -like "*"' -Properties *
+			}
+		} else {
+			If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties * -Credential $Credential
+			} Else {
+				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties *
+			}
+		}
+			
+		$sqlCommand = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "ad.spOrganizationalUnitUpsert"
+		[Void]$sqlCommand.Parameters.Add("@objectGUID", [system.data.SqlDbType]::uniqueidentifier)
+		[Void]$sqlCommand.Parameters.Add("@Domain", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Name", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Description", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@DistinguishedName", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@StreetAddress", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@City", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@State", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Country", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@PostalCode", [system.data.SqlDbType]::nvarchar)
+		[Void]$sqlCommand.Parameters.Add("@Protected", [system.data.SqlDbType]::bit)
+		[Void]$sqlCommand.Parameters.Add("@whenCreated", [system.data.SqlDbType]::DateTime)
+		[Void]$sqlCommand.Parameters.Add("@whenChanged", [system.data.SqlDbType]::DateTime)
+		[Void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
+			
+		foreach($OrganizationalUnit in $OrganizationalUnits)
+		{
+			try {
+
+				$sqlCommand.Parameters["@objectGUID"].value = $OrganizationalUnit.objectGUID
+				$sqlCommand.Parameters["@Domain"].value = $oDomain.DNSRoot
+				$sqlCommand.Parameters["@Name"].value = $OrganizationalUnit.Name	
+				$sqlCommand.Parameters["@Description"].value = NullToString -value1 $OrganizationalUnit.Description -value2 ""
+				$sqlCommand.Parameters["@DistinguishedName"].value = $OrganizationalUnit.DistinguishedName
+				$sqlCommand.Parameters["@StreetAddress"].value = NullToString -value1 $OrganizationalUnit.StreetAddress -value2 ""
+				$sqlCommand.Parameters["@City"].value = NullToString -value1 $OrganizationalUnit.City -value2 ""
+				$sqlCommand.Parameters["@State"].value = NullToString -value1 $OrganizationalUnit.State -value2 ""
+				$sqlCommand.Parameters["@Country"].value = NullToString -value1 $OrganizationalUnit.Country -value2 ""
+				$sqlCommand.Parameters["@PostalCode"].value = NullToString -value1 $OrganizationalUnit.PostalCode -value2 ""
+				$sqlCommand.Parameters["@Protected"].value = $OrganizationalUnit.ProtectedFromAccidentalDeletion
+				$sqlCommand.Parameters["@whenCreated"].value = $OrganizationalUnit.whenCreated
+				$sqlCommand.Parameters["@whenChanged"].value = $OrganizationalUnit.whenChanged
+				$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+				
+				[Void]$sqlCommand.ExecuteNonQuery()
+					
+			} Catch [System.Exception] {
+				$msg = $_.Exception.Message
+				AddLogEntry $adDomain "Warning" "WriteOrganizationalUnitInfo" "$OrganizationalUnit : $msg" $sqlConnection
+				$warningCounter++
+			}
+			$objectCounter++
+		}
+		$sqlCommand.Dispose()
+	
+		# If this sync is full, then inactivate any object (for this domain) that wasn't touched
+		if($syncType -eq "Full"){
+			$sqlCommand = GetStoredProc $sqlConnection "ad.spOrganizationalUnitInactivateByDate"
+			[void]$sqlCommand.Parameters.Add("@Domain",  [System.Data.SqlDbType]::nvarchar)
+			[void]$sqlCommand.Parameters.Add("@BeforeDate",  [System.Data.SqlDbType]::datetime)
+			[void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::datetime)
+			$sqlCommand.Parameters["@Domain"].Value = $oDomain.DNSRoot
+			$sqlCommand.Parameters["@BeforeDate"].Value = $lastFullSync
+			$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+			[Void]$sqlCommand.ExecuteNonQuery()	
+			$sqlCommand.Dispose()
+		}		
+	}
+	Catch [System.Exception] {
+		$msg = $_.Exception.Message
+		AddLogEntry $adDomain "Error" "WriteOrganizationalUnitInfo" "$msg" $sqlConnection
+		$errorCounter++
+	}
+	if($errorCounter -gt 0) {$syncStatus = "Error"}
+	elseif($warningCounter -gt 0) {$syncStatus = "Warning"}
+	else {$syncStatus = "Success"}
+	
+	# Write Log Entry
+	[string]$msg = "{0} : {1} object(s) : {2} error(s); {3} warning(s)" -f $syncStatus, $objectCounter, $errorCounter, $warningCounter
+	AddLogEntry $adDomain "Info" "WriteServiceAccountInfo" "$msg" $sqlConnection
+	
+	return New-Object psobject -Property @{Status = $syncStatus; ErrorCount = $errorCounter; WarningCount = $warningCounter; ObjectCount = $objectCounter}
+	
+}
+#endregion
+
 
 ################################################################################
 # SET UP ENVIRONMENT
@@ -1492,13 +1987,13 @@ foreach ($object in $adObjectType) {
         [datetime]$lastStart = $lastSyncStatus.LastStartDate
         [datetime]$currentTime = (Get-Date)
         [timespan]$timeDiff = New-TimeSpan -Start $lastStart -End $currentTime
-        If($timeDiff.TotalMinutes -gt 90){
+        If($timeDiff.TotalMinutes -gt 90 -or $Force){
 		    # An old, probably stale synch, let's try to restart it (cringe); retrieve values for $lastUpdate and $lastFullSync
 		    [datetime]$lastUpdate = MaxDate $lastSyncStatus.LastFullSync $lastSyncStatus.LastIncrementalSync
 		    [datetime]$lastFullSync = $lastSyncStatus.LastFullSync
         } else {
-    		Write-Host "$object : A synchronization is already in process." -ForegroundColor Red
-	    	AddLogEntry $domainDNSRoot "Warning" "GetSyncStatus" "$object : A synchronization is already in process." $sqlConnection
+    		Write-Host "$object : A synchronization is already in process. Wait 90 minutes to retry, or use -Force option." -ForegroundColor Red
+	    	AddLogEntry $domainDNSRoot "Warning" "GetSyncStatus" "$object : A synchronization is already in process. Wait 90 minutes to retry, or use -Force option." $sqlConnection
 		    $warningCounter++
 		    continue
         }
@@ -1519,44 +2014,37 @@ foreach ($object in $adObjectType) {
 
 	switch ($object) {
 		"forest" 		{
-                            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-    							$result = WriteForestInfo -adForest $adForest -sqlConnection $sqlConnection -Credential $Credential
-                            } Else {
-	                            $result = WriteForestInfo -adForest $adForest -sqlConnection $sqlConnection
-                            }
+                            $result = WriteForestInfo -adForest $adForest -sqlConnection $sqlConnection -Credential $Credential
 							$errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}
 		"domain" 		{
-							If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-                                $result = WriteDomainInfo -adDomain $domainDNSRoot -sqlConnection $sqlConnection -Credential $Credential
-                            } Else {
-                                $result = WriteDomainInfo -adDomain $domainDNSRoot -sqlConnection $sqlConnection
-                            }
+							$result = WriteDomainInfo -adDomain $domainDNSRoot -sqlConnection $sqlConnection -Credential $Credential
 							$errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}
 		"computer" 		{
-                            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-                                $result = WriteComputerInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential
-                            } Else {
-                                $result = WriteComputerInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection
-                            }
-							$errorCounter += $result.ErrorCount
+                            $result = WriteComputerInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential -subClass all
+                            $errorCounter += $result.ErrorCount
+							$warningCounter += $result.WarningCount
+						}
+		"server" 		{
+                            $result = WriteComputerInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential -subClass server
+                            $errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}
 		"user" 			{
-							$result = WriteUserInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection
-							$errorCounter += $result.ErrorCount
+                            $result = WriteUserInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential
+                            $errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}
 		"group"			{
-							$result = WriteGroupInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -lastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection
+                            $result = WriteGroupInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -lastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential
 							$errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}		
 		"groupmember"	{
-							$result = WriteGroupMemberInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -lastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection
+                            $result = WriteGroupMemberInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -lastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential
 							$errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}
@@ -1570,6 +2058,16 @@ foreach ($object in $adObjectType) {
 							$errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}
+		"serviceaccount"{
+                            $result = WriteServiceAccountInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential
+                            $errorCounter += $result.ErrorCount
+							$warningCounter += $result.WarningCount
+						}
+		"organizationalunit"{
+                            $result = WriteOrganizationalUnitInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential
+                            $errorCounter += $result.ErrorCount
+							$warningCounter += $result.WarningCount
+						}
 		"default"		{
 			Write-Host "$object : Invalid object type."
 			continue
@@ -1581,7 +2079,7 @@ foreach ($object in $adObjectType) {
 	# Update ad.SyncStatus to indicate a sync is completed
 	[string]$syncStatus = "{0} : {1} object(s) : {2} error(s); {3} warning(s)" -f $result.Status, $result.ObjectCount, $result.ErrorCount, $result.WarningCount
 	SetSyncStatus -adDomain $domainDNSRoot -adObjectType $object -SyncType $syncType -startDate $startDate -endDate $endDate -objectCount $result.ObjectCount -syncStatus $syncStatus -sqlConnection $sqlConnection -Credential $Credential
-	[string]$objectString = $object.PadRight(12," ")
+	[string]$objectString = $object.PadRight(14," ")
 	Write-Host "$objectString : $syncStatus"
 }
 
