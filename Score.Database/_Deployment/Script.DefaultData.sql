@@ -404,3 +404,29 @@ SET CurrentUTCOffset = cast(left(b.current_utc_offset, 3) as int) * 60
 FROM
 	dbo.SystemTimeZone inner join sys.time_zone_info b on
 		SystemTimeZone.StandardName = b.name
+
+
+-- ad.UserAccountControl
+
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (1, 'SCRIPT','0x0001','SCRIPT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (2, 'ACCOUNTDISABLE','0x0002','ACCOUNTDISABLE',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (8, 'HOMEDIR_REQUIRED','0x0008','HOMEDIR_REQUIRED',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (16, 'LOCKOUT','0x0010','LOCKOUT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (32, 'PASSWD_NOTREQD','0x0020','PASSWD_NOTREQD',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (64, 'PASSWD_CANT_CHANGE','0x0040','PASSWD_CANT_CHANGE',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (128, 'ENCRYPTED_TEXT_PWD_ALLOWED','0x0080','ENCRYPTED_TEXT_PWD_ALLOWED',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (256, 'TEMP_DUPLICATE_ACCOUNT','0x0100','TEMP_DUPLICATE_ACCOUNT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (512, 'NORMAL_ACCOUNT','0x0200','NORMAL_ACCOUNT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (2048, 'INTERDOMAIN_TRUST_ACCOUNT','0x0800','INTERDOMAIN_TRUST_ACCOUNT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (4096, 'WORKSTATION_TRUST_ACCOUNT','0x1000','WORKSTATION_TRUST_ACCOUNT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (8192, 'SERVER_TRUST_ACCOUNT','0x2000','SERVER_TRUST_ACCOUNT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (65536, 'DONT_EXPIRE_PASSWORD','0x10000','DONT_EXPIRE_PASSWORD',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (131072, 'MNS_LOGON_ACCOUNT','0x20000','MNS_LOGON_ACCOUNT',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (262144, 'SMARTCARD_REQUIRED','0x40000','SMARTCARD_REQUIRED',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (524288, 'TRUSTED_FOR_DELEGATION','0x80000','TRUSTED_FOR_DELEGATION',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (1048576, 'NOT_DELEGATED','0x100000','NOT_DELEGATED',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (2097152, 'USE_DES_KEY_ONLY','0x200000','USE_DES_KEY_ONLY',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (4194304, 'DONT_REQ_PREAUTH','0x400000','DONT_REQ_PREAUTH',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (8388608, 'PASSWORD_EXPIRED','0x800000','PASSWORD_EXPIRED',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (16777216, 'TRUSTED_TO_AUTH_FOR_DELEGATION','0x1000000','TRUSTED_TO_AUTH_FOR_DELEGATION',1,GetDate(),GetDate())
+INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (67108864, 'PARTIAL_SECRETS_ACCOUNT','0x04000000','PARTIAL_SECRETS_ACCOUNT',1,GetDate(),GetDate())
