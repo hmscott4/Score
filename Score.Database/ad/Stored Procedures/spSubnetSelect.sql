@@ -12,5 +12,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE ON [ad].[spSubnetSelect] TO [adUpdate] AS [dbo]
+
 GO

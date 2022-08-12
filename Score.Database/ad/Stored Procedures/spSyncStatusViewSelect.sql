@@ -1,4 +1,4 @@
-CREATE PROC [ad].[spSyncStatusViewSelect] 
+﻿CREATE PROC [ad].[spSyncStatusViewSelect] 
     @Domain nvarchar(128),
 	@ObjectClass nvarchar(128)
 AS 
@@ -13,7 +13,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spSyncStatusViewSelect] TO [adUpdate]
-    AS [dbo];
+
 

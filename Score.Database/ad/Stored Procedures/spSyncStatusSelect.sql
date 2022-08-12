@@ -13,5 +13,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE ON [ad].[spSyncStatusSelect] TO [adUpdate] AS [dbo]
+
 GO

@@ -1,4 +1,4 @@
-CREATE PROC [ad].[spSubnetSelectBySubnet] 
+﻿CREATE PROC [ad].[spSubnetSelectBySubnet] 
     @Name varchar(255) = NULL,
 	@Active bit = 1
 AS 
@@ -13,7 +13,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spSubnetSelectBySubnet] TO [adUpdate]
-    AS [dbo];
+
 

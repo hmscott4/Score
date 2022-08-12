@@ -12,5 +12,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE ON [ad].[spDomainSelect] TO [adUpdate] AS [dbo]
+
 GO

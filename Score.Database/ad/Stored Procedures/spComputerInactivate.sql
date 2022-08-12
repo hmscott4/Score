@@ -27,5 +27,5 @@ AS
                
 	COMMIT
 GO
-GRANT EXECUTE ON [ad].[spComputerInactivate] TO [adUpdate] AS [dbo]
+
 GO

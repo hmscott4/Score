@@ -759,8 +759,14 @@
     </Build>
     <Build Include="scom\Stored Procedures\spSyncHistoryInsert.sql" />
     <Build Include="scom\Stored Procedures\spWindowsComputerSelectByDNSHostName.sql" />
-    <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql" />
-    <Build Include="ad\Stored Procedures\spSubnetSelectBySubnet.sql" />
+    <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="ad\Stored Procedures\spSubnetSelectBySubnet.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="ad\Tables\ComputerImport.sql" />
     <Build Include="dbo\Tables\ReportHeader.sql">
       <AnsiNulls>On</AnsiNulls>
@@ -935,11 +941,19 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="ad\Stored Procedures\spClusterNamedObjectUpsert.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="_Compare\SQLAG2.SCORE_Project.scmp" />
-    <None Include="_Compare\SQL33.SCORE_Project.scmp" />
+    <Build Include="ad\Stored Procedures\spClusterNamedObjectUpsert.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="ad\Views\OrganizationalUnitView.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="Security\pmUpdate.sql" />
+    <Build Include="Security\pmRead.sql" />
+    <Build Include="Security\cmUpdate.sql" />
+    <Build Include="Security\cmRead.sql" />
+    <Build Include="Security\cmAdmin.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="_Deployment\Script.Deployment.sql" />
@@ -949,6 +963,9 @@
   <ItemGroup>
     <PostDeploy Include="_Deployment\Script.DefaultData.sql" />
     <None Include="_Deployment\Script.Release.1.0.3.0.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_Compare\sqlag2.SCORE_project.scmp" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

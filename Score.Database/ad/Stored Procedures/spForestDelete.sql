@@ -20,5 +20,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE ON [ad].[spForestDelete] TO [adUpdate] AS [dbo]
+
 GO

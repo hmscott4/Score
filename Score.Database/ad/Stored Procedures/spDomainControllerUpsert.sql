@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROC [ad].[spDomainControllerUpsert]
 (
 	@Domain nvarchar(128)
@@ -14,16 +15,20 @@ SET XACT_ABORT ON
 
 BEGIN TRAN
 
-UPDATE [ad].[DomainController]
-   SET 
-      [Type] = @Type
-      ,[Active] = 1
-      ,[dbLastUpdate] = @dbLastUpdate
- WHERE 
-	[Domain] = @Domain
-	AND [DNSHostName] = @DNSHostName
+IF EXISTS (SELECT 1 FROM ad.DomainController WHERE [Domain] = @Domain and DNSHostName = @DNSHostName)
+BEGIN
+	UPDATE [ad].[DomainController]
+	   SET 
+		  [Type] = @Type
+		  ,[Active] = 1
+		  ,[dbLastUpdate] = @dbLastUpdate
+	 WHERE 
+		[Domain] = @Domain
+		AND [DNSHostName] = @DNSHostName
+END
 
-IF @@ROWCOUNT = 0
+ELSE
+
 BEGIN
 
 	INSERT INTO [ad].[DomainController]

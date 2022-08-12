@@ -1,4 +1,5 @@
 ﻿
+
 CREATE VIEW [ad].[ComputerView]
 
 AS
@@ -42,7 +43,7 @@ SELECT
         select CONCAT(', ', [enc].[Description])
         from [ad].[Computer] c2
         join [ad].[SupportedEncryptionTypes] [enc] ON 
-            c2.UserAccountControl & enc.ID = enc.ID
+            c2.SupportedEncryptionTypes = enc.ID
         where [c].objectGUID = c2.objectGUID
         for xml path(''), type, root
         ).value('root[1]','varchar(max)'),

@@ -4,6 +4,8 @@
 
 
 
+
+
 GO
 GRANT UPDATE
     ON SCHEMA::[ad] TO [adUpdate];
@@ -21,5 +23,10 @@ GRANT INSERT
 
 GO
 GRANT DELETE
+    ON SCHEMA::[ad] TO [adUpdate];
+
+
+GO
+GRANT EXECUTE
     ON SCHEMA::[ad] TO [adUpdate];
 

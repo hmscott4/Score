@@ -9,13 +9,13 @@
 );
 
 
+
+
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UQ_ad_ClusterNamedObject]
     ON [ad].[ClusterNamedObject]([DNSHostName] ASC);
 
 
 GO
-GRANT SELECT
-    ON OBJECT::[ad].[ClusterNamedObject] TO [adRead]
-    AS [dbo];
+
 

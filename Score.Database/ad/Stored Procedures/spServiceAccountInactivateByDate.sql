@@ -28,7 +28,5 @@ AS
                
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spServiceAccountInactivateByDate] TO [adUpdate]
-    AS [dbo];
+
 

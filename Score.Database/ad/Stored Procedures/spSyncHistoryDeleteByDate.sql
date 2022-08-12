@@ -13,5 +13,5 @@ DELETE FROM [ad].[SyncHistory]
 
 COMMIT
 GO
-GRANT EXECUTE ON [ad].[spSyncHistoryDeleteByDate] TO [adUpdate] AS [dbo]
+
 GO

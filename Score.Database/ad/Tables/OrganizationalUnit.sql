@@ -19,13 +19,13 @@
 );
 
 
+
+
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UQ_ad_OrganizationalUnit]
     ON [ad].[OrganizationalUnit]([DistinguishedName] ASC);
 
 
 GO
-GRANT SELECT
-    ON OBJECT::[ad].[OrganizationalUnit] TO [adRead]
-    AS [dbo];
+
 

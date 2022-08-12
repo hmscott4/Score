@@ -1,4 +1,4 @@
-CREATE PROC [ad].[spUserSelect] 
+﻿CREATE PROC [ad].[spUserSelect] 
     @objectGUID uniqueidentifier
 AS 
 	SET NOCOUNT ON 
@@ -12,7 +12,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spUserSelect] TO [adUpdate]
-    AS [dbo];
+
 

@@ -38,7 +38,5 @@ BEGIN
 	VALUES (@ObjectGUID, @Domain, @DNSHostName, @Comment, @dbLastUpdate, @dbLastUpdate)
 END
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spClusterNamedObjectUpsert] TO [adUpdate]
-    AS [dbo];
+
 

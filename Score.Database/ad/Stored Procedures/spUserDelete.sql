@@ -1,4 +1,4 @@
-/****************************************************************
+﻿/****************************************************************
 * Name: ad.spUserDelete
 * Author: huscott
 * Date: 2015-02-24
@@ -20,7 +20,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spUserDelete] TO [adUpdate]
-    AS [dbo];
+
 

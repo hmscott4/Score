@@ -27,5 +27,5 @@ AS
                
 	COMMIT
 GO
-GRANT EXECUTE ON [ad].[spForestInactivate] TO [adUpdate] AS [dbo]
+
 GO

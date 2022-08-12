@@ -1,4 +1,4 @@
-/****************************************************************
+﻿/****************************************************************
 * Name: ad.spUserInactivate
 * Author: huscott
 * Date: 2015-02-24
@@ -27,7 +27,5 @@ AS
                
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spUserInactivate] TO [adUpdate]
-    AS [dbo];
+
 

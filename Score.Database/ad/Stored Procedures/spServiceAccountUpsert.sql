@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [ad].[spServiceAccountUpsert] (
+﻿
+CREATE PROCEDURE [ad].[spServiceAccountUpsert] (
 	@objectGUID uniqueidentifier
     ,@SID nvarchar(255)
     ,@Domain nvarchar(255)
@@ -42,28 +43,32 @@ END
 
 BEGIN TRANSACTION;
 
-UPDATE [ad].[ServiceAccount]
-   SET [objectGUID] = @objectGUID
-      ,[SID] = @SID
-      ,[DNSHostName] = @DNSHostName
-      ,[Trusted] = @Trusted
-      ,[Description] = @Description
-      ,[DistinguishedName] = @DistinguishedName
-      ,[PrincipalsAllowedToRetrievePassword] = @PrincipalsAllowedToRetrievePassword
-      ,[UserAccountControl] = @UserAccountControl
-      ,[ServicePrincipalNames] = @ServicePrincipalNames
-      ,[SupportedEncryptionTypes] = @SupportedEncryptionTypes
-      ,[Enabled] = @Enabled
-      ,[Active] = @Active
-      ,[LastLogon] = @LastLogon
-      ,[whenCreated] = @whenCreated
-      ,[whenChanged] = @whenChanged
-      ,[dbLastUpdate] = @dbLastUpdate
- WHERE [Name] = @Name 
-	AND [Domain] = @Domain
+IF EXISTS (SELECT 1 FROM ad.ServiceAccount WHERE objectGUID = @objectGUID)
+BEGIN
+	UPDATE [ad].[ServiceAccount]
+	   SET [objectGUID] = @objectGUID
+		  ,[SID] = @SID
+		  ,[DNSHostName] = @DNSHostName
+		  ,[Trusted] = @Trusted
+		  ,[Description] = @Description
+		  ,[DistinguishedName] = @DistinguishedName
+		  ,[PrincipalsAllowedToRetrievePassword] = @PrincipalsAllowedToRetrievePassword
+		  ,[UserAccountControl] = @UserAccountControl
+		  ,[ServicePrincipalNames] = @ServicePrincipalNames
+		  ,[SupportedEncryptionTypes] = @SupportedEncryptionTypes
+		  ,[Enabled] = @Enabled
+		  ,[Active] = @Active
+		  ,[LastLogon] = @LastLogon
+		  ,[whenCreated] = @whenCreated
+		  ,[whenChanged] = @whenChanged
+		  ,[dbLastUpdate] = @dbLastUpdate
+	 WHERE [Name] = @Name 
+		AND [Domain] = @Domain
+END
+
+ELSE
 
 
-IF @@ROWCOUNT = 0
 BEGIN
 	INSERT INTO [ad].[ServiceAccount]
 			   ([objectGUID]
@@ -110,7 +115,5 @@ END
 
 COMMIT;
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spServiceAccountUpsert] TO [adUpdate]
-    AS [dbo];
+
 

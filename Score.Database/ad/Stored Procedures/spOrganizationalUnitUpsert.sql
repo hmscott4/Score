@@ -1,4 +1,5 @@
 ﻿
+
 CREATE PROC [ad].[spOrganizationalUnitUpsert]
 (
 	@objectGUID uniqueidentifier
@@ -41,26 +42,32 @@ END
 
 BEGIN TRAN
 
-UPDATE [ad].[OrganizationalUnit]
-   SET [objectGUID] = @objectGUID
-      ,[Name] = @Name
-      ,[Description] = @Description
-      ,[DistinguishedName] = @DistinguishedName
-      ,[StreetAddress] = @StreetAddress
-      ,[City] = @City
-      ,[State] = @State
-      ,[Country] = @Country
-      ,[PostalCode] = @PostalCode
-      ,[Protected] = @Protected
-      ,[Active] = 1
-      ,[whenCreated] = @whenCreated
-      ,[whenChanged] = @whenChanged
-      ,[dbLastUpdate] = @dbLastUpdate
- WHERE 
-	  DistinguishedName = @DistinguishedName AND Domain = @Domain
+IF EXISTS (SELECT 1 FROM ad.OrganizationalUnit WHERE objectGUID = @objectGUID)
+BEGIN
+
+	UPDATE [ad].[OrganizationalUnit]
+	   SET [objectGUID] = @objectGUID
+		  ,[Name] = @Name
+		  ,[Description] = @Description
+		  ,[DistinguishedName] = @DistinguishedName
+		  ,[StreetAddress] = @StreetAddress
+		  ,[City] = @City
+		  ,[State] = @State
+		  ,[Country] = @Country
+		  ,[PostalCode] = @PostalCode
+		  ,[Protected] = @Protected
+		  ,[Active] = 1
+		  ,[whenCreated] = @whenCreated
+		  ,[whenChanged] = @whenChanged
+		  ,[dbLastUpdate] = @dbLastUpdate
+	 WHERE 
+		  DistinguishedName = @DistinguishedName AND Domain = @Domain
+
+END
+
+ELSE
 
 
-IF @@ROWCOUNT = 0
 BEGIN
 	INSERT INTO [ad].[OrganizationalUnit]
 			   ([objectGUID]
@@ -100,7 +107,5 @@ END
 
 COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spOrganizationalUnitUpsert] TO [adUpdate]
-    AS [dbo];
+
 

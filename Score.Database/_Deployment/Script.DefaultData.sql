@@ -406,7 +406,11 @@ FROM
 		SystemTimeZone.StandardName = b.name
 
 
--- ad.UserAccountControl
+/*************************
+* ad.UserAccountControl
+* https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/useraccountcontrol-manipulate-account-properties
+* Used in ad.UserView
+*************************/
 
 INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (1, 'SCRIPT','0x0001','SCRIPT',1,GetDate(),GetDate())
 INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (2, 'ACCOUNTDISABLE','0x0002','ACCOUNTDISABLE',1,GetDate(),GetDate())
@@ -430,3 +434,41 @@ INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, d
 INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (8388608, 'PASSWORD_EXPIRED','0x800000','PASSWORD_EXPIRED',1,GetDate(),GetDate())
 INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (16777216, 'TRUSTED_TO_AUTH_FOR_DELEGATION','0x1000000','TRUSTED_TO_AUTH_FOR_DELEGATION',1,GetDate(),GetDate())
 INSERT INTO ad.UserAccountControl (ID, Definition, HexValue, Property, Active, dbAddDate, dbLastUpdate) Values (67108864, 'PARTIAL_SECRETS_ACCOUNT','0x04000000','PARTIAL_SECRETS_ACCOUNT',1,GetDate(),GetDate())
+
+/****************************** 
+* ad.SupportedEncryptionTypes
+* https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/decrypting-the-selection-of-supported-kerberos-encryption-types/ba-p/1628797
+* Used in ad.UserView
+******************************/
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (0, '0x0', 'Not defined - defaults to RC4_HMAC_MD5', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (1, '0x1', 'DES_CBC_CRC', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (2, '0x2', 'DES_CBC_MD5', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (3, '0x3', 'DES_CBC_CRC, DES_CBC_MD5', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (4, '0x4', 'RC4', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (5, '0x5', 'DES_CBC_CRC, RC4', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (6, '0x6', 'DES_CBC_MD5, RC4', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (7, '0x7', 'DES_CBC_CRC, DES_CBC_MD5, RC4', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (8, '0x8', 'AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (9, '0x9', 'DES_CBC_CRC, AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (10, '0xA', 'DES_CBC_MD5, AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (11, '0xB', 'DES_CBC_CRC, DES_CBC_MD5, AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (12, '0xC', 'RC4, AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (13, '0xD', 'DES_CBC_CRC, RC4, AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (14, '0xE', 'DES_CBC_MD5, RC4, AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (15, '0xF', 'DES_CBC_CBC, DES_CBC_MD5, RC4, AES 128', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (16, '0x10', 'AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (17, '0x11', 'DES_CBC_CRC, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (18, '0x12', 'DES_CBC_MD5, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (19, '0x13', 'DES_CBC_CRC, DES_CBC_MD5, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (20, '0x14', 'RC4, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (21, '0x15', 'DES_CBC_CRC, RC4, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (22, '0x16', 'DES_CBC_MD5, RC4, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (23, '0x17', 'DES_CBC_CRC, DES_CBC_MD5, RC4, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (24, '0x18', 'AES 128, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (25, '0x19', 'DES_CBC_CRC, AES 128, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (26, '0x1A', 'DES_CBC_MD5, AES 128, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (27, '0x1B', 'DES_CBC_MD5, DES_CBC_MD5, AES 128, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (28, '0x1C', 'RC4, AES 128, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (29, '0x1D', 'DES_CBC_CRC, RC4, AES 128, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (30, '0x1E', 'DES_CBC_MD5, RC4, AES 128, AES 256', 1, GetDate(), GetDate())
+INSERT INTO ad.SupportedEncryptionTypes (ID, HexValue, Description, Active, dbAddDate, dbLastUpdate) Values (31, '0x1F', 'DES+A1:C33_CBC_MD5, DES_CBC_MD5, RC4, AES 128, AES 256', 1, GetDate(), GetDate())

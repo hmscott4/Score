@@ -51,6 +51,12 @@
 
     A switch parameter used to override when the last synch was aborted.  Last Synch status will show "In Process".
 
+.PARAMETER LapsPassword
+
+    A switch parameter used to allow the collection of Local Administrator Password (LAPS) data for computer objects.  
+	LAPS is a solution to randomize Local Administrator Account passwords.  If a computer object is deleted or other
+	issues arise, the password may be retrieved from the database.  The password is encrypted in the database.
+
 
 .INPUTS
 
@@ -103,7 +109,9 @@ Param(
 	[Parameter(Mandatory=$false)]
 	[System.Management.Automation.CredentialAttribute()]$Credential=([System.Management.Automation.PSCredential]::Empty),
 	[Parameter(Mandatory=$false)]
-	[switch]$Force
+	[switch]$Force,
+	[Parameter(Mandatory=$false)]
+	[switch]$LapsPassword
 )
 
 Set-StrictMode -Version Latest
@@ -641,25 +649,6 @@ param(
             $oRootDSE = Get-ADRootDSE -Server $adDomain
         }
 
-		# Check for existence of LAPS attribute; if it exists, retrieve LAPS properties
-		# $lapsCN = "CN=ms-Mcs-AdmPwdExpirationTime,CN=Schema,CN=Configuration," + $oDomain.DistinguishedName
-        $lapsCN = "CN=ms-Mcs-AdmPwdExpirationTime," + $oRootDSE.schemaNamingContext
-		Try
-		{
-			$lapsObject = Get-ADObject -Identity $lapsCN -Server $oDomain.Forest
-            # $lapsObject = Get-ADObject -Identity $lapsCN -Server $adDomain
-            [bool]$bLAPS = $true
-			$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "OperatingSystem", "OperatingSystemServicePack", "OperatingSystemVersion", "Description", "TrustedForDelegation","IPv4Address","objectGUID","LastLogonTimeStamp","UserAccountControl","msDS-SupportedEncryptionTypes","ms-Mcs-AdmPwdExpirationTime","ms-Mcs-AdmPwd")
-
-		}
-		Catch
-		{
-			# Did not find LAPS 
-            $Error.Clear()
-            [bool]$bLAPS = $false
-			$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "OperatingSystem", "OperatingSystemServicePack", "OperatingSystemVersion", "Description", "TrustedForDelegation","IPv4Address","objectGUID","LastLogonTimeStamp","UserAccountControl","msDS-SupportedEncryptionTypes")
-		}
-
         # Retrieving just servers? or servers and workstations?
         if($subClass -eq 'all')
         {
@@ -676,6 +665,26 @@ param(
         } Else {
             [string]$sFilter = "OperatingSystem -like '$operatingSystemFilter'"
         }
+
+        # ADDED TO SUPPORT LAPS
+		# Check for existence of LAPS attribute; if it exists, retrieve LAPS properties
+		# $lapsCN = "CN=ms-Mcs-AdmPwdExpirationTime,CN=Schema,CN=Configuration," + $oDomain.DistinguishedName
+		$lapsCN = "CN=ms-Mcs-AdmPwdExpirationTime," + $oRootDSE.schemaNamingContext
+		Try
+		{
+			$lapsObject = Get-ADObject -Identity $lapsCN -Server $oDomain.Forest
+			# $lapsObject = Get-ADObject -Identity $lapsCN -Server $adDomain
+			[bool]$bLAPS = $true
+			$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "OperatingSystem", "OperatingSystemServicePack", "OperatingSystemVersion", "Description", "TrustedForDelegation","IPv4Address","objectGUID","LastLogonTimeStamp","UserAccountControl","msDS-SupportedEncryptionTypes","ms-Mcs-AdmPwdExpirationTime","ms-Mcs-AdmPwd")
+
+		}
+		Catch
+		{
+			# Did not find LAPS 
+			$Error.Clear()
+			[bool]$bLAPS = $false
+			$PropList = @("LastLogonDate", "whenCreated", "whenChanged", "OperatingSystem", "OperatingSystemServicePack", "OperatingSystemVersion", "Description", "TrustedForDelegation","IPv4Address","objectGUID","LastLogonTimeStamp","UserAccountControl","msDS-SupportedEncryptionTypes")
+		}
 
         # Query AD (with or without credential)
         If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
@@ -706,15 +715,16 @@ param(
 		[Void]$sqlCommand.Parameters.Add("@whenChanged", [system.data.SqlDbType]::DateTime)
         [Void]$sqlCommand.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
 
-        # ADDED TO SUPPORT LAPS
-    	$sqlCommandLAPS = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "ad.spLocalAdminPasswordSolutionUpsert"
+
+		$sqlCommandLAPS = GetStoredProc -sqlConnection $sqlConnection -sqlCommandName "ad.spLocalAdminPasswordSolutionUpsert"
 		[Void]$sqlCommandLAPS.Parameters.Add("@objectGUID", [system.data.SqlDbType]::uniqueidentifier)
 		[Void]$sqlCommandLAPS.Parameters.Add("@AdmPwdExpiration", [system.data.SqlDbType]::nvarchar)
 		[Void]$sqlCommandLAPS.Parameters.Add("@AdmPassword", [system.data.SqlDbType]::nvarchar)
-        [Void]$sqlCommandLAPS.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
+		[Void]$sqlCommandLAPS.Parameters.Add("@dbLastUpdate",  [System.Data.SqlDbType]::Datetime)
+
 		
-	    foreach($computer in $computers)
-	    {
+		foreach($computer in $computers)
+		{
 			try {
 				if($null -eq $computer.LastLogonDate){$dLastLogon = [System.DBNull]::Value} else {$dLastLogon = [DateTime]::FromFileTime([Int64] $computer.lastlogontimestamp)}
 
@@ -737,45 +747,45 @@ param(
 				$sqlCommand.Parameters["@LastLogon"].value = $dLastLogon
 				$sqlCommand.Parameters["@whenCreated"].value = $computer.whenCreated
 				$sqlCommand.Parameters["@whenChanged"].value = $computer.whenChanged
-	            $sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+				$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
 			
 				[Void]$sqlCommand.ExecuteNonQuery()
 
-                # SECTION ADDED TO SUPPORT LAPS
-				if($bLAPS)
-                {
-                    If($null -eq $computer.'ms-Mcs-AdmPwdExpirationTime')
-                    { 
-                        $admPwdExpiration = [System.DBNull]::Value
-                    } Else 
-                    {
-                        $admPwdExpiration = [DateTime]::FromFileTime([Int64] $computer.'ms-Mcs-AdmPwdExpirationTime')
-                    }
-                    If($null -eq $computer.'ms-Mcs-AdmPwd')
-                    { 
-                        $admPassword = [System.DBNull]::Value
-                    } Else 
-                    {
-                        $admPassword = $computer.'ms-Mcs-AdmPwd'
-                    }
+				# SECTION ADDED TO SUPPORT LAPS
+				if($bLAPS -and $LapsPassword)
+				{
+					If($null -eq $computer.'ms-Mcs-AdmPwdExpirationTime')
+					{ 
+						$admPwdExpiration = [System.DBNull]::Value
+					} Else 
+					{
+						$admPwdExpiration = [DateTime]::FromFileTime([Int64] $computer.'ms-Mcs-AdmPwdExpirationTime')
+					}
+					If($null -eq $computer.'ms-Mcs-AdmPwd')
+					{ 
+						$admPassword = [System.DBNull]::Value
+					} Else 
+					{
+						$admPassword = $computer.'ms-Mcs-AdmPwd'
+					}
 
-				    $sqlCommandLAPS.Parameters["@ObjectGUID"].value = $computer.objectGUID
-				    $sqlCommandLAPS.Parameters["@AdmPwdExpiration"].value = $admPwdExpiration
-				    $sqlCommandLAPS.Parameters["@AdmPassword"].value = $admPassword
-	                $sqlCommandLAPS.Parameters["@dbLastUpdate"].Value = (Get-Date)
+					$sqlCommandLAPS.Parameters["@ObjectGUID"].value = $computer.objectGUID
+					$sqlCommandLAPS.Parameters["@AdmPwdExpiration"].value = $admPwdExpiration
+					$sqlCommandLAPS.Parameters["@AdmPassword"].value = $admPassword
+					$sqlCommandLAPS.Parameters["@dbLastUpdate"].Value = (Get-Date)
 			
-				    [Void]$sqlCommandLAPS.ExecuteNonQuery()
-                }
+					[Void]$sqlCommandLAPS.ExecuteNonQuery()
+				}
 				
 			} Catch [System.Exception] {
 				$msg = $_.Exception.Message
-			    AddLogEntry $adDomain "Warning" "WriteComputerInfo" "$computer : $msg" $sqlConnection
+				AddLogEntry $adDomain "Warning" "WriteComputerInfo" "$computer : $msg" $sqlConnection
 				$warningCounter++
 			}
-			$objectCounter++
+		    $objectCounter++
 		}
+		$sqlCommandLAPS.Dispose()
  		$sqlCommand.Dispose()
- 		$sqlCommandLAPS.Dispose()
 
 		# This section added to deal with MS Cluster Virtual Computer Objects
 		# These objects exist in Active Directory, but will never receive an agent
@@ -1098,7 +1108,7 @@ param(
             }
 		} else {
             If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-    			$users = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList -Credential $Credential
+    			$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList -Credential $Credential
             } Else {
             	$groups = Get-ADGroup -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties $PropList
             }
@@ -1245,32 +1255,67 @@ param(
 		
 	    foreach($group in $groups)
 	    {
-			
-			if($group.Members) {
-	            foreach($groupMember in $group.Members)
-	            {
-					try {
-	                    $PropList = @("objectGUID")
-						$adObject = Get-ADObject -Server $adDomain -Identity $groupMember -Properties $PropList
-						if($adObject.objectGUID -and $adObject.objectClass){
+			# Get members of class "Group"
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$groupMembers = Get-ADGroupMember -Identity $group -Server $adDomain -Credential $Credential | Where-object {$_.ObjectClass -eq "group"}
+            } Else {
+            	$groupMembers = Get-ADGroupMember -Identity $group -Server $adDomain | Where-object {$_.ObjectClass -eq "group"}
+            }	
 
-		                    $sqlCommand.Parameters["@Domain"].Value = $oDomain.DNSRoot # $domainNetBIOSName
-		                    $sqlCommand.Parameters["@GroupGUID"].Value = $group.objectGUID
-		                    $sqlCommand.Parameters["@MemberGUID"].Value = $adObject.objectGUID
-		                    $sqlCommand.Parameters["@MemberType"].Value = $adObject.objectClass
-		                    $sqlCommand.Parameters["@Active"].Value = $true
-		                    $sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+	        foreach($groupMember in $groupMembers)
+			{
+				try {
+					#$PropList = @("objectGUID")
+					#$adObject = Get-ADObject -Server $adDomain -Identity $groupMember -Properties $PropList
+					#if($adObject.objectGUID -and $adObject.objectClass){
 
-	                    	[Void]$sqlCommand.ExecuteNonQuery()
-						}
-					} Catch [System.Exception] {
-						$msg = $_.Exception.Message
-					    AddLogEntry $adDomain "Warning" "WriteGroupMemberInfo" "$group : $groupMember : $msg" $sqlConnection
-						$warningCounter++
-					}
-				    $objectCounter++
-	            }
+					$sqlCommand.Parameters["@Domain"].Value = $oDomain.DNSRoot # $domainNetBIOSName
+					$sqlCommand.Parameters["@GroupGUID"].Value = $group.objectGUID
+					$sqlCommand.Parameters["@MemberGUID"].Value = $groupMember.objectGUID
+					$sqlCommand.Parameters["@MemberType"].Value = $groupMember.objectClass
+					$sqlCommand.Parameters["@Active"].Value = $true
+					$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+
+					[Void]$sqlCommand.ExecuteNonQuery()
+					
+				} Catch [System.Exception] {
+					$msg = $_.Exception.Message
+					AddLogEntry $adDomain "Warning" "WriteGroupMemberInfo" "$group : $groupMember : $msg" $sqlConnection
+					$warningCounter++
+				}
+				$objectCounter++
 			}
+
+			# Get recursive list of membership (which does not return groups)
+            If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    			$groupMembers = Get-ADGroupMember -Identity $group -Server $adDomain -Credential $Credential -recursive
+            } Else {
+            	$groupMembers = Get-ADGroupMember -Identity $group -Server $adDomain -recursive
+            }	
+					
+	        foreach($groupMember in $groupMembers)
+			{
+				try {
+					#$PropList = @("objectGUID")
+					#$adObject = Get-ADObject -Server $adDomain -Identity $groupMember -Properties $PropList
+					#if($adObject.objectGUID -and $adObject.objectClass){
+
+					$sqlCommand.Parameters["@Domain"].Value = $oDomain.DNSRoot # $domainNetBIOSName
+					$sqlCommand.Parameters["@GroupGUID"].Value = $group.objectGUID
+					$sqlCommand.Parameters["@MemberGUID"].Value = $groupMember.objectGUID
+					$sqlCommand.Parameters["@MemberType"].Value = $groupMember.objectClass
+					$sqlCommand.Parameters["@Active"].Value = $true
+					$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+
+					[Void]$sqlCommand.ExecuteNonQuery()
+					
+				} Catch [System.Exception] {
+					$msg = $_.Exception.Message
+					AddLogEntry $adDomain "Warning" "WriteGroupMemberInfo" "$group : $groupMember : $msg" $sqlConnection
+					$warningCounter++
+				}
+				$objectCounter++
+			}			
         }
 		$sqlCommand.Dispose()
 
@@ -1773,9 +1818,11 @@ Function WriteOrganizationalUnitInfo {
 			}
 		} else {
 			If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties * -Credential $Credential
+				$Containers = Get-ADObject -LDAPFilter '(objectClass=container)' -Server $adDomain -searchBase $adDomainSearchRoot -properties "*" -Credential $Credential | Where-Object {$_.IsSystemCriticalObject -eq $true} 
+				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties "*" -Credential $Credential
 			} Else {
-				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties *
+				$Containers = Get-ADObject -LDAPFilter '(objectClass=container)' -Server $adDomain -searchBase $adDomainSearchRoot -properties "*" | Where-Object {$_.IsSystemCriticalObject -eq $true} 
+				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties "*"
 			}
 		}
 			
@@ -1823,6 +1870,35 @@ Function WriteOrganizationalUnitInfo {
 			}
 			$objectCounter++
 		}
+
+		foreach($Container in $Containers)
+		{
+			try {
+
+				$sqlCommand.Parameters["@objectGUID"].value = $Container.objectGUID
+				$sqlCommand.Parameters["@Domain"].value = $Container.DNSRoot
+				$sqlCommand.Parameters["@Name"].value = $Container.Name	
+				$sqlCommand.Parameters["@Description"].value = NullToString -value1 $Container.Description -value2 ""
+				$sqlCommand.Parameters["@DistinguishedName"].value = $Container.DistinguishedName
+				$sqlCommand.Parameters["@StreetAddress"].value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@City"].value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@State"].value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@Country"].value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@PostalCode"].value = [System.DBNull]::Value
+				$sqlCommand.Parameters["@Protected"].value = $Container.ProtectedFromAccidentalDeletion
+				$sqlCommand.Parameters["@whenCreated"].value = $Container.whenCreated
+				$sqlCommand.Parameters["@whenChanged"].value = $Container.whenChanged
+				$sqlCommand.Parameters["@dbLastUpdate"].Value = (Get-Date)
+				
+				[Void]$sqlCommand.ExecuteNonQuery()
+					
+			} Catch [System.Exception] {
+				$msg = $_.Exception.Message
+				AddLogEntry $adDomain "Warning" "WriteOrganizationalUnitInfo" "$OrganizationalUnit : $msg" $sqlConnection
+				$warningCounter++
+			}
+			$objectCounter++
+		}		
 		$sqlCommand.Dispose()
 	
 		# If this sync is full, then inactivate any object (for this domain) that wasn't touched
@@ -1849,7 +1925,7 @@ Function WriteOrganizationalUnitInfo {
 	
 	# Write Log Entry
 	[string]$msg = "{0} : {1} object(s) : {2} error(s); {3} warning(s)" -f $syncStatus, $objectCounter, $errorCounter, $warningCounter
-	AddLogEntry $adDomain "Info" "WriteServiceAccountInfo" "$msg" $sqlConnection
+	AddLogEntry $adDomain "Info" "WriteOrganizationalUnitInfo" "$msg" $sqlConnection
 	
 	return New-Object psobject -Property @{Status = $syncStatus; ErrorCount = $errorCounter; WarningCount = $warningCounter; ObjectCount = $objectCounter}
 	
@@ -2024,7 +2100,7 @@ foreach ($object in $adObjectType) {
 							$warningCounter += $result.WarningCount
 						}
 		"computer" 		{
-                            $result = WriteComputerInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential -subClass all
+                            $result = WriteComputerInfo -adDomain $domainDNSRoot -adDomainSearchRoot $domainSearchRoot -SyncType $syncType -LastUpdate $lastUpdate -lastFullSync $lastFullSync -sqlConnection $sqlConnection -Credential $Credential -subClass all 
                             $errorCounter += $result.ErrorCount
 							$warningCounter += $result.WarningCount
 						}

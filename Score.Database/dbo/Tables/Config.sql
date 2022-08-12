@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[Config] (
+﻿CREATE TABLE [dbo].[Config] (
     [ID]          INT            IDENTITY (1, 1) NOT NULL,
     [ConfigName]  NVARCHAR (255) NOT NULL,
     [ConfigValue] NVARCHAR (255) NOT NULL,
@@ -6,8 +6,10 @@ CREATE TABLE [dbo].[Config] (
     [dbAddBy]     NVARCHAR (255) NOT NULL,
     [dbModDate]   DATETIME2 (3)  NOT NULL,
     [dbModBy]     NVARCHAR (255) NOT NULL,
-    CONSTRAINT [PK_Config] PRIMARY KEY CLUSTERED ([ID] ASC) WITH (FILLFACTOR = 80)
+    CONSTRAINT [PK_Config] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
+
+
 
 
 GO
@@ -18,7 +20,5 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_Config_Unique] ON [dbo].[Config]
 	[ConfigName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
 GO
-GRANT SELECT
-    ON OBJECT::[dbo].[Config] TO [adRead]
-    AS [dbo];
+
 

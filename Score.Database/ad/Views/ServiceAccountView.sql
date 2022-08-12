@@ -1,4 +1,5 @@
-﻿CREATE VIEW [ad].[ServiceAccountView]
+﻿
+CREATE VIEW [ad].[ServiceAccountView]
 
 AS
 
@@ -27,10 +28,19 @@ SELECT
 	 ,[sa].[dbAddDate]
 	 ,[sa].[dbLastUpdate]
     ,STUFF((
+        select CONCAT(', ', [uac].[Property])
+        from [ad].[ServiceAccount] sa2
+        join [ad].[UserAccountControl] [uac] ON 
+            sa2.UserAccountControl & uac.ID = uac.ID
+        where [sa].[objectGUID] = [sa2].[objectGUID]
+        for xml path(''), type, root
+        ).value('root[1]','varchar(max)'),
+        1, 2, N'') as [AccountProperties]
+    ,STUFF((
         select CONCAT(', ', [enc].[Description])
         from [ad].[ServiceAccount] sa2
         join [ad].[SupportedEncryptionTypes] [enc] ON 
-            sa2.UserAccountControl & enc.ID = enc.ID
+            sa2.SupportedEncryptionTypes = enc.ID
         where [sa].[objectGUID] = [sa2].[objectGUID]
         for xml path(''), type, root
         ).value('root[1]','varchar(max)'),

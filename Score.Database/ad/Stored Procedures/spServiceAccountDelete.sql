@@ -20,7 +20,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spServiceAccountDelete] TO [adUpdate]
-    AS [dbo];
+
 

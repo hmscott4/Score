@@ -1,4 +1,4 @@
-/****************************************************************
+﻿/****************************************************************
 * Name: ad.spComputerUpsert_Import
 * Author: huscott
 * Date: 2015-02-24
@@ -28,7 +28,7 @@ AS
 	BEGIN TRAN
 
 	MERGE [ad].[Computer] AS [target]
-	USING (SELECT [objectGUID], [SID], right(dnshostname, len(dnshostname) - (len(name)+1)) as [Domain], [Name], [DNSHostName], [IPv4Address], [Trusted], [OperatingSystem], [OperatingSystemVersion], [OperatingSystemServicePack], [Description], [DistinguishedName], [Enabled], [LastLogonDate] as LastLogon, [whenCreated], [whenChanged] 
+	USING (SELECT [objectGUID], [SID], right(DNSHostName, len(DNSHostName) - (len([Name])+1)) as [Domain], [Name], [DNSHostName], [IPv4Address], [Trusted], [OperatingSystem], [OperatingSystemVersion], [OperatingSystemServicePack], [Description], [DistinguishedName], [Enabled], [LastLogonDate] as LastLogon, [whenCreated], [whenChanged] 
 			FROM ad.ComputerImport
 			WHERE (LEN(DNSHostName) > 0 AND CHARINDEX('.',DNSHostName) > 0)) 
 		AS source 
@@ -54,7 +54,5 @@ AS
 
 
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spComputerUpsert_Import] TO [adUpdate]
-    AS [dbo];
+
 

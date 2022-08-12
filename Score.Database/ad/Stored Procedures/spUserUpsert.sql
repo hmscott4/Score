@@ -1,4 +1,4 @@
-/****************************************************************
+﻿/****************************************************************
 * Name: ad.spUserUpsert
 * Author: huscott
 * Date: 2015-02-24
@@ -89,7 +89,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE
-    ON OBJECT::[ad].[spUserUpsert] TO [adUpdate]
-    AS [dbo];
+
 

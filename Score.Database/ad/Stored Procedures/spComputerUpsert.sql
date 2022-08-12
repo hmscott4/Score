@@ -72,5 +72,5 @@ AS
 
 	COMMIT
 GO
-GRANT EXECUTE ON [ad].[spComputerUpsert] TO [adUpdate] AS [dbo]
+
 GO

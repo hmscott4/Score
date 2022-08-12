@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[ProcessLog] (
+﻿CREATE TABLE [dbo].[ProcessLog] (
     [ID]          INT            IDENTITY (1, 1) NOT NULL,
     [Severity]    NVARCHAR (50)  NOT NULL,
     [Process]     NVARCHAR (50)  NOT NULL,
@@ -9,8 +9,8 @@ CREATE TABLE [dbo].[ProcessLog] (
 );
 
 
+
+
 GO
-GRANT SELECT
-    ON OBJECT::[dbo].[ProcessLog] TO [adRead]
-    AS [dbo];
+
 
