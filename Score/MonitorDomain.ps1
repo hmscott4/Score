@@ -907,7 +907,11 @@ param(
 	[Int32]$errorCounter = 0
 	[Int32]$objectCounter = 0
 	Try {
-		$oDomain = Get-ADDomain -Server $adDomain
+        If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    		$Domain = Get-ADDomain -Server $adDomain -Credential $Credential
+        } Else {
+            $Domain = Get-ADDomain -Server $adDomain
+        }
 	
 	    # Retrieve users from AD
 		$PropList = @("DisplayName","GivenName","Surname","Company","Title","EmployeeID","ProfilePath","HomeDirectory","LockedOut","PasswordExpired","PasswordLastSet","PasswordNeverExpires","PasswordNotRequired","TrustedForDelegation","TrustedToAuthForDelegation","Office","Department","Division","StreetAddress","City","State","PostalCode","ManagedBy","MobilePhone","telephoneNumber","Fax","Pager","mail","Enabled","LastLogonDate", "whenCreated","whenChanged","objectGUID","LastLogonTimeStamp","msDS-SupportedEncryptionTypes","UserAccountControl")
@@ -1092,7 +1096,14 @@ param(
 	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteGroupInfo" "Starting $syncType check..." $sqlConnection
 	
-	$oDomain = Get-ADDomain -Server $adDomain
+	If($Credential -ne ([System.Management.Automation.PSCredential]::Empty))
+	{
+		$oDomain = Get-ADDomain -Server $adDomain -credential $Credential
+	}
+	Else
+	{
+		$oDomain = Get-ADDomain -Server $adDomain
+	}
 
 	[Int32]$warningCounter = 0
 	[Int32]$errorCounter = 0
@@ -1227,7 +1238,12 @@ param(
 	[Int32]$errorCounter = 0
 	[Int32]$objectCounter = 0
 	try {
-		$oDomain = Get-ADDomain -Server $adDomain
+		
+        If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
+    		$Domain = Get-ADDomain -Server $adDomain -Credential $Credential
+        } Else {
+            $Domain = Get-ADDomain -Server $adDomain
+        }
 		
 	    # Retrieve Security groups from AD
 		$PropList = @("Members","objectGUID")
