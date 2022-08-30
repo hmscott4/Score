@@ -1834,10 +1834,10 @@ Function WriteOrganizationalUnitInfo {
 			}
 		} else {
 			If($Credential -ne ([System.Management.Automation.PSCredential]::Empty)){
-				$Containers = Get-ADObject -LDAPFilter '(objectClass=container)' -Server $adDomain -searchBase $adDomainSearchRoot -properties "*" -Credential $Credential | Where-Object {$_.IsSystemCriticalObject -eq $true} 
+				$Containers = Get-ADObject -LDAPFilter '(objectClass=container)' -Server $adDomain -searchBase $adDomainSearchRoot -properties "*" -Credential $Credential | Where-Object {$_.IsCriticalSystemObject -eq $true} 
 				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties "*" -Credential $Credential
 			} Else {
-				$Containers = Get-ADObject -LDAPFilter '(objectClass=container)' -Server $adDomain -searchBase $adDomainSearchRoot -properties "*" | Where-Object {$_.IsSystemCriticalObject -eq $true} 
+				$Containers = Get-ADObject -LDAPFilter '(objectClass=container)' -Server $adDomain -searchBase $adDomainSearchRoot -properties "*" | Where-Object {$_.IsCriticalSystemObject -eq $true} 
 				$OrganizationalUnits = Get-ADOrganizationalUnit -Server $adDomain -searchBase $adDomainSearchRoot -Filter 'Name -like "*"' -Properties "*"
 			}
 		}
@@ -1892,7 +1892,7 @@ Function WriteOrganizationalUnitInfo {
 			try {
 
 				$sqlCommand.Parameters["@objectGUID"].value = $Container.objectGUID
-				$sqlCommand.Parameters["@Domain"].value = $Container.DNSRoot
+				$sqlCommand.Parameters["@Domain"].value = $oDomain.DNSRoot
 				$sqlCommand.Parameters["@Name"].value = $Container.Name	
 				$sqlCommand.Parameters["@Description"].value = NullToString -value1 $Container.Description -value2 ""
 				$sqlCommand.Parameters["@DistinguishedName"].value = $Container.DistinguishedName
