@@ -2012,18 +2012,6 @@ if ($sqlConnection.State -ne "Open")
 }
 
 ################################################################################
-# ADD ACTIVE DIRECTORY MODULE
-################################################################################
-Try 
-{
- 	Import-Module ActiveDirectory -ErrorAction Stop
-}
-Catch 
-{
-	Throw "Error: ActiveDirectory Module couldn't be loaded; be sure it has been installed." 
-}
-
-################################################################################
 # CONNECT TO ACTIVE DIRECTORY
 ################################################################################
 try 
