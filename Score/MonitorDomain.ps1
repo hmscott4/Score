@@ -131,16 +131,14 @@ Set-Location $shellFolder
 #
 # Parameters:
 # 	- Domain
-#	- Object
-#   - syncType
+#	- adObjectType
+#   - sqlConnection
+#   - PSCredential (optional)
 #
 # Returns:
-#   - Last Update Type (varchar: Full | Incremental)
-#   - Start Date (datetime)
-#   - End Date (datetime)
-#   - syncType
+#   - PSObject with Status
 #
-# Function to retrieve AD Domain stats for object from ad.Module
+# Function to retrieve last sync status for domain/objecttype
 #
 #************************************************************************************************************************************
 Function GetSyncStatus {
@@ -258,12 +256,14 @@ Function GetSyncStatus {
 #   - endDate (datetime)
 #   - objectCount
 #   - syncStatus
+#   - sqlConnection
+#	- PSCredential
 #
 # Returns:
+#   - PSObject with Status
 #
-# Function to set AD Domain stats for object in ad.SyncStatus
-# 
-# May be called to set the beginning status (no end date) or to update upon completion (end date specified)
+# Function to set AD Domain stats for object in ad.SyncStatus. May be called to set the 
+# beginning status (no end date) or to update upon completion (end date specified)
 #
 #************************************************************************************************************************************
 Function SetSyncStatus {
@@ -361,10 +361,12 @@ Function SetSyncStatus {
 # Function WriteForestInfo
 #
 # Parameters:
-# 	- Connection String
+#   - adForest
+# 	- sqlConnection
+#   - PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes meta data about Forest to ad.Forest
 #
@@ -441,10 +443,12 @@ Function WriteForestInfo {
 # Function WriteDomainInfo
 #
 # Parameters:
-# 	- Connection String
+#   - adDomain
+#   - sqlConnection
+# 	- PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes meta data about Domain and Domain RootDSE to ad.Domain
 #
@@ -596,10 +600,17 @@ Function WriteDomainInfo {
 # Function WriteComputerInfo
 #
 # Parameters:
-# 	- Connection String
+# 	- adDomain
+#   - adDomainSearchRoot
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
+#   - subClass ("server","all")
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes AD information about servers to ad.Computer
 #
@@ -630,9 +641,11 @@ Function WriteComputerInfo {
 	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteComputerInfo" "Starting $syncType Check..." $sqlConnection
 	
+	# Local counters
 	[Int32]$warningCounter = 0
 	[Int32]$errorCounter = 0
 	[Int32]$objectCounter = 0
+
 	Try {
 		If ($Credential -ne ([System.Management.Automation.PSCredential]::Empty)) {
 			$oDomain = Get-ADDomain -Server $adDomain -Credential $Credential
@@ -852,6 +865,7 @@ Function WriteComputerInfo {
 		AddLogEntry $adDomain "Error" "WriteComputerInfo" "$msg" $sqlConnection
 		$errorCounter++
 	}
+
 	if ($errorCounter -gt 0) { $syncStatus = "Error" }
 	elseif ($warningCounter -gt 0) { $syncStatus = "Warning" }
 	else { $syncStatus = "Success" }
@@ -870,10 +884,16 @@ Function WriteComputerInfo {
 # Function WriteUserInfo
 #
 # Parameters:
-# 	- Connection String
+# 	- adDomain
+#   - adDomainSearchRoot
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes AD information about users to ad.User
 #
@@ -1068,10 +1088,16 @@ Function WriteUserInfo {
 # Function WriteGroupInfo
 #
 # Parameters:
-# 	- Connection String
+# 	- adDomain
+#   - adDomainSearchRoot
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes AD information about groups to ad.Group
 #
@@ -1202,10 +1228,16 @@ Function WriteGroupInfo {
 # Function WriteGroupMemberInfo
 #
 # Parameters:
-# 	- Connection String
+# 	- adDomain
+#   - adDomainSearchRoot
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes AD information about group membership to ad.GroupMember
 #
@@ -1366,10 +1398,16 @@ function WriteGroupMemberInfo {
 # Function WriteSiteInfo
 #
 # Parameters:
-# 	- Connection String
+# 	- adForest
+#   - rootConfigurationNamingContext
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes AD information about sites to ad.Site
 #
@@ -1494,11 +1532,16 @@ Function WriteSiteInfo {
 # Function WriteSubnetInfo
 #
 # Parameters:
-# 	- Connection String
-#	- Domain Configuration Naming Context
+# 	- adForest
+#   - rootConfigurationNamingContext
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes AD information about subnets to ad.Subnet
 #
@@ -1625,7 +1668,16 @@ Function WriteSubnetInfo {
 # Function WriteServiceAccountInfo
 #
 # Parameters:
-# 	- Connection String
+# 	- adForest
+#   - adDomain
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
+#
+# Returns:
+#   - PSObject with Status
 #
 # Returns:
 #   - Nothing
@@ -1654,7 +1706,8 @@ Function WriteServiceAccountInfo {
 	
 	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteServiceAccountInfo" "Starting $syncType Check..." $sqlConnection
-		
+	
+	# Local Counters
 	[Int32]$warningCounter = 0
 	[Int32]$errorCounter = 0
 	[Int32]$objectCounter = 0
@@ -1771,10 +1824,16 @@ Function WriteServiceAccountInfo {
 # Function WriteOrganizationalUnitInfo
 #
 # Parameters:
-# 	- Connection String
+# 	- adForest
+#   - adDomain
+#   - syncType
+#   - lastUpdate
+#   - lastFullSync
+#   - sqlConnection
+#   - PSCredential
 #
 # Returns:
-#   - Nothing
+#   - PSObject with Status
 #
 # Writes AD information about OrganizationalUnit to ad.OrganizationalUnit
 #
@@ -1800,10 +1859,12 @@ Function WriteOrganizationalUnitInfo {
 	
 	# Update Process log
 	AddLogEntry $adDomain "Info" "WriteOrganizationalUnitInfo" "Starting $syncType Check..." $sqlConnection
-		
+	
+	# Local Counters
 	[Int32]$warningCounter = 0
 	[Int32]$errorCounter = 0
 	[Int32]$objectCounter = 0
+	
 	Try {			
 		# Retrieve service accounts from AD where OSName is like *Server*
 		# $PropList = @("LastLogonDate", "whenCreated", "whenChanged", "Description", "TrustedForDelegation","objectGUID","dnsHostName","LastLogonTimeStamp","userAccountControl","msDS-SupportedEncryptionTypes","servicePrincipalName","msDS-GroupMSAMembership")
