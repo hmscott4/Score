@@ -1864,7 +1864,7 @@ Function WriteOrganizationalUnitInfo {
 	[Int32]$warningCounter = 0
 	[Int32]$errorCounter = 0
 	[Int32]$objectCounter = 0
-	
+
 	Try {			
 		# Retrieve service accounts from AD where OSName is like *Server*
 		# $PropList = @("LastLogonDate", "whenCreated", "whenChanged", "Description", "TrustedForDelegation","objectGUID","dnsHostName","LastLogonTimeStamp","userAccountControl","msDS-SupportedEncryptionTypes","servicePrincipalName","msDS-GroupMSAMembership")
@@ -2125,7 +2125,7 @@ foreach ($object in $adObjectType) {
 			[datetime]$lastFullSync = $lastSyncStatus.LastFullSync
 		} 
 		else {
-			Write-Verbose "$object : A synchronization is already in process. Wait 90 minutes to retry, or use -Force option." -ForegroundColor Red
+			Write-Error "$object : A synchronization is already in process. Wait 90 minutes to retry, or use -Force option."
 			AddLogEntry $domainDNSRoot "Warning" "GetSyncStatus" "$object : A synchronization is already in process. Wait 90 minutes to retry, or use -Force option." $sqlConnection
 			$warningCounter++
 			continue
