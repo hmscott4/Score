@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[DatabasePermission] (
-    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabasePermission_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabasePermission_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [DatabaseInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
     [DatabaseName]         NVARCHAR (128)   NOT NULL,
     [PermissionSource]     NVARCHAR (32)    NOT NULL,

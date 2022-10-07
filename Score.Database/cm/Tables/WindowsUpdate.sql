@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[WindowsUpdate] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_WindowsUpdate] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_WindowsUpdate] DEFAULT (newsequentialid()) NOT NULL,
     [HotfixID]     NVARCHAR (128)   NOT NULL,
     [Description]  NVARCHAR (128)   NOT NULL,
     [Caption]      NVARCHAR (128)   NULL,

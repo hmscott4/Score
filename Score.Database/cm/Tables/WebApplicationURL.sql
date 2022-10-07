@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[WebApplicationURL] (
-    [objectGUID]            UNIQUEIDENTIFIER CONSTRAINT [DF_WebApplicationURL_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]            UNIQUEIDENTIFIER CONSTRAINT [DF_WebApplicationURL_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [WebApplicationGUID]    UNIQUEIDENTIFIER NOT NULL,
     [ComputerGUID]          UNIQUEIDENTIFIER NOT NULL,
     [Name]                  NVARCHAR (255)   NOT NULL,

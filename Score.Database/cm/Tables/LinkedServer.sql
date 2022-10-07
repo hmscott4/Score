@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[LinkedServer] (
-    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_LinkedServer_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_LinkedServer_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [DatabaseInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
     [ID]                   INT              NOT NULL,
     [Name]                 NVARCHAR (255)   NOT NULL,

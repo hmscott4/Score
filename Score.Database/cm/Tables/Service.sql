@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[Service] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_Service_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_Service_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID] UNIQUEIDENTIFIER NOT NULL,
     [Name]         NVARCHAR (255)   NOT NULL,
     [DisplayName]  NVARCHAR (255)   NULL,

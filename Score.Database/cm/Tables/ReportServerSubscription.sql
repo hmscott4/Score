@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[ReportServerSubscription] (
-    [objectGUID]            UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ReportServerSubscription_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]            UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ReportServerSubscription_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ReportingInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
     [Owner]                 NVARCHAR (255)   NOT NULL,
     [Path]                  NVARCHAR (1024)  NOT NULL,

@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[ComputerSharePermission] (
-    [objectGUID]        UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ComputerSharePermission_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]        UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ComputerSharePermission_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerShareGUID] UNIQUEIDENTIFIER NOT NULL,
     [SecurityPrincipal] NVARCHAR (128)   NOT NULL,
     [FileSystemRights]  NVARCHAR (128)   NOT NULL,

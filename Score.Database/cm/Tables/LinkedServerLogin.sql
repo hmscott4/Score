@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[LinkedServerLogin] (
-    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_LinkedServerLogin_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_LinkedServerLogin_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [DatabaseInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
     [LinkedServerID]       INT              NOT NULL,
     [Name]                 NVARCHAR (255)   NOT NULL,

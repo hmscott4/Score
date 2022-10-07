@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[DrivePartitionMap] (
-    [ObjectGUID]    UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DrivePartitionMap_objectGUID] DEFAULT (newid()) NOT NULL,
+    [ObjectGUID]    UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DrivePartitionMap_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID]  UNIQUEIDENTIFIER NOT NULL,
     [PartitionName] NVARCHAR (128)   NOT NULL,
     [DriveName]     NVARCHAR (128)   NOT NULL,

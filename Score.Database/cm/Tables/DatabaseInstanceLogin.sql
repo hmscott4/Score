@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[DatabaseInstanceLogin] (
-    [objectGUID]                UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseInstanceLogin_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]                UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseInstanceLogin_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [DatabaseInstanceGUID]      UNIQUEIDENTIFIER NOT NULL,
     [Name]                      NVARCHAR (255)   NOT NULL,
     [Sid]                       NVARCHAR (255)   NOT NULL,

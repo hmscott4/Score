@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[ComputerGroupMember] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ComputerGroupMember_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ComputerGroupMember_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID] UNIQUEIDENTIFIER NOT NULL,
     [GroupName]    NVARCHAR (128)   NOT NULL,
     [MemberName]   NVARCHAR (128)   NOT NULL,

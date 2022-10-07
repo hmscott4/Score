@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[NetworkAdapterConfiguration] (
-    [objectGUID]                  UNIQUEIDENTIFIER CONSTRAINT [DF_cm_NetworkAdapterConfiguration_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]                  UNIQUEIDENTIFIER CONSTRAINT [DF_cm_NetworkAdapterConfiguration_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID]                UNIQUEIDENTIFIER NOT NULL,
     [Index]                       INT              NOT NULL,
     [MACAddress]                  NVARCHAR (128)   NULL,

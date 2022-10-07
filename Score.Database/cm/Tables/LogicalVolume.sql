@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[LogicalVolume] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_LogicalVolume_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_LogicalVolume_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID] UNIQUEIDENTIFIER NOT NULL,
     [Name]         NVARCHAR (128)   NOT NULL,
     [DriveLetter]  NVARCHAR (128)   NULL,

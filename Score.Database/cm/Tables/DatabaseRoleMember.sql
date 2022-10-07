@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[DatabaseRoleMember] (
-    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseRoleMember_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseRoleMember_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [DatabaseInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
     [DatabaseName]         NVARCHAR (128)   NOT NULL,
     [RoleName]             NVARCHAR (128)   NOT NULL,

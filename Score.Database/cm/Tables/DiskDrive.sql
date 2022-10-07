@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[DiskDrive] (
-    [objectGUID]       UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DiskDrive_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]       UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DiskDrive_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID]     UNIQUEIDENTIFIER NOT NULL,
     [Name]             NVARCHAR (128)   NOT NULL,
     [DeviceID]         NVARCHAR (128)   NOT NULL,

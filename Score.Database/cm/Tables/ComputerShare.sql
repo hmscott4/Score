@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[ComputerShare] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ComputerShare_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ComputerShare_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID] UNIQUEIDENTIFIER NOT NULL,
     [Name]         NVARCHAR (128)   NOT NULL,
     [Description]  NVARCHAR (128)   NOT NULL,

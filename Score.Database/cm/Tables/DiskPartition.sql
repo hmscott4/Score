@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[DiskPartition] (
-    [objectGUID]       UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DiskPartition_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]       UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DiskPartition_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID]     UNIQUEIDENTIFIER NOT NULL,
     [Name]             NVARCHAR (255)   NOT NULL,
     [DiskIndex]        INT              NOT NULL,

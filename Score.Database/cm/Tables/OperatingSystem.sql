@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[OperatingSystem] (
-    [objectGUID]              UNIQUEIDENTIFIER CONSTRAINT [DF_cm_OperatingSystem_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]              UNIQUEIDENTIFIER CONSTRAINT [DF_cm_OperatingSystem_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [computerGUID]            UNIQUEIDENTIFIER NOT NULL,
     [IPV4Address]             NVARCHAR (128)   NULL,
     [Manufacturer]            NVARCHAR (255)   NULL,

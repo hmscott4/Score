@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[Computer] (
-    [objectGUID]                UNIQUEIDENTIFIER CONSTRAINT [DF_cm_Computer_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]                UNIQUEIDENTIFIER CONSTRAINT [DF_cm_Computer_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [Domain]                    NVARCHAR (128)   NOT NULL,
     [dnsHostName]               NVARCHAR (255)   NOT NULL,
     [netBIOSName]               NVARCHAR (255)   NOT NULL,

@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[DatabaseFile] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseFile_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseFile_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [DatabaseGUID] UNIQUEIDENTIFIER NOT NULL,
     [FileID]       INT              NOT NULL,
     [FileGroup]    NVARCHAR (255)   NOT NULL,

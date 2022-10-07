@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[ClusterGroup] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ClusterGroup_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ClusterGroup_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ClusterGUID]  UNIQUEIDENTIFIER NOT NULL,
     [GroupName]    NVARCHAR (255)   NOT NULL,
     [Description]  NVARCHAR (1024)  NULL,

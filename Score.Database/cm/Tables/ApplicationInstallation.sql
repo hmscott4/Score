@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[ApplicationInstallation] (
-    [objectGUID]      UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ApplicationInstallation_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]      UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ApplicationInstallation_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID]    UNIQUEIDENTIFIER NOT NULL,
     [ApplicationGUID] UNIQUEIDENTIFIER NOT NULL,
     [InstallDate]     DATETIME2 (7)    NULL,

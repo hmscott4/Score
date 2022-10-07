@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[WindowsUpdateInstallation] (
-    [objectGUID]        UNIQUEIDENTIFIER CONSTRAINT [DF_cm_WindowsUpdateInstallation] DEFAULT (newid()) NOT NULL,
+    [objectGUID]        UNIQUEIDENTIFIER CONSTRAINT [DF_cm_WindowsUpdateInstallation] DEFAULT (newsequentialid()) NOT NULL,
     [ComputerGUID]      UNIQUEIDENTIFIER NOT NULL,
     [WindowsUpdateGUID] UNIQUEIDENTIFIER NOT NULL,
     [InstallDate]       DATETIME2 (3)    NULL,

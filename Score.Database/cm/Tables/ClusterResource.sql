@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[ClusterResource] (
-    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ClusterResource_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ClusterResource_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [ClusterGUID]  UNIQUEIDENTIFIER NOT NULL,
     [ResourceName] NVARCHAR (255)   NOT NULL,
     [ResourceType] NVARCHAR (255)   NOT NULL,

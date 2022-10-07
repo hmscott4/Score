@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [cm].[AnalysisDatabase] (
-    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_AnalysisDatabase_objectGUID] DEFAULT (newid()) NOT NULL,
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_AnalysisDatabase_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
     [AnalysisInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
     [DatabaseName]         NVARCHAR (128)   NOT NULL,
     [Description]          NVARCHAR (1024)  NULL,
