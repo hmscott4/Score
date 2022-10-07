@@ -118,18 +118,18 @@ param(
 			if($regKey){
 				$instanceNames = $regKey.GetValue("InstalledInstances")
 				if(!$instanceNames){
-					# Write-Host "Unable to locate $sqlClass instances on $dnsHostName"
+					# Write-Verbose "Unable to locate $sqlClass instances on $dnsHostName"
 					$instanceNames = $null
 				}
 			}
 		} else {
 			$instanceNames = $null
-			# Write-Host "Unable to locate $sqlClass instances on $dnsHostName"
+			# Write-Verbose "Unable to locate $sqlClass instances on $dnsHostName"
 		}
 	}
 	catch [System.Exception] {
 		$instanceNames = $null
-		# Write-Host "Unable to locate $sqlClass instances on $dnsHostName"
+		# Write-Verbose "Unable to locate $sqlClass instances on $dnsHostName"
 	}
 
 	return $instanceNames
@@ -445,7 +445,7 @@ param (
 	catch [System.Exception] {
 		$msg = $_.Exception.Message
 		# AddLogEntry $dnsHostName "Error" "GetCIMResult" "$msg. Query : $queryString"
-        # Write-Host "$dnsHostName : $msg"
+        # Write-Verbose "$dnsHostName : $msg"
 		return $null
 	}
 }
@@ -510,14 +510,14 @@ Param(
         $test = New-Object System.Net.Sockets.TcpClient;
         Try
         {
-            # Write-Host "Connecting to "$RemoteServer":"$Port" (TCP)..";
+            # Write-Verbose "Connecting to "$RemoteServer":"$Port" (TCP)..";
             $test.Connect($RemoteServer, $Port);
-            # Write-Host "Connection successful";
+            # Write-Verbose "Connection successful";
             $result = "Success"
         }
         Catch
         {
-            # Write-Host "Connection failed";
+            # Write-Verbose "Connection failed";
             $result = "Failed"
         }
         Finally
@@ -531,14 +531,14 @@ Param(
         $test = New-Object System.Net.Sockets.UdpClient;
         Try
         {
-            # Write-Host "Connecting to "$RemoteServer":"$Port" (UDP)..";
+            # Write-Verbose "Connecting to "$RemoteServer":"$Port" (UDP)..";
             $test.Connect($RemoteServer, $Port);
-            # Write-Host "Connection successful";
+            # Write-Verbose "Connection successful";
             $result = "Success"
         }
         Catch
         {
-            # Write-Host "Connection failed";
+            # Write-Verbose "Connection failed";
             $result = "Failed"
         }
         Finally

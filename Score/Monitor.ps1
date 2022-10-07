@@ -191,7 +191,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeProcessLog: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeProcessLog: Invalid value for retention period: $daysRetain."
 	}
 
 	# Get Retention factor
@@ -235,7 +235,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "DeleteSyncHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "DeleteSyncHistory: Invalid value for retention period: $daysRetain."
 	}
 	
 	Return New-Object psobject -Property @{ErrorCount = $errorCounter; WarningCount = $warningCounter}
@@ -283,7 +283,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeEvents: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeEvents: Invalid value for retention period: $daysRetain."
 	}
 	
 	Return New-Object psobject -Property @{ErrorCount = $errorCounter; WarningCount = $warningCounter}
@@ -338,7 +338,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeHistory: Invalid value for retention period: $daysRetain."
 	}
 	
 	
@@ -369,7 +369,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeHistory: Invalid value for retention period: $daysRetain."
 	}
 	
 	[int]$daysRetain = GetConfigValue -configName "DatabaseSizeRawRetainDays" -sqlConnection $sqlConnection
@@ -394,7 +394,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeHistory: Invalid value for DatabaseSizeRawRetainDays retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeHistory: Invalid value for DatabaseSizeRawRetainDays retention period: $daysRetain."
 	}
 	
 
@@ -423,7 +423,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain."
 	}
 	
 	[int]$daysRetain = GetConfigValue -configName "LogicalVolumeSizeRawRetainDays" -sqlConnection $sqlConnection
@@ -448,7 +448,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain."
 	}	
 
 	################################################################################
@@ -476,7 +476,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeHistory: Invalid value for WebApplicationURLResponseDaily retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeHistory: Invalid value for WebApplicationURLResponseDaily retention period: $daysRetain."
 	}
 	
 	[int]$daysRetain = GetConfigValue -configName "WebApplicationURLResponseRawRetainDays" -sqlConnection $sqlConnection
@@ -501,7 +501,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Verbose "PurgeHistory: Invalid value for WebApplicationURLResponseRaw retention period: $daysRetain." -ForegroundColor DarkRed
+		Throw "PurgeHistory: Invalid value for WebApplicationURLResponseRaw retention period: $daysRetain."
 	}		
 	
 	Return New-Object psobject -Property @{ErrorCount = $errorCounter; WarningCount = $warningCounter}
@@ -703,7 +703,7 @@ if($Maintenance){
 }
 Write-Verbose "ThrottleLimit: $throttleLimit"
 If($WhatIf){
-	Write-Verbose "WhatIf parameter specified" -ForegroundColor Cyan
+	Write-Verbose "WhatIf parameter specified"
 }
 Write-Verbose "****************************************"
 
@@ -759,7 +759,7 @@ Try {
 				$computers = GetComputerListFromFile $fileName
 			} else {
 				$computers = $null
-				Write-Verbose "Invalid filename provided: $filename" -ForegroundColor Red
+				Throw "Invalid filename provided: $filename"
 			}
 		} Else {
 			$computers = GetComputerListFromRepository $sqlConnection $agentName
@@ -869,9 +869,9 @@ foreach($row in $computers){
 		}
 		
 		if($isCluster -and ($clusterNoChecks -contains $check)){
-			Write-Verbose " : $computer : $check : Skipped" -ForegroundColor Cyan
+			Write-Verbose " : $computer : $check : Skipped"
 		} elseif($WhatIf){
-			Write-Verbose " : $computer : $check : Would be performed." -ForegroundColor Cyan
+			Write-Verbose " : $computer : $check : Would be performed."
 		} elseif($check -eq "SysEvtLog") {
 			# System Event log needs a separate entry, to add parameter "System"
 			$scriptBlock = . ".\modules\$moduleName"
@@ -945,7 +945,7 @@ do {
 ################################################################################
 foreach($item in $Maintenance){
 	If($WhatIf){
-		Write-Verbose "Maintenance task $item would be performed." -ForegroundColor Cyan
+		Write-Verbose "Maintenance task $item would be performed."
 	} else {
 		Switch($item) {
 			"PurgeLog" 	{
