@@ -17,3 +17,10 @@
     CONSTRAINT [FK_NetworkAdapter_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 
+GO
+CREATE NONCLUSTERED INDEX [IX_NetworkAdapter_ComputerGUID]
+    ON [cm].[NetworkAdapter](ComputerGUID)
+GO
+
+CREATE UNIQUE INDEX [IQ_NetworkAdapter_ComputerGUID_Index]
+    ON [cm].[NetworkAdapter](ComputerGUID, [Index])

@@ -20,6 +20,11 @@
     [Active]                      BIT              NOT NULL,
     [dbAddDate]                   DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]                DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_cm_NetworkAdapterConfiguration] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+    CONSTRAINT [PK_cm_NetworkAdapterConfiguration] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_NetworkAdapterConfiguration_ComputerGUID] FOREIGN KEY ([ComputerGUID],[Index]) REFERENCES [cm].[NetworkAdapter] ([ComputerGUID],[Index])
 );
+
+GO
+CREATE NONCLUSTERED INDEX [IX_NetworkAdapterConfiguration_ComputerGUID]
+    ON [cm].[NetworkAdapterConfiguration](ComputerGUID, [Index])
 
