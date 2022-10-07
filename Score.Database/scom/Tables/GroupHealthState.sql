@@ -4,14 +4,14 @@
     [DisplayName]                 NVARCHAR (255)   NOT NULL,
     [FullName]                    NVARCHAR (255)   NOT NULL,
     [Path]                        NVARCHAR (1024)  NULL,
-    [MonitoringClassIds]    NVARCHAR (255)   NOT NULL,
+    [MonitoringClassIds]          NVARCHAR (255)   NOT NULL,
     [HealthState]                 NVARCHAR (255)   NOT NULL,
     [StateLastModified]           DATETIME2 (3)    NULL,
     [IsAvailable]                 BIT              NOT NULL,
     [AvailabilityLastModified]    DATETIME2 (3)    NULL,
     [InMaintenanceMode]           BIT              NOT NULL,
     [MaintenanceModeLastModified] DATETIME2 (3)    NULL,
-	[Display]					  BIT              NOT NULL,
+    [Display]                     BIT              CONSTRAINT [DF_scom_GroupHealthState_Display] DEFAULT ((0)) NOT NULL,
     [Active]                      BIT              NOT NULL,
     [dbAddDate]                   DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]                DATETIME2 (3)    NOT NULL,
@@ -23,14 +23,9 @@
     [Other]                       NVARCHAR (255)   NULL,
     CONSTRAINT [PK_scom_GroupHealthState] PRIMARY KEY NONCLUSTERED ([Id] ASC) WITH (FILLFACTOR = 80)
 );
-GO
-
-ALTER TABLE [scom].[GroupHealthState] ADD CONSTRAINT [DF_scom_GroupHealthState_Display] DEFAULT (0) FOR [Display]
-GO
 
 
 GO
 CREATE UNIQUE CLUSTERED INDEX [UX_scom_GroupHealthState_FullName]
     ON [scom].[GroupHealthState]([FullName] ASC) WITH (FILLFACTOR = 80);
-
 

@@ -12,6 +12,3 @@ DELETE FROM [ad].[SyncHistory]
       WHERE [EndDate] < DATEADD(DAY, -@DaysRetain, GetDate())
 
 COMMIT
-GO
-
-GO

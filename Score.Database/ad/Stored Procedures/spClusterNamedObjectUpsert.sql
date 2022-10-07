@@ -37,6 +37,3 @@ BEGIN
 	INSERT INTO ad.ClusterNamedObject (ObjectGUID, Domain, DNSHostName, Comment, dbAddDate, dbLastUpdate)
 	VALUES (@ObjectGUID, @Domain, @DNSHostName, @Comment, @dbLastUpdate, @dbLastUpdate)
 END
-GO
-
-

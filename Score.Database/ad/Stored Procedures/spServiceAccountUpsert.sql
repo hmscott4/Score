@@ -114,6 +114,3 @@ END
 
 
 COMMIT;
-GO
-
-

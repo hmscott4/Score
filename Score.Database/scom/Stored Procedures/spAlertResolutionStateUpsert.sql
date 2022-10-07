@@ -77,10 +77,3 @@ INSERT
 
 	;
 COMMIT
-
-
-GO
-
-
-
-GO

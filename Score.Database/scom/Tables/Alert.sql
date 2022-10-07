@@ -58,9 +58,6 @@
     [dbAddDate]                         DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]                      DATETIME2 (3)    NOT NULL,
     [ManagementGroup]                   NVARCHAR (255)   NULL,
-    CONSTRAINT [PK_scom_Alert] PRIMARY KEY CLUSTERED ([AlertId] ASC) WITH (FILLFACTOR = 80)
+    CONSTRAINT [PK_scom_Alert] PRIMARY KEY CLUSTERED ([AlertId] ASC)
 );
-
-
-GO
 

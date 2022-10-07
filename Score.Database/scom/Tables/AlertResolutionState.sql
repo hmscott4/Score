@@ -11,6 +11,3 @@
     PRIMARY KEY NONCLUSTERED ([ResolutionStateID] ASC)
 );
 
-
-GO
-

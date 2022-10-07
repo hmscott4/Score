@@ -13,9 +13,3 @@ DELETE FROM [scom].[SyncHistory]
       WHERE [EndDate] < DATEADD(DAY, -@DaysRetain, GetDate())
 
 COMMIT
-
-GO
-
-
-
-GO

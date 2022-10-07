@@ -9,6 +9,3 @@
     CONSTRAINT [FK_scom_ObjectHealthStateAlertRelationship_ObjectHealthState] FOREIGN KEY ([ObjectID]) REFERENCES [scom].[ObjectHealthState] ([ID])
 );
 
-
-GO
-

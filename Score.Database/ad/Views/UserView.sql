@@ -1,4 +1,6 @@
-﻿CREATE VIEW [ad].[UserView]
+﻿
+
+CREATE VIEW [ad].[UserView]
 
 AS
 
@@ -55,7 +57,7 @@ SELECT
         from ad.[User] u2
         join ad.UserAccountControl uac ON 
             u2.UserAccountControl & uac.ID = uac.ID
-        where u.[Name] = u2.[Name]
+        where u.[Name] = u2.[Name] AND u.[Domain] = [u2].[Domain]
         for xml path(''), type, root
         ).value('root[1]','varchar(max)'),
         1, 2, N'') as AccountProperties

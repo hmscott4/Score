@@ -21,8 +21,3 @@ WHERE
 	dbLastUpdate < DATEADD(MINUTE, -15, @BeforeDate) 
 	AND Active = 1
 	AND (@ManagementGroup IS NULL OR ManagementGroup = @ManagementGroup)
-GO
-
-
-
-GO

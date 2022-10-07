@@ -1,16 +1,12 @@
-﻿/****** Object:  Table [cm].[DrivePartitionMap]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[DrivePartitionMap] (
+    [ObjectGUID]    UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DrivePartitionMap_objectGUID] DEFAULT (newid()) NOT NULL,
+    [ComputerGUID]  UNIQUEIDENTIFIER NOT NULL,
+    [PartitionName] NVARCHAR (128)   NOT NULL,
+    [DriveName]     NVARCHAR (128)   NOT NULL,
+    [Active]        BIT              NOT NULL,
+    [dbAddDate]     DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]  DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_DrivePartitionMap] PRIMARY KEY CLUSTERED ([ObjectGUID] ASC),
+    CONSTRAINT [FK_DrivePartitionMap_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_DrivePartitionMap_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO

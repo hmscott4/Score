@@ -12,4 +12,3 @@ DELETE FROM dbo.ProcessLog
 WHERE MessageDate < DATEADD(DAY, -@daysRetain, GetDate())
 
 COMMIT
-GO

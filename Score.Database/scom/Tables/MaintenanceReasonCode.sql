@@ -7,6 +7,3 @@
     [dbModDate]  DATETIME2 (3)    NOT NULL
 );
 
-
-GO
-

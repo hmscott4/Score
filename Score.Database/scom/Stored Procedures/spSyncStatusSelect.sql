@@ -13,9 +13,3 @@ AS
 	WHERE  ([ManagementGroup] = @ManagementGroup AND [ObjectClass] = @ObjectClass) 
 
 	COMMIT
-
-GO
-
-
-GO
-

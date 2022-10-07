@@ -12,8 +12,3 @@ AS
 	WHERE  ([dnsHostName] = @dnsHostName OR (@dnsHostName IS NULL AND [Active] >= @Active))
 
 	COMMIT
-GO
-
-GO
-
-GO

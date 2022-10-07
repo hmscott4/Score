@@ -1,16 +1,14 @@
-﻿/****** Object:  Table [cm].[ClusterGroup]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[ClusterGroup] (
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ClusterGroup_objectGUID] DEFAULT (newid()) NOT NULL,
+    [ClusterGUID]  UNIQUEIDENTIFIER NOT NULL,
+    [GroupName]    NVARCHAR (255)   NOT NULL,
+    [Description]  NVARCHAR (1024)  NULL,
+    [OwnerNode]    NVARCHAR (255)   NOT NULL,
+    [State]        NVARCHAR (128)   NOT NULL,
+    [Active]       BIT              NOT NULL,
+    [dbAddDate]    DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate] DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_ClusterGroup] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_ClusterGroup_Cluster] FOREIGN KEY ([ClusterGUID]) REFERENCES [cm].[Cluster] ([objectGUID])
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_ClusterGroup_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO

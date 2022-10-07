@@ -23,6 +23,3 @@ AS
 	
                
 	COMMIT
-GO
-
-GO

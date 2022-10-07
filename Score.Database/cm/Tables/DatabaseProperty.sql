@@ -1,16 +1,12 @@
-﻿/****** Object:  Table [cm].[DatabaseProperty]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[DatabaseProperty] (
+    [objectGUID]    UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseProperty_objectGUID] DEFAULT (newid()) NOT NULL,
+    [DatabaseGUID]  UNIQUEIDENTIFIER NOT NULL,
+    [PropertyName]  NVARCHAR (128)   NOT NULL,
+    [PropertyValue] NVARCHAR (128)   NULL,
+    [Active]        BIT              NOT NULL,
+    [dbAddDate]     DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]  DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_DatabaseProperty] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_DatabaseProperty_Database] FOREIGN KEY ([DatabaseGUID]) REFERENCES [cm].[Database] ([objectGUID])
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_DatabaseProperty_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO

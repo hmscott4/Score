@@ -54,8 +54,3 @@ BEGIN
                        ,@InUnplannedMaintenanceMilliseconds
                        ,@HealthServiceUnavailableMilliseconds)
 END
-GO
-
-
-
-GO

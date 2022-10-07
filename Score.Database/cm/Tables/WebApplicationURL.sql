@@ -1,20 +1,18 @@
-﻿/****** Object:  Table [cm].[WebApplicationURL]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[WebApplicationURL] (
+    [objectGUID]            UNIQUEIDENTIFIER CONSTRAINT [DF_WebApplicationURL_objectGUID] DEFAULT (newid()) NOT NULL,
+    [WebApplicationGUID]    UNIQUEIDENTIFIER NOT NULL,
+    [ComputerGUID]          UNIQUEIDENTIFIER NOT NULL,
+    [Name]                  NVARCHAR (255)   NOT NULL,
+    [URL]                   NVARCHAR (2048)  NOT NULL,
+    [UseDefaultCredential]  BIT              NOT NULL,
+    [FormData]              NVARCHAR (2048)  NULL,
+    [LastStatusCode]        NVARCHAR (128)   CONSTRAINT [DF_WebApplicationURL_LastStatusCode] DEFAULT (N'') NOT NULL,
+    [LastStatusDescription] NVARCHAR (128)   CONSTRAINT [DF_WebApplicationURL_LastStatusDescription] DEFAULT (N'') NOT NULL,
+    [LastResponseTime]      INT              CONSTRAINT [DF_WebApplicationURL_LastResponseTime] DEFAULT ((0)) NOT NULL,
+    [LastUpdate]            DATETIME2 (3)    CONSTRAINT [DF_WebApplicationURL_LastUpdate] DEFAULT (getdate()) NOT NULL,
+    [Active]                BIT              NOT NULL,
+    [dbAddDate]             DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]          DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_WebApplicationURL] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_WebApplicationURL_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO
-
-GO
-
-GO

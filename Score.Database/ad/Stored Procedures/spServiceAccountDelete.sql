@@ -19,6 +19,3 @@ AS
 	WHERE  [objectGUID] = @objectGUID
 
 	COMMIT
-GO
-
-

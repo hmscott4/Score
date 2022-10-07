@@ -24,8 +24,3 @@ SET IsAvailable = @IsAvailable, AvailabilityLastModified = @AvailabilityLastModi
 WHERE DisplayName = @DisplayName
 
 COMMIT
-
-GO
-
-
-GO

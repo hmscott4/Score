@@ -1,16 +1,19 @@
-﻿/****** Object:  Table [cm].[NetworkAdapter]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[NetworkAdapter] (
+    [objectGUID]      UNIQUEIDENTIFIER CONSTRAINT [DF_cm_NetworkAdapter_objectGUID] DEFAULT (newid()) NOT NULL,
+    [ComputerGUID]    UNIQUEIDENTIFIER NOT NULL,
+    [Index]           INT              NOT NULL,
+    [Name]            NVARCHAR (255)   NOT NULL,
+    [NetConnectionID] NVARCHAR (255)   NULL,
+    [AdapterType]     NVARCHAR (255)   NULL,
+    [Manufacturer]    NVARCHAR (255)   NULL,
+    [MACAddress]      NVARCHAR (128)   NULL,
+    [PhysicalAdapter] BIT              NULL,
+    [Speed]           BIGINT           NULL,
+    [NetEnabled]      INT              NULL,
+    [Active]          BIT              NOT NULL,
+    [dbAddDate]       DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]    DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_NetworkAdapter] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_NetworkAdapter_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_NetworkAdapter_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO

@@ -31,8 +31,3 @@ AS
 		VALUES (@ObjectID, @AlertID, 1, GetDate(), GetDate())
 
 	END
-
-GO
-
-
-GO

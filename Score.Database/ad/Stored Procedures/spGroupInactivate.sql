@@ -26,6 +26,3 @@ AS
 	-- End Return Select <- do not remove*/*/*/*/*/*/
                
 	COMMIT
-GO
-
-GO

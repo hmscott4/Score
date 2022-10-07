@@ -1,5 +1,4 @@
-﻿/****** Object:  Table [ad].[User]    Script Date: 1/16/2019 8:32:48 AM ******/
-CREATE TABLE [ad].[User] (
+﻿CREATE TABLE [ad].[User] (
     [objectGUID]                 UNIQUEIDENTIFIER NOT NULL,
     [SID]                        NVARCHAR (255)   NOT NULL,
     [Domain]                     NVARCHAR (128)   NOT NULL,
@@ -43,16 +42,11 @@ CREATE TABLE [ad].[User] (
     [whenChanged]                DATETIME2 (3)    NOT NULL,
     [dbAddDate]                  DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]               DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_ad_User] PRIMARY KEY CLUSTERED ([objectGUID] ASC) WITH (FILLFACTOR = 90)
+    CONSTRAINT [PK_ad_User] PRIMARY KEY CLUSTERED ([DistinguishedName] ASC) WITH (FILLFACTOR = 90)
 );
 
 
 GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_User_Unique]
+    ON [ad].[User]([Domain] ASC, [Name] ASC) WITH (FILLFACTOR = 80);
 
-/****** Object:  Index [IX_ad_User_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_User_Unique] ON [ad].[User]
-(
-	[Domain] ASC,
-	[Name] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO

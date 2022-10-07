@@ -8,9 +8,3 @@
     CONSTRAINT [PK_ProcessLog] PRIMARY KEY CLUSTERED ([ID] ASC) WITH (FILLFACTOR = 100)
 );
 
-
-
-
-GO
-
-

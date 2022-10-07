@@ -1,16 +1,19 @@
-﻿/****** Object:  Table [cm].[DatabaseUser]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[DatabaseUser] (
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseUser_objectGUID] DEFAULT (newid()) NOT NULL,
+    [DatabaseInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
+    [DatabaseName]         NVARCHAR (128)   NOT NULL,
+    [UserName]             NVARCHAR (128)   NOT NULL,
+    [Login]                NVARCHAR (128)   NOT NULL,
+    [UserType]             NVARCHAR (128)   NOT NULL,
+    [LoginType]            NVARCHAR (128)   NOT NULL,
+    [HasDBAccess]          BIT              NOT NULL,
+    [CreateDate]           DATETIME2 (3)    NOT NULL,
+    [DateLastModified]     DATETIME2 (3)    NULL,
+    [State]                NVARCHAR (128)   NOT NULL,
+    [Active]               BIT              NOT NULL,
+    [dbAddDate]            DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]         DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_DatabaseUser] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_DatabaseUser_DatabaseInstance] FOREIGN KEY ([DatabaseInstanceGUID]) REFERENCES [cm].[DatabaseInstance] ([objectGUID])
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_DatabaseUser_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO

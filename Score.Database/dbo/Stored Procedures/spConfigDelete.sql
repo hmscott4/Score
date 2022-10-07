@@ -19,6 +19,3 @@ AS
 	WHERE  [ConfigName] = @ConfigName
 
 	COMMIT
-GO
-
-GO

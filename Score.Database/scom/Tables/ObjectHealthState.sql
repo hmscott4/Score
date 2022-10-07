@@ -27,10 +27,6 @@
 
 
 GO
+CREATE UNIQUE CLUSTERED INDEX [UX_scom_Object_FullName]
+    ON [scom].[ObjectHealthState]([FullName] ASC) WITH (FILLFACTOR = 80);
 
-/****** Object:  Index [UX_scom_Object_FullName]    Script Date: 1/16/2019 8:32:48 AM ******/
-CREATE UNIQUE CLUSTERED INDEX [UX_scom_Object_FullName] ON [scom].[ObjectHealthState]
-(
-	[FullName] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
-GO
