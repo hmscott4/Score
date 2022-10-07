@@ -19,6 +19,3 @@ AS
 	WHERE  [ID] = @ID
 
 	COMMIT
-GO
-
-GO

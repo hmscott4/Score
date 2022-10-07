@@ -11,8 +11,3 @@ AS
 	WHERE  ([ConfigName] = @ConfigName OR @ConfigName IS NULL) 
 
 	COMMIT
-GO
-
-GO
-
-GO

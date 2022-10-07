@@ -37,11 +37,6 @@
 );
 
 
-
-
-
-
-
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IXu_ReportHeader]
     ON [dbo].[ReportHeader]([ReportName] ASC);

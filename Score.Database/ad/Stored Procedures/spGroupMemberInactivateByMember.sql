@@ -22,6 +22,3 @@ AS
 		AND [MemberGUID] = @MemberGUID
                
 	COMMIT
-GO
-
-GO

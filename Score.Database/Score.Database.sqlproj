@@ -1,20 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <Name>Score.Database</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{0d2aa415-d7a3-4c77-8647-41a9ed18527f}</ProjectGuid>
+    <ProjectGuid>{cad6ee61-2d4f-4b42-84f9-82427ab5c71b}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
     <RootNamespace>Score.Database</RootNamespace>
     <AssemblyName>Score.Database</AssemblyName>
-    <ModelCollation>1033,CI</ModelCollation>
+    <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -23,67 +22,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
-    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
-    <AnsiNulls>False</AnsiNulls>
-    <QuotedIdentifier>False</QuotedIdentifier>
-    <QueryStoreCaptureMode>All</QueryStoreCaptureMode>
-    <QueryStoreDesiredState>Off</QueryStoreDesiredState>
-    <QueryStoreFlushInterval>900</QueryStoreFlushInterval>
-    <QueryStoreStatsInterval>60</QueryStoreStatsInterval>
-    <QueryStoreMaxPlansPerQuery>200</QueryStoreMaxPlansPerQuery>
-    <QueryStoreStaleQueryThreshold>367</QueryStoreStaleQueryThreshold>
-    <QueryStoreMaxStorageSize>100</QueryStoreMaxStorageSize>
-    <DbScopedConfigLegacyCardinalityEstimation>Off</DbScopedConfigLegacyCardinalityEstimation>
-    <DbScopedConfigMaxDOP>0</DbScopedConfigMaxDOP>
-    <DbScopedConfigParameterSniffing>On</DbScopedConfigParameterSniffing>
-    <DbScopedConfigOptimizerHotfixes>Off</DbScopedConfigOptimizerHotfixes>
-    <DelayedDurability>DISABLED</DelayedDurability>
-    <AutoCreateStatisticsIncremental>False</AutoCreateStatisticsIncremental>
-    <MemoryOptimizedElevateToSnapshot>False</MemoryOptimizedElevateToSnapshot>
-    <Containment>None</Containment>
-    <IsNestedTriggersOn>True</IsNestedTriggersOn>
-    <IsTransformNoiseWordsOn>False</IsTransformNoiseWordsOn>
-    <TwoDigitYearCutoff>2049</TwoDigitYearCutoff>
-    <NonTransactedFileStreamAccess>OFF</NonTransactedFileStreamAccess>
-    <TargetRecoveryTimePeriod>0</TargetRecoveryTimePeriod>
-    <TargetRecoveryTimeUnit>SECONDS</TargetRecoveryTimeUnit>
-    <IsChangeTrackingOn>False</IsChangeTrackingOn>
-    <IsChangeTrackingAutoCleanupOn>True</IsChangeTrackingAutoCleanupOn>
-    <ChangeTrackingRetentionPeriod>2</ChangeTrackingRetentionPeriod>
-    <ChangeTrackingRetentionUnit>Days</ChangeTrackingRetentionUnit>
-    <IsEncryptionOn>False</IsEncryptionOn>
-    <IsBrokerPriorityHonored>False</IsBrokerPriorityHonored>
-    <Trustworthy>False</Trustworthy>
-    <AutoUpdateStatisticsAsynchronously>False</AutoUpdateStatisticsAsynchronously>
-    <PageVerify>CHECKSUM</PageVerify>
-    <ServiceBrokerOption>DisableBroker</ServiceBrokerOption>
-    <DateCorrelationOptimizationOn>False</DateCorrelationOptimizationOn>
-    <Parameterization>SIMPLE</Parameterization>
-    <AllowSnapshotIsolation>False</AllowSnapshotIsolation>
-    <ReadCommittedSnapshot>False</ReadCommittedSnapshot>
-    <VardecimalStorageFormatOn>True</VardecimalStorageFormatOn>
-    <SupplementalLoggingOn>False</SupplementalLoggingOn>
-    <CompatibilityMode>120</CompatibilityMode>
-    <AnsiNullDefault>False</AnsiNullDefault>
-    <AnsiPadding>False</AnsiPadding>
-    <AnsiWarnings>False</AnsiWarnings>
-    <ArithAbort>False</ArithAbort>
-    <ConcatNullYieldsNull>False</ConcatNullYieldsNull>
-    <NumericRoundAbort>False</NumericRoundAbort>
-    <RecursiveTriggersEnabled>False</RecursiveTriggersEnabled>
-    <DatabaseChaining>False</DatabaseChaining>
-    <DatabaseState>ONLINE</DatabaseState>
-    <CloseCursorOnCommitEnabled>False</CloseCursorOnCommitEnabled>
-    <DefaultCursor>GLOBAL</DefaultCursor>
-    <AutoClose>False</AutoClose>
-    <AutoCreateStatistics>True</AutoCreateStatistics>
-    <AutoShrink>False</AutoShrink>
-    <AutoUpdateStatistics>True</AutoUpdateStatistics>
-    <TornPageDetection>False</TornPageDetection>
-    <DatabaseAccess>MULTI_USER</DatabaseAccess>
-    <Recovery>SIMPLE</Recovery>
-    <EnableFullTextSearch>True</EnableFullTextSearch>
-    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <TargetDatabase>Database</TargetDatabase>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -114,642 +53,208 @@
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
-  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="scom\" />
-    <Folder Include="scom\Tables\" />
-    <Folder Include="cm\" />
-    <Folder Include="cm\Tables\" />
-    <Folder Include="pm\" />
-    <Folder Include="pm\Tables\" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
+    <Folder Include="scom\" />
+    <Folder Include="scom\Tables\" />
+    <Folder Include="pm\" />
+    <Folder Include="pm\Tables\" />
+    <Folder Include="cm\" />
+    <Folder Include="cm\Tables\" />
     <Folder Include="ad\" />
     <Folder Include="ad\Tables\" />
-    <Folder Include="cm\Views\" />
     <Folder Include="scom\Views\" />
+    <Folder Include="cm\Views\" />
     <Folder Include="ad\Views\" />
     <Folder Include="Security\" />
-    <Folder Include="cm\Stored Procedures\" />
-    <Folder Include="pm\Stored Procedures\" />
-    <Folder Include="scom\Stored Procedures\" />
-    <Folder Include="ad\Stored Procedures\" />
     <Folder Include="dbo\Stored Procedures\" />
-    <Folder Include="_Deployment" />
+    <Folder Include="scom\Stored Procedures\" />
+    <Folder Include="pm\Stored Procedures\" />
+    <Folder Include="cm\Stored Procedures\" />
+    <Folder Include="ad\Stored Procedures\" />
     <Folder Include="_Compare" />
+    <Folder Include="_Deploy" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="scom\Tables\Alert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
+    <Build Include="dbo\Tables\SystemTimeZone.sql" />
+    <Build Include="dbo\Tables\ReportHeader.sql" />
+    <Build Include="dbo\Tables\ReportContent.sql" />
+    <Build Include="dbo\Tables\ProcessLog.sql" />
+    <Build Include="dbo\Tables\MyEmployees.sql" />
+    <Build Include="dbo\Tables\Credential.sql" />
+    <Build Include="dbo\Tables\Config.sql" />
+    <Build Include="dbo\Tables\Computer.sql" />
+    <Build Include="dbo\Tables\ClusterNamedObject.sql" />
+    <Build Include="scom\Tables\AlertResolutionState.sql" />
+    <Build Include="scom\Tables\ObjectClass.sql">
+      <AnsiNulls>Off</AnsiNulls>
     </Build>
-    <Build Include="cm\Tables\AnalysisInstanceProperty.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ComputerShare.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabaseFile.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\AlertAgingBuckets.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ComputerGroupMember.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ApplicationInstallation.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\WindowsComputer.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabaseProperty.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\SyncStatus.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabasePermission.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\SyncHistory.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\NetworkAdapterConfiguration.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabaseInstance.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\Database.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\LinkedServerLogin.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Tables\Credential.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Tables\SystemTimeZone.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Tables\Config.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ComputerSharePermission.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\Application.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ClusterNode.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\Cluster.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\AnalysisInstance.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Tables\Computer.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\Computer.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\Computer.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ClusterResource.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ReportServerSubscriptionParameter.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ReportingInstance.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Tables\ProcessLog.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\Event.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\Domain.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\GroupMember.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\Group.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\Forest.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\DeletedObject.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabaseRoleMember.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\Site.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\SyncStatus.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\SyncHistory.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\Subnet.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\WindowsUpdateInstallation.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\WindowsUpdate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\ObjectAvailabilityHistory.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\Service.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\WebApplicationURL.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\WebApplication.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\User.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabaseInstanceProperty.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabaseUser.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DiskDrive.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DatabaseInstanceLogin.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DiskPartition.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\LinkedServer.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\Job.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\DrivePartitionMap.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\LogicalVolume.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\NetworkAdapter.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\OperatingSystem.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ReportServerSubscription.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ReportServerItem.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\AnalysisDatabaseCube.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\Agent.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\AnalysisDatabase.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="cm\Tables\ClusterGroup.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\AlertResolutionState.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Views\SyncStatusView.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Views\GroupMemberView.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Views\SyncStatusView.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="Security\adRead.sql" />
-    <Build Include="Security\adUpdate.sql" />
-    <Build Include="scom\Stored Procedures\spAlertDeleteInactive.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAlertInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAlertResolutionStateUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAlertUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAgentAvailabilityUpdate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAgentUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAlertInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spUserUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spUserSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spUserInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spUserInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spUserDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spWindowsComputerUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spWindowsComputerInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spSyncStatusViewSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spSyncStatusUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spSyncStatusSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spSyncHistorySelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spSyncHistoryDeleteByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spCredentialUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spCredentialSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spCredentialInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spCredentialDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spConfigUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spConfigSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spConfigDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spComputerUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spSystemTimeZoneUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spComputerUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spDomainUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spDomainSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spDomainInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spDomainDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupMemberUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupMemberSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupMemberInactivateByMember.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupMemberInactivateByGroup.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupMemberInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupMemberInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupMemberDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spGroupDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spForestUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spForestInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spComputerSelectByAgentName.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spComputerSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spComputerSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spComputerReactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spComputerInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spComputerInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spComputerInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spComputerDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spComputerDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spObjectAvailabilityHistoryInsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSyncStatusUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSyncStatusSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSyncHistorySelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSyncHistoryInsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSyncHistoryDeleteByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSubnetUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSubnetSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSubnetInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSubnetInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSubnetDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSiteUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSiteSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSiteInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSiteInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSiteDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spSyncStatusViewSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spProcessLogSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spProcessLogInsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spProcessLogDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spForestDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spForestSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="Security\ad.sql" />
-    <Build Include="Security\scom.sql" />
-    <Build Include="scom\Tables\AgentExclusions.sql" />
-    <Build Include="scom\Tables\MaintenanceReasonCode.sql" />
-    <Build Include="scom\Tables\ObjectHealthState.sql" />
     <Build Include="scom\Tables\ObjectHealthStateAlertRelationship.sql">
       <AnsiNulls>Off</AnsiNulls>
     </Build>
-    <Build Include="scom\Tables\ObjectClass.sql" />
-    <Build Include="dbo\Stored Procedures\spSystemTimeZoneSelect.sql" />
-    <Build Include="scom\Stored Procedures\spAgentExclusionsInsert.sql">
+    <Build Include="scom\Tables\AlertArchive.sql" />
+    <Build Include="scom\Tables\Alert.sql" />
+    <Build Include="scom\Tables\MaintenanceReasonCode.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="scom\Tables\AgentExclusions.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="scom\Tables\Agent.sql" />
+    <Build Include="scom\Tables\GroupHealthState.sql" />
+    <Build Include="scom\Tables\ObjectAvailabilityHistory.sql" />
+    <Build Include="scom\Tables\ObjectHealthState.sql" />
+    <Build Include="scom\Tables\GroupHealthStateAlertRelationship.sql" />
+    <Build Include="scom\Tables\SyncHistory.sql" />
+    <Build Include="scom\Tables\SyncStatus.sql" />
+    <Build Include="scom\Tables\WindowsComputer.sql" />
+    <Build Include="scom\Tables\AlertAgingBuckets.sql" />
+    <Build Include="pm\Tables\WebApplicationURLResponseRaw.sql" />
+    <Build Include="pm\Tables\WebApplicationURLResponseDaily.sql" />
+    <Build Include="pm\Tables\LogicalVolumeSizeRaw.sql" />
+    <Build Include="pm\Tables\LogicalVolumeSizeDaily.sql" />
+    <Build Include="pm\Tables\DatabaseSizeRaw.sql" />
+    <Build Include="pm\Tables\DatabaseSizeDaily.sql" />
+    <Build Include="cm\Tables\WebApplicationURL.sql" />
+    <Build Include="cm\Tables\WebApplication.sql" />
+    <Build Include="cm\Tables\ReportServerSubscriptionParameter.sql" />
+    <Build Include="cm\Tables\ReportServerSubscription.sql" />
+    <Build Include="cm\Tables\ReportServerItem.sql" />
+    <Build Include="cm\Tables\NetworkAdapterConfiguration.sql" />
+    <Build Include="cm\Tables\NetworkAdapter.sql" />
+    <Build Include="cm\Tables\LinkedServerLogin.sql" />
+    <Build Include="cm\Tables\LinkedServer.sql" />
+    <Build Include="cm\Tables\Job.sql" />
+    <Build Include="cm\Tables\DrivePartitionMap.sql" />
+    <Build Include="cm\Tables\DiskPartition.sql" />
+    <Build Include="cm\Tables\DatabaseRoleMember.sql" />
+    <Build Include="cm\Tables\DatabasePermission.sql" />
+    <Build Include="cm\Tables\ClusterResource.sql" />
+    <Build Include="cm\Tables\ClusterGroup.sql" />
+    <Build Include="cm\Tables\AnalysisInstanceProperty.sql" />
+    <Build Include="cm\Tables\AnalysisDatabaseCube.sql" />
+    <Build Include="cm\Tables\AnalysisDatabase.sql" />
+    <Build Include="cm\Tables\Cluster.sql" />
+    <Build Include="cm\Tables\ClusterNode.sql" />
+    <Build Include="cm\Tables\ReportingInstance.sql" />
+    <Build Include="cm\Tables\Event.sql" />
+    <Build Include="cm\Tables\Service.sql" />
+    <Build Include="cm\Tables\DatabaseInstanceLogin.sql" />
+    <Build Include="cm\Tables\DatabaseProperty.sql" />
+    <Build Include="cm\Tables\DatabaseUser.sql" />
+    <Build Include="cm\Tables\DiskDrive.sql" />
+    <Build Include="cm\Tables\LogicalVolume.sql" />
+    <Build Include="cm\Tables\OperatingSystem.sql" />
+    <Build Include="cm\Tables\Application.sql" />
+    <Build Include="cm\Tables\ApplicationInstallation.sql" />
+    <Build Include="cm\Tables\ComputerGroupMember.sql" />
+    <Build Include="cm\Tables\ComputerSharePermission.sql" />
+    <Build Include="cm\Tables\ComputerShare.sql" />
+    <Build Include="cm\Tables\WindowsUpdate.sql" />
+    <Build Include="cm\Tables\WindowsUpdateInstallation.sql" />
+    <Build Include="cm\Tables\Database.sql" />
+    <Build Include="cm\Tables\DatabaseFile.sql" />
+    <Build Include="cm\Tables\DatabaseInstanceProperty.sql" />
+    <Build Include="cm\Tables\DatabaseInstance.sql" />
+    <Build Include="cm\Tables\Computer.sql" />
+    <Build Include="cm\Tables\AnalysisInstance.sql" />
+    <Build Include="ad\Tables\GroupSensitivity.sql" />
+    <Build Include="ad\Tables\ComputerImport.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="ad\Tables\UserAccountControl.sql" />
+    <Build Include="ad\Tables\SupportedEncryptionTypes.sql" />
+    <Build Include="ad\Tables\ServiceAccount.sql" />
+    <Build Include="ad\Tables\OrganizationalUnit.sql" />
+    <Build Include="ad\Tables\LocalAdminPasswordSolution.sql" />
+    <Build Include="ad\Tables\DomainController.sql" />
+    <Build Include="ad\Tables\ClusterNamedObject.sql" />
+    <Build Include="ad\Tables\User.sql" />
+    <Build Include="ad\Tables\Computer.sql" />
+    <Build Include="ad\Tables\Subnet.sql" />
+    <Build Include="ad\Tables\SyncHistory.sql" />
+    <Build Include="ad\Tables\SyncStatus.sql" />
+    <Build Include="ad\Tables\Site.sql" />
+    <Build Include="ad\Tables\DeletedObject.sql" />
+    <Build Include="ad\Tables\Forest.sql" />
+    <Build Include="ad\Tables\Group.sql" />
+    <Build Include="ad\Tables\GroupMember.sql" />
+    <Build Include="ad\Tables\Domain.sql" />
+    <Build Include="scom\Views\SyncStatusView.sql" />
+    <Build Include="cm\Views\ClusterNodeView.sql" />
+    <Build Include="cm\Views\ReportingInstanceView.sql" />
+    <Build Include="cm\Views\EventView.sql" />
+    <Build Include="cm\Views\DatabaseUserView.sql" />
+    <Build Include="cm\Views\DiskDriveView.sql" />
+    <Build Include="cm\Views\LogicalVolumeView.sql" />
+    <Build Include="cm\Views\OperatingSystemView.sql" />
+    <Build Include="cm\Views\ComputerSharePermissionView.sql" />
+    <Build Include="cm\Views\ComputerShareView.sql" />
+    <Build Include="cm\Views\WindowsUpdateInstallationView.sql" />
+    <Build Include="cm\Views\DatabaseFileView.sql" />
+    <Build Include="cm\Views\DatabaseView.sql" />
+    <Build Include="cm\Views\ServiceView.sql" />
+    <Build Include="cm\Views\DatabaseInstanceLoginView.sql" />
+    <Build Include="cm\Views\DatabasePropertyView.sql" />
+    <Build Include="cm\Views\DatabaseInstancePropertyView.sql" />
+    <Build Include="cm\Views\DatabaseInstanceView.sql" />
+    <Build Include="cm\Views\AnalysisInstanceView.sql" />
+    <Build Include="cm\Views\ApplicationInstallationView.sql" />
+    <Build Include="cm\Views\ComputerGroupMemberView.sql" />
+    <Build Include="ad\Views\UserView.sql" />
+    <Build Include="ad\Views\GroupMemberView.sql" />
+    <Build Include="ad\Views\ServiceAccountView.sql" />
+    <Build Include="ad\Views\GroupMemberViewNested.sql" />
+    <Build Include="ad\Views\ComputerView.sql" />
+    <Build Include="ad\Views\OrganizationalUnitHierarchy.sql" />
+    <Build Include="ad\Views\GroupView.sql" />
+    <Build Include="ad\Views\SubnetView.sql" />
+    <Build Include="ad\Views\OrganizationalUnitView.sql" />
+    <Build Include="ad\Views\SyncStatusView.sql" />
+    <Build Include="Security\scomUpdate.sql" />
+    <Build Include="Security\scomRead.sql" />
+    <Build Include="Security\pmUpdate.sql" />
+    <Build Include="Security\pmRead.sql" />
+    <Build Include="Security\cmUpdate.sql" />
+    <Build Include="Security\cmRead.sql" />
+    <Build Include="Security\cmAdmin.sql" />
+    <Build Include="Security\adUpdate.sql" />
+    <Build Include="Security\adRead.sql" />
+    <Build Include="dbo\Stored Procedures\spSystemTimeZoneUpsert.sql" />
+    <Build Include="dbo\Stored Procedures\spSystemTimeZoneSelect.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="scom\Stored Procedures\spAgentInactivate.sql">
+    <Build Include="dbo\Stored Procedures\spReportHeaderSelectByReportName.sql" />
+    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportNameAndSortSequence.sql" />
+    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportName.sql" />
+    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportID.sql" />
+    <Build Include="dbo\Stored Procedures\spProcessLogSelect.sql" />
+    <Build Include="dbo\Stored Procedures\spProcessLogInsert.sql" />
+    <Build Include="dbo\Stored Procedures\spProcessLogDelete.sql" />
+    <Build Include="dbo\Stored Procedures\spCurrentTimeZoneOffsetUpdate.sql" />
+    <Build Include="dbo\Stored Procedures\spCredentialUpsert.sql" />
+    <Build Include="dbo\Stored Procedures\spCredentialSelect.sql" />
+    <Build Include="dbo\Stored Procedures\spCredentialInactivate.sql" />
+    <Build Include="dbo\Stored Procedures\spCredentialDelete.sql" />
+    <Build Include="dbo\Stored Procedures\spConfigUpsert.sql" />
+    <Build Include="dbo\Stored Procedures\spConfigSelect.sql" />
+    <Build Include="dbo\Stored Procedures\spConfigDelete.sql" />
+    <Build Include="dbo\Stored Procedures\spComputerUpsert.sql" />
+    <Build Include="dbo\Stored Procedures\spComputerSelectByAgentName.sql" />
+    <Build Include="dbo\Stored Procedures\spComputerSelect.sql" />
+    <Build Include="dbo\Stored Procedures\spComputerReactivate.sql" />
+    <Build Include="dbo\Stored Procedures\spComputerInactivate.sql" />
+    <Build Include="dbo\Stored Procedures\spComputerDelete.sql" />
+    <Build Include="scom\Stored Procedures\spWindowsComputerSelectByDNSHostName.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spSyncHistoryInsert.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
@@ -757,218 +262,325 @@
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="scom\Stored Procedures\spSyncHistoryInsert.sql" />
-    <Build Include="scom\Stored Procedures\spWindowsComputerSelectByDNSHostName.sql" />
-    <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql">
+    <Build Include="scom\Stored Procedures\spAgentExclusionsUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spAgentInactivate.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
+    <Build Include="scom\Stored Procedures\spAgentExclusionsInsert.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="scom\Stored Procedures\spObjectClassUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipInactivate.sql" />
+    <Build Include="scom\Stored Procedures\spGroupHealthStateInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spGroupHealthStateUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spObjectAvailabilityHistoryInsert.sql" />
+    <Build Include="scom\Stored Procedures\spObjectHealthStateUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivate.sql" />
+    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spAlertResolutionStateGet.sql" />
+    <Build Include="scom\Stored Procedures\spSyncHistoryDeleteByDate.sql" />
+    <Build Include="scom\Stored Procedures\spSyncHistorySelect.sql" />
+    <Build Include="scom\Stored Procedures\spSyncStatusSelect.sql" />
+    <Build Include="scom\Stored Procedures\spSyncStatusUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spSyncStatusViewSelect.sql" />
+    <Build Include="scom\Stored Procedures\spWindowsComputerInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spWindowsComputerUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spAlertInactivateByDate.sql" />
+    <Build Include="scom\Stored Procedures\spAgentUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spAgentAvailabilityUpdate.sql" />
+    <Build Include="scom\Stored Procedures\spAlertUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spAlertResolutionStateUpsert.sql" />
+    <Build Include="scom\Stored Procedures\spAlertInactivate.sql" />
+    <Build Include="scom\Stored Procedures\spAlertDeleteInactive.sql" />
+    <Build Include="pm\Stored Procedures\spWebApplicationURLResponseRawInsert.sql" />
+    <Build Include="pm\Stored Procedures\spWebApplicationURLResponseRawDelete.sql" />
+    <Build Include="pm\Stored Procedures\spWebApplicationURLResponseDailyUpsert.sql" />
+    <Build Include="pm\Stored Procedures\spWebApplicationURLResponseDailyDelete.sql" />
+    <Build Include="pm\Stored Procedures\spLogicalVolumeSizeRawInsert.sql" />
+    <Build Include="pm\Stored Procedures\spLogicalVolumeSizeRawDelete.sql" />
+    <Build Include="pm\Stored Procedures\spLogicalVolumeSizeDailyUpsert.sql" />
+    <Build Include="pm\Stored Procedures\spLogicalVolumeSizeDailyDelete.sql" />
+    <Build Include="pm\Stored Procedures\spDatabaseSizeRawInsert.sql" />
+    <Build Include="pm\Stored Procedures\spDatabaseSizeRawDelete.sql" />
+    <Build Include="pm\Stored Procedures\spDatabaseSizeDailyUpsert.sql" />
+    <Build Include="pm\Stored Procedures\spDatabaseSizeDailyDelete.sql" />
+    <Build Include="cm\Stored Procedures\spComputerGroupMemberInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationURLSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spComputerGroupMemberDelete.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationURLSelect.sql" />
+    <Build Include="cm\Stored Procedures\spComputerDelete.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationURLInactivateByName.sql" />
+    <Build Include="cm\Stored Procedures\spClusterUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationURLDeleteByName.sql" />
+    <Build Include="cm\Stored Procedures\spClusterSelectByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spClusterResourceUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationSelectByApplication.sql" />
+    <Build Include="cm\Stored Procedures\spClusterResourceSelectByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationInactivateByApplication.sql" />
+    <Build Include="cm\Stored Procedures\spClusterResourceInactivateByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationDeleteByApplication.sql" />
+    <Build Include="cm\Stored Procedures\spClusterResourceDeleteByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spServiceUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spClusterNodeUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spServiceSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spClusterNodeSelectByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spServiceInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spClusterNodeInactivateByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spServiceDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spClusterNodeDeleteByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spClusterInactivateByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionSelectByReportingInstance.sql" />
+    <Build Include="cm\Stored Procedures\spClusterGroupUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionParameterUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spClusterGroupSelectByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionParameterSelectBySubscription.sql" />
+    <Build Include="cm\Stored Procedures\spClusterGroupInactivateByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionParameterInactivateBySubscription.sql" />
+    <Build Include="cm\Stored Procedures\spClusterGroupDeleteByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionParameterDeleteBySubscription.sql" />
+    <Build Include="cm\Stored Procedures\spClusterDeleteByClusterName.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionInactivateByReportingInstance.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerSubscriptionDeleteByReportingInstance.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationSelect.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerItemUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationInstallationUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerItemSelectByReportingInstance.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationInstallationSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerItemInactivateByReportingInstance.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationInstallationInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spReportServerItemDeleteByReportingInstance.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationInstallationDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spReportingInstanceUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationInactivate.sql" />
+    <Build Include="cm\Stored Procedures\spReportingInstanceSelectByServiceState.sql" />
+    <Build Include="cm\Stored Procedures\spApplicationDelete.sql" />
+    <Build Include="cm\Stored Procedures\spReportingInstanceSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstanceUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spReportingInstanceInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstanceSelectByServiceState.sql" />
+    <Build Include="cm\Stored Procedures\spReportingInstanceInactivate.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstanceSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spReportingInstanceDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstancePropertyUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spOperatingSystemUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstancePropertySelectByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spOperatingSystemSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstancePropertyInactivateByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spOperatingSystemInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstancePropertyDeleteByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spOperatingSystemDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstanceInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstanceInactivate.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisInstanceDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseSelectByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterConfigurationUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseInactivateByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterConfigurationSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseDeleteByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterConfigurationInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseCubeUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spNetworkAdapterConfigurationDelete.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseCubeSelectByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLogicalVolumeUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseCubeInactivateByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLogicalVolumeSizeUpdate.sql" />
+    <Build Include="cm\Stored Procedures\spAnalysisDatabaseCubeDeleteByAnalysisInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLogicalVolumeSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spLogicalVolumeInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spLogicalVolumeDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerSelectByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerLoginUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerLoginSelectByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerLoginInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerLoginDeleteByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spLinkedServerDeleteByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spJobUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spJobSelectByInstance.sql" />
+    <Build Include="cm\Stored Procedures\spJobInactivateByInstance.sql" />
+    <Build Include="cm\Stored Procedures\spJobDeleteByInstance.sql" />
+    <Build Include="cm\Stored Procedures\spEventSelectByComputerAndLogName.sql" />
+    <Build Include="cm\Stored Procedures\spEventSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spEventInsert.sql" />
+    <Build Include="cm\Stored Procedures\spEventGetMaxDateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spEventDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spEventDelete.sql" />
+    <Build Include="cm\Stored Procedures\spDrivePartitionMapUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDrivePartitionMapSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDrivePartitionMapInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDrivePartitionMapDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDiskPartitionUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDiskPartitionSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDiskPartitionInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDiskPartitionDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDiskDriveUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDiskDriveSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDiskDriveInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDiskDriveDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseUserUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseUserSelectByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseUserInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseUserInactivateByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseUserDeleteByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseSizeUpdate.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseSelectByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseRoleMemberUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseRoleMemberSelectByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseRoleMemberInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseRoleMemberInactivateByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseRoleMemberDeleteByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePropertyUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePropertySelectByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePropertyInactivateByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePropertyDeleteByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePermissionUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePermissionSelectByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePermissionInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePermissionInactivateByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabasePermissionDeleteByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceSelectByServiceState.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstancePropertyUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstancePropertySelectByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstancePropertyInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstancePropertyDeleteByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstancePermissionInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceLoginUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceLoginSelectByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceLoginInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceLoginDeleteByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceInactivate.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInstanceDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseInactivateByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseFileUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseFileSelect.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseFileInactivateByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseFileDeleteByDatabase.sql" />
+    <Build Include="cm\Stored Procedures\spDatabaseDeleteByDatabaseInstance.sql" />
+    <Build Include="cm\Stored Procedures\spComputerUpsertForCluster.sql" />
+    <Build Include="cm\Stored Procedures\spComputerUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spComputerShareUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spComputerShareSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spComputerSharePermissionUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateSelect.sql" />
+    <Build Include="cm\Stored Procedures\spComputerSharePermissionSelectByShare.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateInstallationUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spComputerSharePermissionInactivateByShare.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateInstallationSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spComputerSharePermissionDeleteByShare.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateInstallationInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spComputerShareInactivateByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateInstallationDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spComputerShareDeleteByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateInactivate.sql" />
+    <Build Include="cm\Stored Procedures\spComputerSelect.sql" />
+    <Build Include="cm\Stored Procedures\spWindowsUpdateDelete.sql" />
+    <Build Include="cm\Stored Procedures\spComputerInactivate.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationURLUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spComputerGroupMemberUpsert.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationURLUpdateLastResult.sql" />
+    <Build Include="cm\Stored Procedures\spComputerGroupMemberSelectByComputer.sql" />
+    <Build Include="cm\Stored Procedures\spWebApplicationURLSelectByName.sql" />
+    <Build Include="ad\Stored Procedures\spForestSelect.sql" />
+    <Build Include="ad\Stored Procedures\spForestDelete.sql" />
+    <Build Include="ad\Stored Procedures\spServiceAccountUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spServiceAccountInactivateByDate.sql" />
+    <Build Include="ad\Stored Procedures\spServiceAccountInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spServiceAccountDelete.sql" />
+    <Build Include="ad\Stored Procedures\spOrganizationalUnitUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spOrganizationalUnitInactivateByDate.sql" />
     <Build Include="ad\Stored Procedures\spSubnetSelectBySubnet.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="ad\Tables\ComputerImport.sql" />
-    <Build Include="dbo\Tables\ReportHeader.sql">
-      <AnsiNulls>On</AnsiNulls>
-    </Build>
-    <Build Include="dbo\Tables\ReportContent.sql">
-      <AnsiNulls>On</AnsiNulls>
-    </Build>
-    <Build Include="Security\scomUpdate.sql" />
-    <Build Include="Security\scomRead.sql" />
-    <Build Include="dbo\Stored Procedures\spReportHeaderSelectByReportName.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportID.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportNameAndSortSequence.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\spReportContentSelectByReportName.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spObjectHealthStateUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spObjectHealthStateAlertRelationshipInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spGroupHealthStateUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spGroupHealthStateInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spGroupHealthStateAlertRelationshipInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\GroupHealthStateAlertRelationship.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\GroupHealthState.sql" />
-    <Build Include="scom\Stored Procedures\spObjectClassUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAgentExclusionsUpsert.sql">
+    <Build Include="ad\Stored Procedures\spLocalAdminPasswordSolutionUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spComputerUpsert_Import.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Stored Procedures\spCurrentTimeZoneOffsetUpdate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Stored Procedures\spAlertResolutionStateGet.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="scom\Tables\AlertArchive.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Tables\ClusterNamedObject.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\UserAccountControl.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\SupportedEncryptionTypes.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\ServiceAccount.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\OrganizationalUnit.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\LocalAdminPasswordSolution.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\DomainController.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Tables\ClusterNamedObject.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Views\UserView.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Views\ServiceAccountView.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Views\GroupMemberViewNested.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Views\ComputerView.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spServiceAccountUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spServiceAccountInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spServiceAccountInactivate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spServiceAccountDelete.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spOrganizationalUnitUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spOrganizationalUnitInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spLocalAdminPasswordSolutionUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spLocalAdminPasswordSolutionSelect.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spDomainControllerUpsert.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="ad\Stored Procedures\spDomainControllerInactivateByDate.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
+    <Build Include="ad\Stored Procedures\spLocalAdminPasswordSolutionSelect.sql" />
+    <Build Include="ad\Stored Procedures\spDomainControllerUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spDomainControllerInactivateByDate.sql" />
     <Build Include="ad\Stored Procedures\spClusterNamedObjectUpsert.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="ad\Views\OrganizationalUnitView.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="Security\pmUpdate.sql" />
-    <Build Include="Security\pmRead.sql" />
-    <Build Include="Security\cmUpdate.sql" />
-    <Build Include="Security\cmRead.sql" />
-    <Build Include="Security\cmAdmin.sql" />
+    <Build Include="ad\Stored Procedures\spSyncStatusViewSelect.sql" />
+    <Build Include="ad\Stored Procedures\spSiteDelete.sql" />
+    <Build Include="ad\Stored Procedures\spSiteInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spSiteInactivateByDate.sql" />
+    <Build Include="ad\Stored Procedures\spSiteSelect.sql" />
+    <Build Include="ad\Stored Procedures\spSiteUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spSubnetDelete.sql" />
+    <Build Include="ad\Stored Procedures\spSubnetInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spSubnetInactivateByDate.sql" />
+    <Build Include="ad\Stored Procedures\spSubnetSelect.sql" />
+    <Build Include="ad\Stored Procedures\spSubnetUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spSyncHistoryDeleteByDate.sql" />
+    <Build Include="ad\Stored Procedures\spSyncHistoryInsert.sql" />
+    <Build Include="ad\Stored Procedures\spSyncHistorySelect.sql" />
+    <Build Include="ad\Stored Procedures\spSyncStatusSelect.sql" />
+    <Build Include="ad\Stored Procedures\spSyncStatusUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spComputerDelete.sql" />
+    <Build Include="ad\Stored Procedures\spComputerInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spComputerInactivateByDate.sql" />
+    <Build Include="ad\Stored Procedures\spComputerSelect.sql" />
+    <Build Include="ad\Stored Procedures\spForestInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spForestUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spGroupDelete.sql" />
+    <Build Include="ad\Stored Procedures\spGroupInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spGroupInactivateByDate.sql" />
+    <Build Include="ad\Stored Procedures\spGroupMemberDelete.sql" />
+    <Build Include="ad\Stored Procedures\spGroupMemberInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spGroupMemberInactivateByDate.sql" />
+    <Build Include="ad\Stored Procedures\spGroupMemberInactivateByGroup.sql" />
+    <Build Include="ad\Stored Procedures\spGroupMemberInactivateByMember.sql" />
+    <Build Include="ad\Stored Procedures\spGroupMemberSelect.sql" />
+    <Build Include="ad\Stored Procedures\spGroupMemberUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spGroupSelect.sql" />
+    <Build Include="ad\Stored Procedures\spGroupUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spDomainDelete.sql" />
+    <Build Include="ad\Stored Procedures\spDomainInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spDomainSelect.sql" />
+    <Build Include="ad\Stored Procedures\spDomainUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spComputerUpsert.sql" />
+    <Build Include="ad\Stored Procedures\spUserDelete.sql" />
+    <Build Include="ad\Stored Procedures\spUserInactivate.sql" />
+    <Build Include="ad\Stored Procedures\spUserInactivateByDate.sql" />
+    <Build Include="ad\Stored Procedures\spUserSelect.sql" />
+    <Build Include="ad\Stored Procedures\spUserUpsert.sql" />
+    <Build Include="Security\scom.sql" />
+    <Build Include="Security\pm.sql" />
+    <Build Include="Security\cm.sql" />
+    <Build Include="Security\ad.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PreDeploy Include="_Deployment\Script.Deployment.sql" />
-    <None Include="_Deployment\Script.RolePermissions.sql" />
-    <None Include="_Deployment\Script.Release.1.0.2.0.sql" />
+    <None Include="_Compare\SQLAG2.SCORE_Project.SCORE.scmp" />
+    <None Include="_Compare\Project.SCORE_SQLAG2.Score.scmp" />
   </ItemGroup>
+  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
-    <PostDeploy Include="_Deployment\Script.DefaultData.sql" />
-    <None Include="_Deployment\Script.Release.1.0.3.0.sql" />
+    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="_Compare\sqlag2.SCORE_project.scmp" />
-  </ItemGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
+  </Target>
 </Project>

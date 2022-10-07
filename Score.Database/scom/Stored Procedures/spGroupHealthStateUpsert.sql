@@ -162,8 +162,3 @@ BEGIN TRAN
 		)
 	;
 COMMIT
-
-GO
-
-
-GO

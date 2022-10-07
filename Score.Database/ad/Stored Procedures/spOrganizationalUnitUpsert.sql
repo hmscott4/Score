@@ -106,6 +106,3 @@ BEGIN
 END
 
 COMMIT
-GO
-
-

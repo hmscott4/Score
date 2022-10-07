@@ -6,8 +6,3 @@ AS
 DELETE 
 FROM scom.Alert
 WHERE Active = 0
-GO
-
-
-
-GO

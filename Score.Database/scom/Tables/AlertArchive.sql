@@ -56,6 +56,7 @@
     [HostID]                            INT              NULL,
     [Active]                            BIT              NOT NULL,
     [dbAddDate]                         DATETIME2 (3)    NULL,
-    [dbLastUpdate]                      DATETIME2 (3)    NULL
+    [dbLastUpdate]                      DATETIME2 (3)    NULL,
+    CONSTRAINT [PK_scom_AlertArchive] PRIMARY KEY NONCLUSTERED ([AlertID] ASC) WITH (FILLFACTOR = 80)
 );
 

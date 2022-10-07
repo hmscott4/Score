@@ -22,9 +22,3 @@ FROM scom.[GroupHealthStateAlertRelationship] inner join scom.Alert b
 	on scom.[GroupHealthStateAlertRelationship].AlertID = b.AlertId
 
 COMMIT
-
-GO
-
-
-
-GO

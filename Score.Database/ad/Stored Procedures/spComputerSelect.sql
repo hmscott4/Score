@@ -11,6 +11,3 @@ AS
 	WHERE  ([dnsHostName] = @dnsHostName) 
 
 	COMMIT
-GO
-
-GO

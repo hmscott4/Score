@@ -12,6 +12,3 @@ AS
 	WHERE  ([Domain] = @Domain AND [ObjectClass] = @ObjectClass) 
 
 	COMMIT
-GO
-
-

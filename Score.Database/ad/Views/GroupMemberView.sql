@@ -44,4 +44,3 @@ FROM
 		FROM [ad].[ServiceAccount] 
 		) member ON
 			gm.MemberGUID = member.objectGUID
-GO

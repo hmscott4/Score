@@ -17,13 +17,8 @@ SET XACT_ABORT ON
 BEGIN TRAN
 
 update scom.[ObjectHealthStateAlertRelationship]
-SET Active = b.Active
+Set Active = b.Active
 FROM scom.[ObjectHealthStateAlertRelationship] inner join scom.Alert b
-	ON scom.[ObjectHealthStateAlertRelationship].AlertID = b.AlertId
+	on scom.[ObjectHealthStateAlertRelationship].AlertID = b.AlertId
 
 COMMIT
-
-GO
-
-
-GO

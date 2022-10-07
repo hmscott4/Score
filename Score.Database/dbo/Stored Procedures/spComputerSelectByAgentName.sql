@@ -8,8 +8,3 @@ SELECT [dnsHostName]
   FROM [dbo].[Computer]
  WHERE ([AgentName] = @AgentName OR @AgentName is NULL)
        AND [Active] >= @Active
-GO
-
-GO
-
-GO

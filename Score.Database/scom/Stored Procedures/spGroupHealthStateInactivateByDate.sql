@@ -23,8 +23,3 @@ WHERE dbLastUpdate < DATEADD(MINUTE,-15,@BeforeDate)
 	AND Active = 1
 
 COMMIT
-
-GO
-
-
-GO

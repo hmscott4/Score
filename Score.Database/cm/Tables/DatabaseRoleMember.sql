@@ -1,12 +1,18 @@
-﻿/****** Object:  Table [cm].[DatabaseRoleMember]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[DatabaseRoleMember] (
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_DatabaseRoleMember_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
+    [DatabaseInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
+    [DatabaseName]         NVARCHAR (128)   NOT NULL,
+    [RoleName]             NVARCHAR (128)   NOT NULL,
+    [RoleMember]           NVARCHAR (128)   NOT NULL,
+    [Active]               BIT              NOT NULL,
+    [dbAddDate]            DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]         DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_DatabaseRoleMember] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_DatabaseRoleMember_DatabaseInstanceGUID] FOREIGN KEY ([DatabaseInstanceGUID]) REFERENCES [cm].[DatabaseInstance] ([objectGUID])
+);
 
 GO
+CREATE NONCLUSTERED INDEX [IX_DatabaseRoleMember_DatabaseInstanceGUID] 
+    ON [cm].[DatabaseRoleMember](DatabaseInstanceGUID)
 
-GO
 
-GO
-/****** Object:  Index [IX_cm_DatabaseRoleMember_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO

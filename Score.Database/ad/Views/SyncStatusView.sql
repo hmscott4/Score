@@ -27,5 +27,3 @@ GROUP BY
 	[ss].[Status],
 	[ss].[SyncType],
 	[ss].[StartDate]
-
-GO

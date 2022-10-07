@@ -21,6 +21,3 @@ AS
 	WHERE  [Domain] = @Domain AND [dbLastUpdate] < @BeforeDate
 	              
 	COMMIT
-GO
-
-GO

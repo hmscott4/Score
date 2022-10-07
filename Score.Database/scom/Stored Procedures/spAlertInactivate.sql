@@ -20,9 +20,3 @@ SET [Active] = 0
 WHERE
 	[Active] = 1
 	AND (@ManagementGroup IS NULL OR ManagementGroup = @ManagementGroup)
-
-GO
-
-
-
-GO

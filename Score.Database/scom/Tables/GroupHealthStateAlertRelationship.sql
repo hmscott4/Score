@@ -9,5 +9,3 @@
     CONSTRAINT [FK_scom_GroupHealthStateAlertRelationship_GroupHealthState] FOREIGN KEY ([GroupID]) REFERENCES [scom].[GroupHealthState] ([Id])
 );
 
-
-

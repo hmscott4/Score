@@ -15,17 +15,9 @@
     [whenChanged]       DATETIME2 (3)    NOT NULL,
     [dbAddDate]         DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]      DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_OrganizationalUnit] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+    CONSTRAINT [PK_OrganizationalUnit] PRIMARY KEY CLUSTERED ([DistinguishedName] ASC)
 );
 
 
-
-
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UQ_ad_OrganizationalUnit]
-    ON [ad].[OrganizationalUnit]([DistinguishedName] ASC);
-
-
-GO
-
 

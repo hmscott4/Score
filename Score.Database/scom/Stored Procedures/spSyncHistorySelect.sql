@@ -12,8 +12,3 @@ AS
 	WHERE  ([ID] = @ID OR @ID IS NULL) 
 
 	COMMIT
-
-GO
-
-
-

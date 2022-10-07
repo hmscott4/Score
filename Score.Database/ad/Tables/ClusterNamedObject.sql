@@ -5,17 +5,9 @@
     [Comment]      NVARCHAR (2048)  NULL,
     [dbAddDate]    DATETIME2 (3)    NOT NULL,
     [dbLastUpdate] DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_ad_ClusterNamedObject] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+    CONSTRAINT [PK_ad_ClusterNamedObject] PRIMARY KEY CLUSTERED ([DNSHostName] ASC)
 );
 
 
-
-
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UQ_ad_ClusterNamedObject]
-    ON [ad].[ClusterNamedObject]([DNSHostName] ASC);
-
-
-GO
-
 

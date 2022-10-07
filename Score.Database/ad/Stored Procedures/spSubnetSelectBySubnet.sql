@@ -12,6 +12,3 @@ AS
 	WHERE  ([Name] = @Name OR @Name IS NULL) and Active >= @Active
 
 	COMMIT
-GO
-
-

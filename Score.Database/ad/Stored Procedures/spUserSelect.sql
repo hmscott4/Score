@@ -11,6 +11,3 @@ AS
 	WHERE  ([objectGUID] = @objectGUID OR @objectGUID IS NULL) 
 
 	COMMIT
-GO
-
-

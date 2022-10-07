@@ -1,14 +1,14 @@
-﻿/****** Object:  Table [cm].[ApplicationInstallation]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[ApplicationInstallation] (
+    [objectGUID]      UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ApplicationInstallation_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
+    [ComputerGUID]    UNIQUEIDENTIFIER NOT NULL,
+    [ApplicationGUID] UNIQUEIDENTIFIER NOT NULL,
+    [InstallDate]     DATETIME2 (7)    NULL,
+    [Active]          BIT              NOT NULL,
+    [dbAddDate]       DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]    DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_ApplicationInstallation] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_ApplicationInstallation_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
+);
 
 GO
-
-GO
-/****** Object:  Index [IX_cm_Application_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO
+CREATE INDEX IX_ApplicationInstallation_ComputerGUID ON [cm].[ApplicationInstallation](ComputerGUID)

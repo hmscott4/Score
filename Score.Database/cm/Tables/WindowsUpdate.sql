@@ -1,12 +1,12 @@
-﻿/****** Object:  Table [cm].[WindowsUpdate]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[WindowsUpdate] (
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_WindowsUpdate] DEFAULT (newsequentialid()) NOT NULL,
+    [HotfixID]     NVARCHAR (128)   NOT NULL,
+    [Description]  NVARCHAR (128)   NOT NULL,
+    [Caption]      NVARCHAR (128)   NULL,
+    [FixComments]  NVARCHAR (128)   NULL,
+    [Active]       BIT              NOT NULL,
+    [dbAddDate]    DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate] DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_WindowsUpdate] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_WindowsUpdate]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO

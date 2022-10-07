@@ -26,10 +26,3 @@ SELECT [ID]
       ,[dbLastUpdate]
   FROM [scom].[WindowsComputer]
   WHERE [DNSHostName] = @DNSHostName
-GO
-
-
-GO
-
-
-GO

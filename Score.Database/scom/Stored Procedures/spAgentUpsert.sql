@@ -144,9 +144,3 @@ BEGIN TRAN
 				   ,@dbLastUpdate)
 			;
 COMMIT
-
-GO
-
-
-
-GO

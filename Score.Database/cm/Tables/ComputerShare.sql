@@ -1,16 +1,17 @@
-﻿/****** Object:  Table [cm].[ComputerShare]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[ComputerShare] (
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ComputerShare_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
+    [ComputerGUID] UNIQUEIDENTIFIER NOT NULL,
+    [Name]         NVARCHAR (128)   NOT NULL,
+    [Description]  NVARCHAR (128)   NOT NULL,
+    [Path]         NVARCHAR (2048)  NOT NULL,
+    [Status]       NVARCHAR (128)   NULL,
+    [Type]         NVARCHAR (128)   NULL,
+    [Active]       BIT              NOT NULL,
+    [dbAddDate]    DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate] DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_ComputerShare] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_ComputerShare_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
+);
 
 GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_ComputerShare_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO
+CREATE INDEX IX_ComputerShare_ComputerGUID ON [cm].[ComputerShare](ComputerGUID)

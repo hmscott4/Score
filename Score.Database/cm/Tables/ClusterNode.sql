@@ -1,12 +1,11 @@
-﻿/****** Object:  Table [cm].[ClusterNode]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[ClusterNode] (
+    [objectGUID]   UNIQUEIDENTIFIER CONSTRAINT [DF_cm_ClusterNode_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
+    [ClusterGUID]  UNIQUEIDENTIFIER NOT NULL,
+    [ComputerGUID] UNIQUEIDENTIFIER NOT NULL,
+    [State]        NVARCHAR (128)   NOT NULL,
+    [Active]       BIT              NOT NULL,
+    [dbAddDate]    DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate] DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_ClusterNode] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_ClusterNode_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO

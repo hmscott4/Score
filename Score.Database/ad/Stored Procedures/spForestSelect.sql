@@ -11,6 +11,3 @@ AS
 	WHERE  ([Name] = @Name OR @Name IS NULL) 
 
 	COMMIT
-GO
-
-GO

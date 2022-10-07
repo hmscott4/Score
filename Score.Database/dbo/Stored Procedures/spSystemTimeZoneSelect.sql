@@ -22,4 +22,3 @@ SELECT [ZoneID]
   FROM [dbo].[SystemTimeZone]
   WHERE [Display] >= @Display
   ORDER BY [CurrentUTCOffset]
-GO

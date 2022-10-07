@@ -18,11 +18,9 @@
     [whenChanged]                         DATETIME2 (3)    NOT NULL,
     [dbAddDate]                           DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]                        DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_ad_ServiceAccount] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+    CONSTRAINT [PK_ad_ServiceAccount] PRIMARY KEY CLUSTERED ([DistinguishedName] ASC)
 );
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_ad_ServiceAccount_Unique]
-    ON [ad].[ServiceAccount]([Domain] ASC, [Name] ASC);
 

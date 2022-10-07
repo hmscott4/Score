@@ -1,6 +1,3 @@
-CREATE ROLE [scomRead]
+﻿CREATE ROLE [scomRead]
     AUTHORIZATION [dbo];
-
-
-GO
 

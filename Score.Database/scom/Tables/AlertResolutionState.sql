@@ -8,9 +8,6 @@
     [dbAddDate]         DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]      DATETIME2 (3)    NOT NULL,
     [IsOpen]            BIT              DEFAULT ((1)) NOT NULL,
-    PRIMARY KEY NONCLUSTERED ([ResolutionStateID] ASC)
+    CONSTRAINT [PK_scom_AlertResolutionState] PRIMARY KEY NONCLUSTERED ([ResolutionStateID] ASC) WITH (FILLFACTOR = 80)
 );
-
-
-GO
 

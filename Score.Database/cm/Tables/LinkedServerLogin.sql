@@ -1,16 +1,14 @@
-﻿/****** Object:  Table [cm].[LinkedServerLogin]    Script Date: 1/16/2019 8:32:48 AM ******/
+﻿CREATE TABLE [cm].[LinkedServerLogin] (
+    [objectGUID]           UNIQUEIDENTIFIER CONSTRAINT [DF_cm_LinkedServerLogin_objectGUID] DEFAULT (newsequentialid()) NOT NULL,
+    [DatabaseInstanceGUID] UNIQUEIDENTIFIER NOT NULL,
+    [LinkedServerID]       INT              NOT NULL,
+    [Name]                 NVARCHAR (255)   NOT NULL,
+    [Impersonate]          BIT              NOT NULL,
+    [State]                NVARCHAR (128)   NOT NULL,
+    [DateLastModified]     DATETIME2 (3)    NOT NULL,
+    [Active]               BIT              NOT NULL,
+    [dbAddDate]            DATETIME2 (3)    NOT NULL,
+    [dbLastUpdate]         DATETIME2 (3)    NOT NULL,
+    CONSTRAINT [PK_cm_LinkedServerLogin] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+);
 
-GO
-
-GO
-
-GO
-/****** Object:  Index [IX_cm_LinkedServerLogin_Unique]    Script Date: 1/16/2019 8:32:48 AM ******/
-
-GO
-
-GO
-
-GO
-
-GO

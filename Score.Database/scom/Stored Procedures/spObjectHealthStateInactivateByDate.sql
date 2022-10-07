@@ -30,8 +30,3 @@ WHERE dbLastUpdate < DATEADD(MINUTE, -15, @BeforeDate)
 	AND (@ManagementGroup IS NULL OR ManagementGroup = @ManagementGroup)
 
 COMMIT
-
-GO
-
-
-GO
