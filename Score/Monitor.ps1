@@ -174,7 +174,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 365){
 	
 		AddLogEntry "DeleteProcessLog" "Info" "Maintenance" "Deleting ProcessLog entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting ProcessLog entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting ProcessLog entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "dbo.spProcessLogDelete"
@@ -191,7 +191,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeProcessLog: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeProcessLog: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 
 	# Get Retention factor
@@ -200,7 +200,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 365){
 	
 		AddLogEntry "adDeleteSyncHistory" "Info" "Maintenance" "Deleting AD Sync History entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting SyncHistory entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting SyncHistory entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "ad.spSyncHistoryDeleteByDate"
@@ -218,7 +218,7 @@ param(
 		}
 
 		AddLogEntry "scomDeleteSyncHistory" "Info" "Maintenance" "Deleting SCOM Sync History entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting SyncHistory entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting SyncHistory entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "scom.spSyncHistoryDeleteByDate"
@@ -235,7 +235,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "DeleteSyncHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "DeleteSyncHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 	
 	Return New-Object psobject -Property @{ErrorCount = $errorCounter; WarningCount = $warningCounter}
@@ -265,7 +265,7 @@ param(
 	
 	If($daysRetain -gt 0 -and $daysRetain -le 365){	
 		AddLogEntry "DeleteEventLog" "Info" "Maintenance" "Deleting cm.Event entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting cm.Event entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting cm.Event entries older than $daysRetain day(s)."
 		
 		
 		try	{
@@ -283,7 +283,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeEvents: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeEvents: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 	
 	Return New-Object psobject -Property @{ErrorCount = $errorCounter; WarningCount = $warningCounter}
@@ -321,7 +321,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 365){
 	
 		AddLogEntry "PurgeHistory" "Info" "Maintenance" "Deleting Configuration History entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting Configuration History entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting Configuration History entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "cm.spConfigurationHistoryDelete"
@@ -338,7 +338,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 	
 	
@@ -352,7 +352,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 2500){
 	
 		AddLogEntry "PurgeHistory" "Info" "Maintenance" "Deleting DatabaseSizeDaily entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting DatabaseSizeDaily entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting DatabaseSizeDaily entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "pm.spDatabaseSizeDailyDelete"
@@ -369,7 +369,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeHistory: Invalid value for retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 	
 	[int]$daysRetain = GetConfigValue -configName "DatabaseSizeRawRetainDays" -sqlConnection $sqlConnection
@@ -377,7 +377,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 90){
 	
 		AddLogEntry "PurgeHistory" "Info" "Maintenance" "Deleting DatabaseSizeRaw entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting DatabaseSizeRaw entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting DatabaseSizeRaw entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "pm.spDatabaseSizeRawDelete"
@@ -394,7 +394,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeHistory: Invalid value for DatabaseSizeRawRetainDays retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeHistory: Invalid value for DatabaseSizeRawRetainDays retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 	
 
@@ -406,7 +406,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 2500){
 	
 		AddLogEntry "PurgeHistory" "Info" "Maintenance" "Deleting LogicalVolumeSizeDaily entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting LogicalVolumeSizeDaily entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting LogicalVolumeSizeDaily entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "pm.spLogicalVolumeSizeDailyDelete"
@@ -423,7 +423,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 	
 	[int]$daysRetain = GetConfigValue -configName "LogicalVolumeSizeRawRetainDays" -sqlConnection $sqlConnection
@@ -431,7 +431,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 90){
 	
 		AddLogEntry "PurgeHistory" "Info" "Maintenance" "Deleting LogicalVolumeSizeRaw entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting LogicalVolumeSizeRaw entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting LogicalVolumeSizeRaw entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "pm.spLogicalVolumeSizeRawDelete"
@@ -448,7 +448,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeHistory: Invalid value for LogicalVolumeSizeRaw retention period: $daysRetain." -ForegroundColor DarkRed
 	}	
 
 	################################################################################
@@ -459,7 +459,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 2500){
 	
 		AddLogEntry "PurgeHistory" "Info" "Maintenance" "Deleting WebApplicationURLResponseDaily entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting WebApplicationURLResponseDaily entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting WebApplicationURLResponseDaily entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "pm.spWebApplicationURLResponseDailyDelete"
@@ -476,7 +476,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeHistory: Invalid value for WebApplicationURLResponseDaily retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeHistory: Invalid value for WebApplicationURLResponseDaily retention period: $daysRetain." -ForegroundColor DarkRed
 	}
 	
 	[int]$daysRetain = GetConfigValue -configName "WebApplicationURLResponseRawRetainDays" -sqlConnection $sqlConnection
@@ -484,7 +484,7 @@ param(
 	If($daysRetain -gt 0 -and $daysRetain -le 90){
 	
 		AddLogEntry "PurgeHistory" "Info" "Maintenance" "Deleting WebApplicationURLResponseRaw entries older than $daysRetain day(s)." $sqlConnection
-		Write-Host " : Maintenance : Deleting WebApplicationURLResponseRaw entries older than $daysRetain day(s)."
+		Write-Verbose " : Maintenance : Deleting WebApplicationURLResponseRaw entries older than $daysRetain day(s)."
 		
 		try	{
 			$sqlCommand = GetStoredProc $sqlConnection "pm.spWebApplicationURLResponseRawDelete"
@@ -501,7 +501,7 @@ param(
 			$errorCounter++
 		}
 	} else {
-		Write-Host "PurgeHistory: Invalid value for WebApplicationURLResponseRaw retention period: $daysRetain." -ForegroundColor DarkRed
+		Write-Verbose "PurgeHistory: Invalid value for WebApplicationURLResponseRaw retention period: $daysRetain." -ForegroundColor DarkRed
 	}		
 	
 	Return New-Object psobject -Property @{ErrorCount = $errorCounter; WarningCount = $warningCounter}
@@ -531,7 +531,7 @@ param (
 	[datetime]$forDate = [datetime]::Today.AddDays(-1)
 	
     AddLogEntry "WriteDailyHistory" "Info" "Maintenance" "Processing Daily History Update for $forDate" $sqlConnection
-	Write-Host " : Maintenance : Processing Daily History Update for $forDate"
+	Write-Verbose " : Maintenance : Processing Daily History Update for $forDate"
 	[int]$errorCounter = 0
 	[int]$warningCounter = 0
 	try	{
@@ -689,23 +689,23 @@ if(($agentName -eq $null) -or ($agentName.Length -eq 0)) {
 ################################################################################
 # WRITE PROCESS HEADER
 ################################################################################
-Write-Host "*********** Starting process ***********"
+Write-Verbose "*********** Starting process ***********"
 If($Checks){
-	Write-Host "Checks       : $Checks"
+	Write-Verbose "Checks       : $Checks"
 	if($fileName){
-		Write-Host "Filename     : $fileName"
+		Write-Verbose "Filename     : $fileName"
 	} else {
-		Write-Host "AgentName    : $agentName"
+		Write-Verbose "AgentName    : $agentName"
 	}
 }
 if($Maintenance){
-	Write-Host "Maintenance  : $Maintenance"
+	Write-Verbose "Maintenance  : $Maintenance"
 }
-Write-Host "ThrottleLimit: $throttleLimit"
+Write-Verbose "ThrottleLimit: $throttleLimit"
 If($WhatIf){
-	Write-Host "WhatIf parameter specified" -ForegroundColor Cyan
+	Write-Verbose "WhatIf parameter specified" -ForegroundColor Cyan
 }
-Write-Host "****************************************"
+Write-Verbose "****************************************"
 
 
 ################################################################################
@@ -759,7 +759,7 @@ Try {
 				$computers = GetComputerListFromFile $fileName
 			} else {
 				$computers = $null
-				Write-Host "Invalid filename provided: $filename" -ForegroundColor Red
+				Write-Verbose "Invalid filename provided: $filename" -ForegroundColor Red
 			}
 		} Else {
 			$computers = GetComputerListFromRepository $sqlConnection $agentName
@@ -786,14 +786,14 @@ foreach($row in $computers){
     # TEST CONNECTIVITY
     ################################################################################  
     if(!(Test-Connection $computer -Quiet -Count 1)){
-        Write-Host "Unable to ping computer: $computer"
+        Write-Verbose "Unable to ping computer: $computer"
 		AddLogEntry -Reference "PingCheck" -Status "Error" -moduleName "MainModule" -messageString "Unable to ping computer: $computer." -sqlConnection $sqlConnection
         continue
     }
 
     $testPort = TestPort -ComputerName $computer -Port 135 -Protocol "TCP"
     if($testPort -eq "Failed"){
-        Write-Host "Unable to communicate on port 135 with computer: $computer"
+        Write-Verbose "Unable to communicate on port 135 with computer: $computer"
 		AddLogEntry -Reference "PortCheck" -Status "Error" -moduleName "MainModule" -messageString "Unable to communicate on port 135 with computer: $computer." -sqlConnection $sqlConnection
         continue
     }	
@@ -864,14 +864,14 @@ foreach($row in $computers){
 	foreach($check in $checks){
 		[string]$moduleName = GetCheckModule $check 
 		if(!$moduleName){
-			Write-Host "Invalid Check: $check"
+			Write-Verbose "Invalid Check: $check"
 			Continue
 		}
 		
 		if($isCluster -and ($clusterNoChecks -contains $check)){
-			Write-Host " : $computer : $check : Skipped" -ForegroundColor Cyan
+			Write-Verbose " : $computer : $check : Skipped" -ForegroundColor Cyan
 		} elseif($WhatIf){
-			Write-Host " : $computer : $check : Would be performed." -ForegroundColor Cyan
+			Write-Verbose " : $computer : $check : Would be performed." -ForegroundColor Cyan
 		} elseif($check -eq "SysEvtLog") {
 			# System Event log needs a separate entry, to add parameter "System"
 			$scriptBlock = . ".\modules\$moduleName"
@@ -945,7 +945,7 @@ do {
 ################################################################################
 foreach($item in $Maintenance){
 	If($WhatIf){
-		Write-Host "Maintenance task $item would be performed." -ForegroundColor Cyan
+		Write-Verbose "Maintenance task $item would be performed." -ForegroundColor Cyan
 	} else {
 		Switch($item) {
 			"PurgeLog" 	{
@@ -968,7 +968,7 @@ foreach($item in $Maintenance){
 				$errorCounter += $writeHistResp.ErrorCount
 				$warningCounter += $writeHistResp.WarningCount				
 			}
-			Default {Write-Host "Invalid Maintenance option: $item"}
+			Default {Write-Verbose "Invalid Maintenance option: $item"}
 		}
 	}
 }
@@ -977,8 +977,8 @@ foreach($item in $Maintenance){
 # WRITE FINAL ENTRY TO PROCESS LOG
 ################################################################################
 AddLogEntry "EndProcess" "Info" "MainModule" "Completed processing: checked $computersChecked computer(s) with $errorCounter errors and $warningCounter warnings." $sqlConnection
-Write-Host "Completed processing: checked $computersChecked computer(s) with $errorCounter error(s) and $warningCounter warning(s)."
-Write-Host "************ End Process ***************"
+Write-Verbose "Completed processing: checked $computersChecked computer(s) with $errorCounter error(s) and $warningCounter warning(s)."
+Write-Verbose "************ End Process ***************"
 
 ################################################################################
 # CLEANUP
