@@ -26,3 +26,5 @@
     CONSTRAINT [FK_OperatingSystem_Computer] FOREIGN KEY ([computerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 
+GO
+CREATE INDEX [IX_OperatingSystem_ComputerGUID] ON [cm].[OperatingSystem](ComputerGUID)

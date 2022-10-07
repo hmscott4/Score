@@ -22,3 +22,6 @@
     CONSTRAINT [FK_DiskDrive_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 
+GO
+CREATE NONCLUSTERED INDEX IX_DiskDrive_ComputerGUID 
+    ON [cm].[DiskDrive](ComputerGUID)

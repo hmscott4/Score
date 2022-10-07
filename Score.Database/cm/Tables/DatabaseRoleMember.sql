@@ -7,6 +7,12 @@
     [Active]               BIT              NOT NULL,
     [dbAddDate]            DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]         DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_cm_DatabaseRoleMember] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+    CONSTRAINT [PK_cm_DatabaseRoleMember] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_DatabaseRoleMember_DatabaseInstanceGUID] FOREIGN KEY ([DatabaseInstanceGUID]) REFERENCES [cm].[DatabaseInstance] ([objectGUID])
 );
+
+GO
+CREATE NONCLUSTERED INDEX [IX_DatabaseRoleMember_DatabaseInstanceGUID] 
+    ON [cm].[DatabaseRoleMember](DatabaseInstanceGUID)
+
 

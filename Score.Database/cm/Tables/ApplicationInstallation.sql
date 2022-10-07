@@ -10,3 +10,5 @@
     CONSTRAINT [FK_ApplicationInstallation_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 
+GO
+CREATE INDEX IX_ApplicationInstallation_ComputerGUID ON [cm].[ApplicationInstallation](ComputerGUID)

@@ -6,6 +6,7 @@
     [SortOrder]    INT            NOT NULL,
     [Active]       BIT            NOT NULL,
     [dbAddDate]    DATETIME2 (3)  NOT NULL,
-    [dbLastUpdate] DATETIME2 (3)  NOT NULL
+    [dbLastUpdate] DATETIME2 (3)  NOT NULL,
+    CONSTRAINT [PK_scom_AlertAgingBuckets] PRIMARY KEY NONCLUSTERED ([AgeID] ASC) WITH (FILLFACTOR = 80)
 );
 

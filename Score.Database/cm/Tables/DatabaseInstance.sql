@@ -13,6 +13,7 @@
     [Active]             BIT              NOT NULL,
     [dbAddDate]          DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]       DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_cm_DatabaseInstance] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
+    CONSTRAINT [PK_cm_DatabaseInstance] PRIMARY KEY CLUSTERED ([objectGUID] ASC),
+    CONSTRAINT [FK_DatabaseInstance_ComputerGUID] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 

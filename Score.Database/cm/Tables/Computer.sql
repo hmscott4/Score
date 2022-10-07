@@ -23,6 +23,6 @@
     [IsClusterResource]         BIT              CONSTRAINT [DF_cm_Computer_IsClusterResource] DEFAULT ((0)) NULL,
     [dbAddDate]                 DATETIME2 (3)    NOT NULL,
     [dbLastUpdate]              DATETIME2 (3)    NOT NULL,
-    CONSTRAINT [PK_cm_Computer] PRIMARY KEY NONCLUSTERED ([objectGUID] ASC) WITH (FILLFACTOR = 90)
+    CONSTRAINT [PK_cm_Computer] PRIMARY KEY CLUSTERED ([objectGUID] ASC) WITH (FILLFACTOR = 90)
 );
 

@@ -18,3 +18,10 @@
     CONSTRAINT [FK_LogicalVolume_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_LogicalVolume_ComputerGUID]
+    ON [cm].[LogicalVolume]([ComputerGUID] ASC);
+

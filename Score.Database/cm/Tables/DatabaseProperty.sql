@@ -10,3 +10,7 @@
     CONSTRAINT [FK_DatabaseProperty_Database] FOREIGN KEY ([DatabaseGUID]) REFERENCES [cm].[Database] ([objectGUID])
 );
 
+GO
+CREATE NONCLUSTERED INDEX [IX_DatabaseProperty_DatabaseGUID]
+    ON [cm].[DatabaseProperty](DatabaseGUID)
+

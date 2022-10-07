@@ -17,3 +17,6 @@
     CONSTRAINT [FK_DatabaseUser_DatabaseInstance] FOREIGN KEY ([DatabaseInstanceGUID]) REFERENCES [cm].[DatabaseInstance] ([objectGUID])
 );
 
+GO
+CREATE NONCLUSTERED INDEX [IX_DatabaseUser_DatabaseInstanceGUID] 
+    ON [cm].[DatabaseUser](DatabaseInstanceGUID)

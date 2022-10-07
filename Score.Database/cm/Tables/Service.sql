@@ -18,3 +18,6 @@
     CONSTRAINT [FK_Service_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 
+GO
+CREATE NONCLUSTERED INDEX [IX_Service_ComputerGUID]
+    ON [cm].[Service](ComputerGUID)

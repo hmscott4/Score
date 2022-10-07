@@ -13,3 +13,5 @@
     CONSTRAINT [PK_cm_ComputerSharePermission] PRIMARY KEY CLUSTERED ([objectGUID] ASC)
 );
 
+GO
+CREATE INDEX IX_ComputerSharePermission_ComputerShareGUID ON [cm].[ComputerSharePermission](ComputerShareGUID)

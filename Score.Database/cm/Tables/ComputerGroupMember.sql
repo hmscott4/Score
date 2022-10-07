@@ -10,3 +10,5 @@
     CONSTRAINT [FK_ComputerGroupMember_Computer] FOREIGN KEY ([ComputerGUID]) REFERENCES [cm].[Computer] ([objectGUID])
 );
 
+GO
+CREATE INDEX IX_ComputerGroupMember_ComputerGUID ON [cm].[ComputerGroupMember](ComputerGUID)

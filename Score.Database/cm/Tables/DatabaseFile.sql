@@ -18,3 +18,5 @@
     CONSTRAINT [FK_DatabaseFile_Database] FOREIGN KEY ([DatabaseGUID]) REFERENCES [cm].[Database] ([objectGUID])
 );
 
+GO
+CREATE INDEX IX_DatabaseFile_DatabaseGUID ON [cm].[Database](ObjectGUID)
