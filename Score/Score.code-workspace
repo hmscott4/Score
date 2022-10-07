@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Score.Database",
+			"path": "../Score.Database"
+		}
+	],
+	"settings": {}
+}
